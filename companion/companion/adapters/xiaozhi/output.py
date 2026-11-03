@@ -66,12 +66,14 @@ class XiaozhiTransport:
 
         await send_tts_message(self.connection, "sentence_start", text)
         if packets:
-            previous_count = getattr(self.connection, "audio_flow_control", {}).get(
-                "packet_count", 0
-            )
+            previous_flow = getattr(self.connection, "audio_flow_control", {})
+            previous_count = previous_flow.get("packet_count", 0)
             await sendAudio(self.connection, packets[0])
-            count = getattr(self.connection, "audio_flow_control", {}).get("packet_count", 0)
-            if self.metric and count > previous_count:
+            flow = getattr(self.connection, "audio_flow_control", {})
+            # Upstream resets the counter per sentence. Compare within that
+            # counter's lifetime, not against the preceding sentence's total.
+            sent = flow.get("packet_count", 0) > (previous_count if flow is previous_flow else 0)
+            if self.metric and sent:
                 self.metric(self.event, "opus_first_packet_sent_ms")
             await sendAudio(self.connection, packets[1:])
         await _wait_for_audio_completion(self.connection)

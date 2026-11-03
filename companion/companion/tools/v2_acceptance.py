@@ -1,6 +1,7 @@
 """Fixed synthetic v2 probe/replay. All raw evidence stays in the chosen local directory."""
 
 import argparse
+import hashlib
 import json
 import platform
 import time
@@ -29,6 +30,10 @@ def export(core, samples, target, phase):
         "python": platform.python_version(),
         "samples": samples,
         "settings": core.config.settings.model_dump(mode="json"),
+        "prompt_sha256": {
+            p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted((core.config.directory / "prompts").glob("*.j2"))
+        },
         "tables": {table: core.store.query(f"SELECT * FROM {table}") for table in tables},
     }
     target.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -72,7 +77,7 @@ def main():
                         session,
                         "periodic" if scenario["id"] == "Q01" else "ask_for_help",
                     )
-                idle = core.wait_idle(25)
+                idle = core.wait_idle(50)
                 row = core.store.query("SELECT * FROM turns WHERE id=?", (identifier,))[0]
                 sample = {
                     "scenario": scenario["id"],
@@ -93,7 +98,7 @@ def main():
                     flush=True,
                 )
             core.on_session_end(session, "synthetic_replay")
-            core.wait_idle(25)
+            core.wait_idle(50)
             export(core, samples, report_path, args.phase)
     finally:
         core.close()

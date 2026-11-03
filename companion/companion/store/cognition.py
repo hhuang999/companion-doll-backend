@@ -36,7 +36,7 @@ class CognitionStore:
                 text = row[0] if row else None
             elif ref.kind == "memory":
                 row = connection.execute(
-                    "SELECT data FROM memory_items WHERE memory_id=? AND user_key=? AND status='active'",
+                    "SELECT data FROM memory_items WHERE memory_id=? AND user_key=?",
                     (str(ref.id), user_key),
                 ).fetchone()
                 text = json.loads(row[0])["value"] if row else None
@@ -178,6 +178,7 @@ class CognitionStore:
         usage,
         result=None,
         error=None,
+        prompt_version="v2.1",
     ):
         run_id = uuid.uuid4().hex
         with self.transaction() as db:
@@ -189,7 +190,7 @@ class CognitionStore:
                     role,
                     attempt,
                     model,
-                    "v2.1",
+                    prompt_version,
                     candidate_version,
                     started_at,
                     duration_ms,
@@ -206,7 +207,17 @@ class CognitionStore:
             "SELECT data FROM support_plans WHERE session_id=? AND status='active' ORDER BY version DESC LIMIT 1",
             (session_id,),
         )
-        return SupportPlan.model_validate_json(rows[0]["data"]) if rows else None
+        if not rows:
+            return None
+        plan = SupportPlan.model_validate_json(rows[0]["data"])
+        if plan.valid_until <= utcnow():
+            with self.transaction() as db:
+                db.execute(
+                    "UPDATE support_plans SET status='expired' WHERE plan_id=? AND version=? AND status='active'",
+                    (plan.plan_id, plan.version),
+                )
+            return None
+        return plan
 
     def memory_items(self, user_key, db=None):
         rows = (

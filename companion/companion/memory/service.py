@@ -68,6 +68,15 @@ class MemoryService:
             try:
                 candidate = self.scope_candidate(candidate, state)
                 self.store.validate_refs(state.user_key, candidate.source_refs, allowed, db)
+                for ref in candidate.source_refs:
+                    if (
+                        ref.kind == "memory"
+                        and not db.execute(
+                            "SELECT 1 FROM memory_items WHERE memory_id=? AND user_key=? AND status='active'",
+                            (str(ref.id), state.user_key),
+                        ).fetchone()
+                    ):
+                        raise ValueError("Referenced memory has been corrected")
                 if candidate.epistemic_status in ("hypothesized", "legacy_unverified"):
                     raise ValueError("Unconfirmed candidate cannot become a long-term fact")
                 if candidate.expires_at and candidate.expires_at <= self.clock():

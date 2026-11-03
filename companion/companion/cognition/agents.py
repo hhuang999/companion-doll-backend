@@ -1,10 +1,12 @@
 """Finite role calls with independent contexts, shared budgets and observable usage."""
 
+import hashlib
 import json
 import threading
 import time
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
+from openai import APITimeoutError
 from pydantic import ValidationError
 
 from companion.memory.service import estimate_tokens
@@ -36,13 +38,21 @@ class Agents:
             "end": 1800,
         }[role]
         prompt = self.templates.get_template(f"{role}.j2").render(
-            schema=json.dumps(schema.model_json_schema(), ensure_ascii=False, separators=(",", ":"))
+            schema=json.dumps(
+                compact_schema(schema.model_json_schema()),
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
         )
         messages = [
             {
                 "role": "system",
                 "content": "Return only a JSON object matching this schema. Omit optional fields unless needed.\n"
-                + prompt,
+                "每条引用必须同时填写kind、id、claim；claim是简短的依据说明，不能省略。"
+                "evidence、source_refs、concerns、facts字段必须是JSON数组，即使只有一项。"
+                "事实结构为{statement:文本,evidence:[{kind:来源类型,id:真实来源ID,claim:依据说明}]}。"
+                "只有hypotheses中的对象允许conflicting_evidence。不要复制schema或示意占位内容。"
+                "时间未知则省略；提供时间必须是带时区的ISO格式。\n" + prompt,
             },
             {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
         ]
@@ -91,7 +101,7 @@ class Agents:
                 error = type(exc).__name__
                 status = (
                     "timed_out"
-                    if isinstance(exc, TimeoutError)
+                    if isinstance(exc, (TimeoutError, APITimeoutError))
                     else "cancelled"
                     if budget.cancel.is_set()
                     else "failed"
@@ -115,7 +125,21 @@ class Agents:
                     usage.model_dump(),
                     result.model_dump(mode="json") if result else None,
                     error,
+                    prompt_version="v2:"
+                    + hashlib.sha256(messages[0]["content"].encode()).hexdigest()[:16],
                 )
             if status == "completed":
                 return result, run_id
         raise RuntimeError("Unreachable role state")
+
+
+def compact_schema(value):
+    if isinstance(value, dict):
+        return {
+            k: compact_schema(v)
+            for k, v in value.items()
+            if k not in ("title", "description", "default")
+        }
+    if isinstance(value, list):
+        return [compact_schema(v) for v in value]
+    return value

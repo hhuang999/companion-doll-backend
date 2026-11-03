@@ -7,8 +7,10 @@ from collections.abc import Iterator
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+from companion.cognition.models import Usage
 from companion.cognition.policy import prompt_projection
 from companion.llm.client import LLMClient
+from companion.memory.service import estimate_tokens
 
 from .config import Config
 from .models import TurnContext
@@ -80,9 +82,33 @@ class Talker:
                 + "</policy_data>",
             }
         )
-        messages += [{"role": r["role"], "content": r["text"]} for r in history]
+        previous_stage, previous_card = "explore", "-"
+        for row in history:
+            if row["role"] == "user":
+                previous_stage, previous_card = (
+                    row.get("stage") or "explore",
+                    row.get("card") or "-",
+                )
+                messages.append({"role": "user", "content": row["text"]})
+            else:
+                # Preserve the protocol in examples; untagged assistant history caused
+                # the live model to imitate untagged replies after the first turn.
+                messages.append(
+                    {
+                        "role": "assistant",
+                        "content": f"<<state={previous_stage};card={previous_card};emo=😶;offer=->>\n"
+                        + row["text"],
+                    }
+                )
         if not history or history[-1].get("id") != context.turn_id:
             messages.append({"role": "user", "content": context.text})
+        metrics["talker_usage"] = Usage(
+            input_tokens=estimate_tokens(messages), source="estimated"
+        ).model_dump()
+
+        def record_usage(value):
+            metrics["talker_usage"] = value.model_dump()
+
         stream = self.llm.stream_chat(
             config.settings.llm.talker_model,
             messages,
@@ -91,6 +117,7 @@ class Talker:
             first_token_timeout_s=config.settings.timing.talker_first_token_timeout_ms / 1000,
             temperature=0.7,
             max_tokens=160,
+            usage_callback=record_usage,
         )
         header = ""
         buffer = ""

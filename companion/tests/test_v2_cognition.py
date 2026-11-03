@@ -277,3 +277,73 @@ def test_v2_21_purge_waits_inflight_and_does_not_resurrect(engine):
         "interaction_events",
     ):
         assert not core.store.query(f"SELECT * FROM {table}")
+
+
+def test_v2_11_plan_memory_dependency_conflict_across_sessions(engine):
+    core, fake, _ = engine
+    from collections import deque
+
+    from companion.core.models import SessionState
+
+    input_turn(core, "我叫小林")
+    old = core.store.memory_items("u")[0]
+    started, release = start_role(fake, "planner")
+    fake.roles["planner"] = deque(
+        [
+            {
+                "objective": "listen",
+                "understanding": "称呼用户",
+                "evidence": [{"kind": "memory", "id": old.memory_id, "claim": "称呼依据"}],
+            }
+        ]
+    )
+    core.reasoner.submit("u", "s", "periodic")
+    assert started.wait(2)
+    other = SessionState(session_id="other", user_key="u")
+    core.store.create_session(other)
+    tid = core.store.add_input(other, "new", "我叫小琳", "user", TurnSignals())
+    candidate = MemoryCandidate(
+        kind="fact_preference",
+        key="nickname",
+        value="小琳",
+        scope="persistent",
+        source_refs=(EvidenceRef(kind="user_turn", id=tid, claim="更正"),),
+        supersedes_id=old.memory_id,
+        expected_version=old.version,
+    )
+    core.cognition.memory.commit((candidate,), other, tid)
+    release.set()
+    assert core.wait_idle()
+    assert not core.store.active_support_plan("s")
+    assert core.store.memory_items("u")[0].value == "小琳"
+
+
+def test_v2_05_wrong_review_version_cannot_publish(engine):
+    core, fake, _ = engine
+    from collections import deque
+
+    fake.roles["critic"] = deque(
+        [
+            lambda p: {
+                "candidate_id": p["candidate_id"],
+                "candidate_version": 2,
+                "verdict": "approve",
+            }
+        ]
+    )
+    input_turn(core, "怎么办")
+    assert core.wait_idle()
+    assert not core.store.active_support_plan("s")
+    assert "mismatch" in core.store.query("SELECT error FROM cognitive_jobs")[0]["error"]
+
+
+def test_v2_06_provider_failure_is_visible_without_retry(engine):
+    core, fake, _ = engine
+    from collections import deque
+
+    fake.roles["analysis"] = deque([RuntimeError("synthetic upstream 429")])
+    input_turn(core, "普通倾诉")
+    core.reasoner.submit("u", "s", "periodic")
+    assert core.wait_idle()
+    assert core.store.query("SELECT status FROM cognitive_jobs")[0]["status"] == "failed"
+    assert fake.calls.count("analysis") == 1

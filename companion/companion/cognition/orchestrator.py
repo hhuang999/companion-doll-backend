@@ -7,12 +7,15 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
 
+from openai import APITimeoutError
 from pydantic import BaseModel
 
 from companion.core.models import (
     Assessment,
     CardEvidence,
     CardSelection,
+    Followup,
+    MemoryUpdate,
     ReasonerOutput,
     SeekerState,
     Snapshot,
@@ -73,6 +76,14 @@ class Cognition:
                 kind != "end_consolidation" and (s.lifecycle != "active" or s.mode == "crisis")
             ):
                 return None
+            previous = (
+                self.store.query(
+                    "SELECT job_id,data FROM cognitive_jobs WHERE session_id=? AND kind='end_consolidation' ORDER BY queued_at DESC LIMIT 1",
+                    (session_id,),
+                )
+                if kind == "end_consolidation"
+                else []
+            )
             return CognitiveJob(
                 job_id=uuid.uuid4().hex,
                 user_key=user_key,
@@ -87,6 +98,12 @@ class Cognition:
                 base_plan_version=s.support_plan_version,
                 priority=priority,
                 epoch=self.core.user_epochs.get(user_key, 0),
+                retry_of=previous[0]["job_id"] if previous else None,
+                attempt=json.loads(previous[0]["data"])["attempt"] + 1 if previous else 1,
+                budget_limits={
+                    **getattr(self.config.settings.cognition, kind).model_dump(),
+                    "deadline_s": self.config.settings.timing.reasoner_timeout_s,
+                },
             )
 
     def _payload(self, job, state):
@@ -97,7 +114,7 @@ class Cognition:
             state, " ".join(r["text"] for r in history if r["role"] == "user"), budget=2200
         )
         events = self.store.query(
-            "SELECT data FROM interaction_events WHERE user_key=? AND session_id=? AND (turn_id<=? OR turn_id IS NULL) ORDER BY recorded_at DESC LIMIT 8",
+            "SELECT data FROM interaction_events WHERE user_key=? AND session_id=? AND (turn_id<=? OR turn_id IS NULL) AND event_type NOT LIKE 'playback_%' ORDER BY recorded_at DESC LIMIT 6",
             (job.user_key, job.session_id, job.source_turn_id),
         )
         payload = {
@@ -109,8 +126,43 @@ class Cognition:
                 if state.pending_offer
                 else None,
             },
-            "memory": [m.model_dump(mode="json") for m in (*bundle.boundaries, *bundle.items)],
-            "feedback": [json.loads(r["data"]) for r in events],
+            "memory": [
+                m.model_dump(
+                    mode="json",
+                    include={
+                        "memory_id",
+                        "version",
+                        "kind",
+                        "key",
+                        "value",
+                        "scope",
+                        "scope_ref",
+                        "expires_at",
+                        "source_refs",
+                        "mention_policy",
+                        "boundary_rule",
+                        "target",
+                    },
+                )
+                for m in (*bundle.boundaries, *bundle.items)
+            ],
+            "feedback": [
+                {
+                    key: value
+                    for key, value in json.loads(r["data"]).items()
+                    if key
+                    in {
+                        "event_id",
+                        "event_type",
+                        "origin",
+                        "turn_id",
+                        "output_id",
+                        "support_plan_id",
+                        "payload",
+                    }
+                }
+                for r in events
+            ],
             "kind": job.kind,
             "today": self.core.today(),
             "final_turn_id": job.source_turn_id,
@@ -137,10 +189,33 @@ class Cognition:
         candidates = ()
         plan = None
         summary = None
+        followups = ()
         plan_reason = "not_produced"
         try:
             with self.core.user_lock(job.user_key), rt.lock:
                 state = rt.state.model_copy(deep=True)
+                if job.kind != "end_consolidation":
+                    # Freeze at execution, after the preceding serial job committed.
+                    # Queue age is retained; only genuinely available new evidence advances source.
+                    job = job.model_copy(
+                        update={
+                            "source_turn_id": state.latest_turn_id,
+                            "source_user_index": state.user_turns,
+                            "topic_revision": state.topic_revision,
+                            "policy_revision": state.policy_revision,
+                            "base_plan_version": state.support_plan_version,
+                            "boundary_revision": self.store.revisions(job.user_key)[
+                                "boundary_revision"
+                            ],
+                            "status": "running",
+                            "started_at": utcnow(),
+                        }
+                    )
+                    with self.store.transaction() as db:
+                        db.execute(
+                            "UPDATE cognitive_jobs SET data=?,source_turn_id=? WHERE job_id=?",
+                            (job.model_dump_json(), job.source_turn_id, job.job_id),
+                        )
                 # Queue captures are immutable. Never relabel old evidence as a new source.
                 state.latest_turn_id = job.source_turn_id
                 state.user_turns = job.source_user_index
@@ -159,6 +234,7 @@ class Cognition:
                     )
                     self._validate(job, result, allowed)
                     candidates, summary = result.memory_candidates, result.summary
+                    followups = result.followups
                 else:
                     summary = ""
             else:
@@ -173,6 +249,8 @@ class Cognition:
                         job, "analysis", SituationAssessment, payload, budget
                     )
                     self._validate(job, analysis, allowed)
+                    if analysis.risk_review_requested:
+                        self.core.request_risk_review(job.session_id, job.source_turn_id)
                     candidates = (*analysis.memory_candidates, *analysis.boundary_candidates)
                     brief = None
                     if brief_future:
@@ -184,7 +262,17 @@ class Cognition:
                         **payload,
                         "analysis": analysis.model_dump(mode="json"),
                         "cards": [
-                            c.model_dump()
+                            c.model_dump(
+                                include={
+                                    "id",
+                                    "status",
+                                    "requires_permission",
+                                    "targets",
+                                    "constraints",
+                                    "reasoner",
+                                    "limits",
+                                }
+                            )
                             for c in self.config.cards.values()
                             if c.status != "draft"
                         ],
@@ -278,15 +366,32 @@ class Cognition:
                         brief_future.result()
             budget.check()
             self.publish(
-                job, state, plan, analysis, candidates, summary, allowed, plan_reason, budget
+                job,
+                state,
+                plan,
+                analysis,
+                candidates,
+                summary,
+                allowed,
+                plan_reason,
+                budget,
+                followups=followups,
             )
+            if (
+                job.kind in ("routine", "deliberation")
+                and plan is None
+                and plan_reason.startswith("delta_")
+            ):
+                current = self.core.sessions.get(job.session_id)
+                if current and current.state.latest_turn_id > job.source_turn_id:
+                    self.scheduler.submit(job.user_key, job.session_id, "delta_refresh")
         except Exception as error:
             logger.exception("Cognitive job %s failed", job.job_id)
             status = (
                 "cancelled"
                 if isinstance(error, JobCancelled) or cancel.is_set()
                 else "timed_out"
-                if isinstance(error, TimeoutError)
+                if isinstance(error, (TimeoutError, APITimeoutError))
                 else "rejected"
                 if isinstance(error, (ValueError, BudgetExceeded))
                 else "failed"
@@ -362,6 +467,7 @@ class Cognition:
         plan_reason,
         budget,
         failure_status=None,
+        followups=(),
     ):
         rt = self.core.sessions.get(job.session_id)
         if rt is None:
@@ -398,6 +504,15 @@ class Cognition:
                 memory_results = self.memory.commit(
                     candidates, source_state, job.source_turn_id, allowed, db
                 )
+                if plan:
+                    invalid_after_memory = plan_invalid_reason(
+                        plan,
+                        state,
+                        self.store.revisions(job.user_key, db),
+                        self.store.memory_items(job.user_key, db),
+                    )
+                    if invalid_after_memory:
+                        plan, plan_reason = None, invalid_after_memory
                 if (
                     plan
                     and self.store.revisions(job.user_key, db)["boundary_revision"]
@@ -506,6 +621,27 @@ class Cognition:
                         (job.session_id,),
                     ).fetchone()
                     if end and end[0] == job.source_turn_id and end[1] == "pending":
+                        proposals = MemoryUpdate(
+                            followups=tuple(
+                                Followup(
+                                    content=f.content,
+                                    due_date=f.due_date,
+                                    importance=f.importance,
+                                    source_turn_ids=tuple(
+                                        int(r.id) for r in f.evidence if r.kind == "user_turn"
+                                    ),
+                                )
+                                for f in followups
+                            )
+                        )
+                        validated_end, _ = self.core.validator.validate(
+                            ReasonerOutput(memory=proposals),
+                            source_state,
+                            {int(i) for k, i in allowed if k == "user_turn"},
+                            utcnow().date(),
+                            ending=True,
+                        )
+                        self.store._write_memory(db, job.user_key, validated_end.memory)
                         db.execute(
                             "UPDATE sessions SET summary=?,lifecycle='closed' WHERE session_id=?",
                             (summary, job.session_id),

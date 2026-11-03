@@ -256,13 +256,22 @@ class Store(CognitionStore):
             )
 
     def core_memory(self, user_key: str, today: str) -> CoreMemory:
-        profile = self.query(
-            "SELECT field,value FROM profile WHERE user_key=? ORDER BY field", (user_key,)
-        )
-        events = self.query(
-            "SELECT summary FROM events WHERE user_key=? AND status='active' ORDER BY importance DESC,id DESC LIMIT 3",
-            (user_key,),
-        )
+        memory = [
+            item
+            for item in self.memory_items(user_key)
+            if item.scope in ("persistent", "until_time")
+            and item.epistemic_status not in ("hypothesized", "legacy_unverified")
+            and item.valid_from <= utcnow()
+            and (item.expires_at is None or item.expires_at > utcnow())
+        ]
+        profile = [
+            {"field": m.key, "value": m.value} for m in memory if m.kind == "fact_preference"
+        ]
+        events = [
+            {"summary": m.value}
+            for m in sorted(memory, key=lambda m: (-m.importance, -m.source_cursor))
+            if m.kind == "episodic_event"
+        ][:3]
         followups = self.query(
             "SELECT content FROM followups WHERE user_key=? AND status='pending' AND due_date<=? ORDER BY importance DESC LIMIT 2",
             (user_key, today),

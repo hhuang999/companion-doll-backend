@@ -35,12 +35,14 @@ def test_live_conversation_and_summary(config, tmp_path):
             turn = core.on_input("online", str(index), text, TurnSignals())
             for event in core.respond("online", turn):
                 core.dispatch(event)
-            assert core.wait_idle()
+            # v2 may serialize a repair strategy and a separate memory job.
+            # This waits for the queue; each job retains its 20 s hard deadline.
+            assert core.wait_idle(50)
         assert core.sessions["online"].state.pending_offer
         assert all("<<state" not in event.text for event in port.events)
         assert not core.store.query("SELECT id FROM turns WHERE output_status='error'")
         core.on_session_end("online", "online_test")
-        assert core.wait_idle()
+        assert core.wait_idle(50)
         assert core.store.query("SELECT status FROM end_tasks")[0]["status"] == "done"
         assert core.store.query("SELECT summary FROM sessions")[0]["summary"]
     finally:

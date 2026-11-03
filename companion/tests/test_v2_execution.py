@@ -5,7 +5,7 @@ import threading
 from companion.adapters.output import RecordingOutputPort
 from companion.adapters.xiaozhi.output import XiaozhiOutputPort
 from companion.core.api import CompanionCore
-from companion.core.models import SessionState
+from companion.core.models import SessionState, TurnSignals
 from companion.llm.fake import FakeLLM
 from test_device_output import FakeSpeech, FakeTransport, event
 from test_v2_cognition import input_turn
@@ -197,5 +197,89 @@ def test_v2_13_prefetch_does_not_change_consent_without_started(config, store):
         core.sessions["s"].state.pending_offer.active = False
         input_turn(core, "好，你说")
         assert core.sessions["s"].state.stage.value != "action"
+    finally:
+        core.close()
+
+
+def test_v2_first_packet_metric_survives_upstream_counter_reset(monkeypatch):
+    import sys
+    import types
+
+    from companion.adapters.xiaozhi.output import XiaozhiTransport
+
+    connection = types.SimpleNamespace(audio_flow_control={"packet_count": 100})
+    sent, measurements = [], []
+
+    async def send(conn, packets):
+        if isinstance(packets, bytes):
+            conn.audio_flow_control = {"packet_count": 1}
+            sent.append(packets)
+
+    async def noop(*args):
+        pass
+
+    module = types.ModuleType("core.handle.sendAudioHandle")
+    module.sendAudio, module.send_tts_message = send, noop
+    module._wait_for_audio_completion = noop
+    monkeypatch.setitem(sys.modules, "core.handle.sendAudioHandle", module)
+    transport = XiaozhiTransport(connection)
+    transport.metric = lambda event, metric: measurements.append(metric)
+    asyncio.run(transport.play([b"first"], "first"))
+    asyncio.run(transport.play([b"second"], "second"))
+    assert sent == [b"first", b"second"]
+    assert measurements == ["opus_first_packet_sent_ms"] * 2
+
+
+def test_v2_shutdown_stops_dispatch_and_retains_occupied_slot(config, store):
+    import pytest
+
+    config.settings.timing.shutdown_grace_s = 0.02
+    fake = FakeLLM()
+    fake.role_started["analysis"] = threading.Event()
+    fake.reasoner_release = threading.Event()
+    core = CompanionCore(config, store, fake)
+    core.bind_output("s", "u", RecordingOutputPort(core.on_playback_event))
+    try:
+        input_turn(core, "怎么办")
+        assert fake.role_started["analysis"].wait(2)
+        with pytest.raises(TimeoutError):
+            core.reasoner.close()
+        assert core.reasoner.closed and not core.reasoner.dispatcher.is_alive()
+        assert "u" in core.reasoner.active
+        assert core.reasoner.submit("u", "s", "periodic") is None
+    finally:
+        fake.reasoner_release.set()
+        assert core.reasoner.wait_idle(3)
+        core.close()
+
+
+def test_v2_17_same_target_failures_count_distinct_user_turns(config, store):
+    from companion.cognition.models import EventPayload
+
+    core = CompanionCore(config, store, FakeLLM())
+    core.bind_output("s", "u", RecordingOutputPort(core.on_playback_event))
+    try:
+        input_turn(core, "今天考试没考好")
+        state = core.sessions["s"].state
+        core.machine.offer(state, "action")
+        core.interactions.record(
+            state, "support_refused", "user_explicit", turn_id=state.latest_turn_id
+        )
+        # Duplicate delivery is idempotent and cannot count as two failures.
+        core.interactions.record(
+            state, "support_refused", "user_explicit", turn_id=state.latest_turn_id
+        )
+        assert not core.interactions.repeated_failure(state)
+        identifier = store.add_input(state, "second", "这个办法没用", "user", TurnSignals())
+        core.interactions.record(
+            state,
+            "explicit_feedback",
+            "user_explicit",
+            turn_id=identifier,
+            payload=EventPayload(attribution="unattributed", valence="negative"),
+        )
+        assert not core.interactions.repeated_failure(state)
+        core.interactions.record(state, "support_refused", "user_explicit", turn_id=identifier)
+        assert core.interactions.repeated_failure(state)
     finally:
         core.close()

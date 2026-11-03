@@ -1,6 +1,7 @@
 """Session orchestration. Model and playback I/O never owns dialogue state."""
 
 import logging
+import sqlite3
 import threading
 import time
 import uuid
@@ -11,8 +12,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Protocol
 from zoneinfo import ZoneInfo
-
-from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from companion.llm.client import LLMClient
 from companion.store import Store
@@ -63,6 +62,8 @@ class SessionRuntime:
     responded: set[int] = field(default_factory=set)
     risk_deliveries: set[tuple[int, str, str, str]] = field(default_factory=set)
     closing_counted: set[int] = field(default_factory=set)
+    persistence_failed: bool = False
+    risk_reviews: set[int] = field(default_factory=set)
 
 
 class CompanionCore:
@@ -97,11 +98,6 @@ class CompanionCore:
         self.cognition = Cognition(self)
         self.reasoner = self.cognition.scheduler
         self.interactions = Interactions(self, self.cognition.memory)
-        self.templates = Environment(
-            loader=FileSystemLoader(config.directory / "prompts"),
-            undefined=StrictUndefined,
-            autoescape=False,
-        )
         if recover:
             for row in store.recover():
                 state = SessionState.model_validate_json(row["state"])
@@ -150,6 +146,30 @@ class CompanionCore:
         signals: TurnSignals,
         kind: InputKind = "user",
     ) -> int:
+        runtime = self.sessions[session_id]
+        if runtime.persistence_failed:
+            raise RuntimeError("Session stopped after a persistence failure; reconnect")
+        previous_snapshot = runtime.snapshot
+        try:
+            return self._on_input(session_id, input_id, text, signals, kind)
+        except sqlite3.Error:
+            with self.user_lock(runtime.state.user_key), runtime.lock:
+                runtime.snapshot = previous_snapshot
+                runtime.persistence_failed = True
+                for cancel in runtime.cancels.values():
+                    cancel.set()
+                if runtime.port:
+                    runtime.port.cancel_before(session_id, runtime.state.generation + 1)
+            raise
+
+    def _on_input(
+        self,
+        session_id: str,
+        input_id: str,
+        text: str,
+        signals: TurnSignals,
+        kind: InputKind = "user",
+    ) -> int:
         if (
             kind not in ("user", "wake", "idle_end")
             or not input_id
@@ -173,6 +193,7 @@ class CompanionCore:
                     return existing["id"]
                 for cancel in runtime.cancels.values():
                     cancel.set()
+                self.interactions.cancelling(state, "new_input")
                 if state.mode == "exercise":
                     state.policy_revision += 1
                     plan_event = runtime.outputs.get(state.active_plan_id or "")
@@ -238,11 +259,30 @@ class CompanionCore:
                                 "stage_proposal": None,
                             }
                         )
+                    if policy.selection_reason == "verified" or policy.active_boundaries:
+                        runtime.snapshot = runtime.snapshot.model_copy(
+                            update={
+                                "allowed_cards": tuple(
+                                    c
+                                    for c in runtime.snapshot.allowed_cards
+                                    if c in policy.allowed_action_ids
+                                ),
+                                "preferred_card": runtime.snapshot.preferred_card
+                                if runtime.snapshot.preferred_card in policy.allowed_action_ids
+                                else None,
+                            }
+                        )
                     result = self.machine.apply_rules(state, text, signals, runtime.snapshot)
                     directive, triggers = (
                         result.directive,
                         tuple(dict.fromkeys((*control_triggers, *result.trigger_reasons))),
                     )
+                    if (
+                        policy.active_boundaries or any(a.kind == "no_advice" for a in policy.avoid)
+                    ) and directive in ("action_offer", "exercise_offer", "resume_offer"):
+                        state.pending_offer = None
+                        self.machine.move(state, Stage.explore)
+                        directive = None
                     if control_changed and not triggers:
                         triggers = ("boundary",)
                     if (
@@ -350,6 +390,9 @@ class CompanionCore:
                 text,
                 previous,
                 lambda result, elapsed: self._risk_result(session_id, turn_id, result, elapsed),
+                usage_callback=lambda usage: self.record_usage(
+                    session_id, turn_id, "risk_usage", usage
+                ),
             )
             with self.user_lock(runtime.state.user_key), runtime.lock:
                 runtime.risk_futures[turn_id] = future
@@ -362,6 +405,15 @@ class CompanionCore:
         ):
             self.reasoner.submit(runtime.state.user_key, session_id, "interaction_memory", "memory")
         return turn_id
+
+    def record_usage(self, session_id, turn_id, name, usage):
+        runtime = self.sessions.get(session_id)
+        if runtime is None:
+            return
+        with self.user_lock(runtime.state.user_key), runtime.lock:
+            if runtime.state.user_key not in self.purging and turn_id in runtime.metrics:
+                runtime.metrics[turn_id][name] = usage.model_dump()
+                self.store.update_turn(turn_id, latency={name: usage.model_dump()})
 
     def _risk_result(self, session_id: str, turn_id: int, risk: RiskResult, elapsed: float) -> None:
         with self.registry_lock:
@@ -439,6 +491,30 @@ class CompanionCore:
         if risk.level == "watch" and active and runtime.state.mode != "crisis":
             self.reasoner.submit(runtime.state.user_key, session_id, "risk_watch")
 
+    def request_risk_review(self, session_id, turn_id):
+        runtime = self.sessions.get(session_id)
+        if runtime is None:
+            return
+        with self.user_lock(runtime.state.user_key), runtime.lock:
+            if (
+                runtime.state.lifecycle != "active"
+                or runtime.state.mode == "crisis"
+                or turn_id in runtime.risk_reviews
+                or runtime.state.user_key in self.purging
+            ):
+                return
+            runtime.risk_reviews.add(turn_id)
+        rows = self.store.query(
+            "SELECT text FROM turns WHERE id=? AND session_id=? AND role='user'",
+            (turn_id, session_id),
+        )
+        if rows:
+            self.risk.classify(
+                rows[0]["text"],
+                [],
+                lambda result, elapsed: self._risk_result(session_id, turn_id, result, elapsed),
+            )
+
     def _notify_risk(self, event_id: int, risk: RiskResult) -> None:
         url = self.config.settings.alert_webhook
         if not url:
@@ -500,6 +576,7 @@ class CompanionCore:
         state = runtime.state
         return (
             state.lifecycle == "active"
+            and not runtime.persistence_failed
             and state.mode != "crisis"
             and state.generation == context.generation
             and not runtime.cancels[context.turn_id].is_set()
@@ -571,6 +648,23 @@ class CompanionCore:
                     )
                 else:
                     followup = self.store.reserve_followup(state.user_key, session_id, self.today())
+                    if followup:
+                        from companion.cognition.policy import effective_boundaries
+
+                        boundaries = effective_boundaries(
+                            self.cognition.memory.retrieve(state, "", proactive=True)
+                        )
+                        if any(
+                            b.target == "current_topic"
+                            or (b.target and b.target in followup["content"])
+                            for b in boundaries
+                        ):
+                            with self.store.transaction() as db:
+                                db.execute(
+                                    "UPDATE followups SET status='pending',reservation_session_id=NULL WHERE id=? AND status='reserved'",
+                                    (followup["id"],),
+                                )
+                            followup = None
                     text = (
                         self.config.persona["followup"].format(content=followup["content"])
                         if followup
@@ -742,69 +836,77 @@ class CompanionCore:
             return
         should_end = False
         with self.user_lock(runtime.state.user_key), runtime.lock:
-            state = runtime.state
-            output = runtime.outputs.get(event.output_id)
-            if not output or event.generation != state.generation or state.lifecycle != "active":
-                return
-            stored = self.store.query(
-                "SELECT status FROM outputs WHERE output_id=?", (event.output_id,)
-            )
-            if not stored or stored[0]["status"] in ("completed", "cancelled", "failed"):
-                return
-            if event.status == "segment":
-                if output.type == "exercise_plan" and event.segment_index is not None:
-                    state.resume_index = event.segment_index
-                return
-            self.interactions.playback(state, output, event)
-            self.store.output_status(event.output_id, event.status)
-            if event.status == "started":
+            with self.store.transaction():
+                state = runtime.state.model_copy(deep=True)
+                output = runtime.outputs.get(event.output_id)
                 if (
-                    output.offer_id
-                    and state.pending_offer
-                    and output.offer_id == state.pending_offer.offer_id
+                    not output
+                    or event.generation != state.generation
+                    or state.lifecycle != "active"
                 ):
-                    state.pending_offer.active = True
-                if output.followup_id:
-                    self.store.mark_followup_asked(output.followup_id, state.session_id)
-                if output.purpose == "rest":
-                    state.rest_reminded = True
-            elif event.status == "completed":
-                context = runtime.contexts[output.turn_id]
-                if (
-                    context.stage == Stage.closing
-                    and output.purpose == "reply"
-                    and output.turn_id not in runtime.closing_counted
-                ):
-                    runtime.closing_counted.add(output.turn_id)
-                    state.closing_turns += 1
-                if output.purpose == "onboarding":
-                    self.store.mark_onboarding(state.user_key)
-                if (
-                    output.purpose in ("onboarding", "opening")
-                    and state.mode == "normal"
-                    and state.stage == Stage.opening
-                ):
-                    self.machine.move(state, Stage.explore)
-                if output.type == "exercise_plan" and state.active_plan_id == output.output_id:
-                    state.active_plan_id = None
-                    state.mode = "normal"
-                    state.policy_revision += 1
-                    state.resume_index = 0
-                    self.machine.move(state, Stage.comfort)
-                should_end = output.purpose == "idle_end"
-            elif event.status in ("failed", "cancelled"):
-                if output.type == "exercise_plan" and state.active_plan_id == output.output_id:
-                    state.active_plan_id = None
-                    state.mode = "normal"
-                if output.offer_id and state.pending_offer and not state.pending_offer.active:
-                    state.pending_offer = None
-                if output.followup_id and stored[0]["status"] == "submitted":
-                    with self.store.transaction() as db:
-                        db.execute(
-                            "UPDATE followups SET status='pending',reservation_session_id=NULL WHERE id=? AND status='reserved'",
-                            (output.followup_id,),
-                        )
-            self.store.save_state(state)
+                    return
+                stored = self.store.query(
+                    "SELECT status FROM outputs WHERE output_id=?", (event.output_id,)
+                )
+                if not stored or stored[0]["status"] in ("completed", "cancelled", "failed"):
+                    return
+                if event.status == "segment":
+                    if output.type == "exercise_plan" and event.segment_index is not None:
+                        state.resume_index = event.segment_index
+                        self.store.save_state(state)
+                        runtime.state = state
+                    return
+                self.interactions.playback(state, output, event)
+                self.store.output_status(event.output_id, event.status)
+                if event.status == "started":
+                    if (
+                        output.offer_id
+                        and state.pending_offer
+                        and output.offer_id == state.pending_offer.offer_id
+                    ):
+                        state.pending_offer.active = True
+                    if output.followup_id:
+                        self.store.mark_followup_asked(output.followup_id, state.session_id)
+                    if output.purpose == "rest":
+                        state.rest_reminded = True
+                elif event.status == "completed":
+                    context = runtime.contexts[output.turn_id]
+                    if (
+                        context.stage == Stage.closing
+                        and output.purpose == "reply"
+                        and output.turn_id not in runtime.closing_counted
+                    ):
+                        runtime.closing_counted.add(output.turn_id)
+                        state.closing_turns += 1
+                    if output.purpose == "onboarding":
+                        self.store.mark_onboarding(state.user_key)
+                    if (
+                        output.purpose in ("onboarding", "opening")
+                        and state.mode == "normal"
+                        and state.stage == Stage.opening
+                    ):
+                        self.machine.move(state, Stage.explore)
+                    if output.type == "exercise_plan" and state.active_plan_id == output.output_id:
+                        state.active_plan_id = None
+                        state.mode = "normal"
+                        state.policy_revision += 1
+                        state.resume_index = 0
+                        self.machine.move(state, Stage.comfort)
+                    should_end = output.purpose == "idle_end"
+                elif event.status in ("failed", "cancelled"):
+                    if output.type == "exercise_plan" and state.active_plan_id == output.output_id:
+                        state.active_plan_id = None
+                        state.mode = "normal"
+                    if output.offer_id and state.pending_offer and not state.pending_offer.active:
+                        state.pending_offer = None
+                    if output.followup_id and stored[0]["status"] == "submitted":
+                        with self.store.transaction() as db:
+                            db.execute(
+                                "UPDATE followups SET status='pending',reservation_session_id=NULL WHERE id=? AND status='reserved'",
+                                (output.followup_id,),
+                            )
+                self.store.save_state(state)
+            runtime.state = state
         if should_end:
             self.on_session_end(event.session_id, "idle_timeout")
 
@@ -816,6 +918,7 @@ class CompanionCore:
             state = runtime.state
             if state.lifecycle != "active" or generation != state.generation:
                 return
+            self.interactions.cancelling(state, reason)
             state.generation += 1
             state.state_revision += 1
             for cancel in runtime.cancels.values():
@@ -840,6 +943,7 @@ class CompanionCore:
             state = runtime.state
             if state.lifecycle != "active":
                 return
+            self.interactions.cancelling(state, reason)
             state.lifecycle = "ending"
             state.policy_revision += 1
             state.active_support_plan_id = None

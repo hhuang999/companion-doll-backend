@@ -42,7 +42,11 @@ class RiskDetector:
         return RiskResult()
 
     def classify(
-        self, text: str, context: list[str], callback: Callable[[RiskResult, float], None]
+        self,
+        text: str,
+        context: list[str],
+        callback: Callable[[RiskResult, float], None],
+        usage_callback=None,
     ) -> Future:
         started = time.monotonic()
         deadline = started + self.config.settings.timing.risk_total_timeout_ms / 1000
@@ -86,6 +90,7 @@ class RiskDetector:
                     temperature=0,
                     max_tokens=180,
                     accept_late_high=True,
+                    usage_callback=usage_callback,
                 )
                 result = result.model_copy(update={"source": "model"})
             except Exception as error:

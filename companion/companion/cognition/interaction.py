@@ -26,6 +26,13 @@ class Interactions:
         evidence=(),
         suffix="",
     ):
+        support_plan_id = state.active_support_plan_id
+        if output:
+            policies = self.store.query(
+                "SELECT data FROM turn_policies WHERE turn_id=?", (output.turn_id,)
+            )
+            if policies:
+                support_plan_id = json.loads(policies[0]["data"]).get("effective_support_plan_id")
         event = InteractionEvent(
             event_id=uuid.uuid4().hex,
             idempotency_key=f"{state.session_id}:{turn_id}:{output.output_id if output else ''}:{event_type}:{suffix}",
@@ -33,8 +40,12 @@ class Interactions:
             session_id=state.session_id,
             turn_id=turn_id,
             output_id=output.output_id if output else None,
-            offer_id=output.offer_id if output else None,
-            support_plan_id=state.active_support_plan_id,
+            offer_id=output.offer_id
+            if output
+            else state.pending_offer.offer_id
+            if state.pending_offer
+            else None,
+            support_plan_id=support_plan_id,
             event_type=event_type,
             origin=origin,
             payload=payload or EventPayload(),
@@ -50,7 +61,7 @@ class Interactions:
         )
         boundary = self.memory.explicit_boundary(text, state, turn_id)
         correction = machine.matches("correct", text) or bool(
-            re.search(r"记错|说错|更正|不是.*是", text)
+            re.search(r"你(?:记|说)错|(?:刚才|之前)(?:我)?说错了|更正|记错了|不是.*是", text)
         )
         refusal = machine.matches("refuse", text) or bool(re.search(r"别再.*建议|不要.*教我", text))
         negative = bool(re.search(r"(?:刚才|这个|这样|那个).*(?:没用|没帮助|不舒服|不喜欢)", text))
@@ -92,15 +103,18 @@ class Interactions:
                     (state.user_key,),
                 )
         if refusal:
+            refused_card = state.card_in_use or (
+                state.pending_offer.target_id if state.pending_offer else None
+            )
+            if refused_card in self.core.config.cards:
+                state.cards_refused.add(refused_card)
             self.record(
                 state,
                 "support_refused",
                 "user_explicit",
                 turn_id=turn_id,
                 evidence=evidence,
-                payload=EventPayload(
-                    text=text[:500], action_id=state.card_in_use, valence="negative"
-                ),
+                payload=EventPayload(text=text[:500], action_id=refused_card, valence="negative"),
             )
             triggers.append("refusal")
         if positive or negative:
@@ -140,6 +154,8 @@ class Interactions:
                 )
                 self.memory.commit((candidate,), state, turn_id)
                 triggers.append("feedback")
+        if self.repeated_failure(state):
+            triggers.append("repeated_failure")
         nickname = re.search(
             r"(?:我叫|叫我|我的名字(?:是|叫))([\u4e00-\u9fffA-Za-z]{1,12})(?:[，。！!]|$)", text
         )
@@ -176,6 +192,27 @@ class Interactions:
                     machine.move(state, Stage.explore)
         return tuple(triggers), control
 
+    def repeated_failure(self, state):
+        """Two explicit failures on the same attributable target in four user turns."""
+        rows = self.store.query(
+            "SELECT data FROM interaction_events WHERE session_id=? AND turn_id IN "
+            "(SELECT id FROM turns WHERE session_id=? AND role='user' ORDER BY id DESC LIMIT 4) "
+            "AND event_type IN ('support_refused','user_correction','explicit_feedback')",
+            (state.session_id, state.session_id),
+        )
+        failures = {}
+        for row in rows:
+            event = json.loads(row["data"])
+            if event["event_type"] == "explicit_feedback" and (
+                event["payload"]["attribution"] != "explicit"
+                or event["payload"]["valence"] != "negative"
+            ):
+                continue
+            target = event["offer_id"] or event["support_plan_id"]
+            if target:
+                failures.setdefault(target, set()).add(event["turn_id"])
+        return any(len(turns) >= 2 for turns in failures.values())
+
     def playback(self, state, output, event):
         self.record(
             state,
@@ -197,3 +234,29 @@ class Interactions:
                     detail="server estimate; no device ACK or benefit inference",
                 ),
             )
+
+    def cancelling(self, state, reason):
+        from companion.core.models import OutputEvent
+
+        for row in self.store.query(
+            "SELECT data FROM outputs WHERE session_id=? AND status IN ('submitted','started')",
+            (state.session_id,),
+        ):
+            output = OutputEvent.model_validate_json(row["data"])
+            self.record(
+                state,
+                "playback_cancelled",
+                "deterministic_rule",
+                turn_id=output.turn_id,
+                output=output,
+                payload=EventPayload(attribution="execution", detail=reason),
+            )
+            if output.type == "exercise_plan":
+                self.record(
+                    state,
+                    "exercise_interrupted",
+                    "deterministic_rule",
+                    turn_id=output.turn_id,
+                    output=output,
+                    payload=EventPayload(attribution="execution", detail=reason),
+                )

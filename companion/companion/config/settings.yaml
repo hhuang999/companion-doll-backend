@@ -25,6 +25,24 @@ dialogue:
   accepted_wait_turns: 2
   accepted_wait_s: 30
 pools: {risk_workers: 4, reasoner_workers: 2}
+cognition:
+  model_workers: 2
+  max_pending: 256
+  queue_timeout_s: 30
+  plan_ttl_s: 120
+  plan_turn_delta: 4
+  context_tokens: 1200
+  analysis_model: qwen-flash
+  brief_model: qwen-flash
+  planner_model: qwen-plus
+  critic_model: qwen-flash
+  delta_model: qwen-flash
+  memory_model: qwen-plus
+  end_model: qwen-plus
+  routine: {max_calls: 4, output_tokens: 2400, total_tokens: 16000}
+  deliberation: {max_calls: 8, output_tokens: 6000, total_tokens: 32000}
+  memory: {max_calls: 2, output_tokens: 1800, total_tokens: 16000}
+  end_consolidation: {max_calls: 2, output_tokens: 2400, total_tokens: 16000}
 storage: {db_path: data/companion.db, busy_timeout_ms: 5000}
 tts: {model: gpt-4o-mini-tts, voice: coral, response_format: wav}
 alert_webhook: null

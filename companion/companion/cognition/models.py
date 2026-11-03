@@ -157,6 +157,17 @@ class DeltaResult(Contract):
 class Consolidation(Contract):
     memory_candidates: tuple[MemoryCandidate, ...] = Field(default=(), max_length=6)
     summary: str | None = Field(default=None, max_length=400)
+    followups: tuple["FollowupCandidate", ...] = Field(default=(), max_length=2)
+
+
+class FollowupCandidate(Contract):
+    content: str = Field(max_length=200)
+    due_date: str
+    importance: int = Field(default=5, ge=1, le=10)
+    evidence: tuple[EvidenceRef, ...] = Field(min_length=1, max_length=3)
+
+
+Consolidation.model_rebuild()
 
 
 class EventPayload(Contract):
@@ -210,6 +221,8 @@ class TurnPolicyFrame(Contract):
     effective_support_plan_version: int | None = None
     objective: Objective = "listen"
     response_guidance: tuple[str, ...] = ()
+    avoid: tuple[Avoid, ...] = ()
+    open_question: str | None = None
     active_boundaries: tuple[MemoryCandidate, ...] = ()
     allowed_action_ids: tuple[str, ...] = ()
     memory_projection: MemoryBundle = Field(default_factory=MemoryBundle)
@@ -239,6 +252,7 @@ class CognitiveJob(Contract):
     started_at: datetime | None = None
     finished_at: datetime | None = None
     error: str | None = None
+    budget_limits: dict[str, int | float] = Field(default_factory=dict)
 
 
 class Usage(Contract):

@@ -56,6 +56,7 @@ class AihubmixClient:
         **params: object,
     ) -> Iterator[str]:
         first_timeout = float(params.pop("first_token_timeout_s", 2.5))
+        usage_callback = params.pop("usage_callback", None)
         remaining = deadline - time.monotonic()
         if remaining <= 0 or cancel.is_set():
             return
@@ -65,6 +66,7 @@ class AihubmixClient:
             model=model,
             messages=messages,
             stream=True,
+            stream_options={"include_usage": True},
             extra_body={"enable_thinking": self.settings.enable_thinking}
             if model.startswith("qwen")
             else {},
@@ -72,6 +74,14 @@ class AihubmixClient:
             **params,
         ) as stream:
             for chunk in stream:
+                if usage_callback and chunk.usage:
+                    usage_callback(
+                        Usage(
+                            input_tokens=chunk.usage.prompt_tokens,
+                            output_tokens=chunk.usage.completion_tokens,
+                            source="provider",
+                        )
+                    )
                 now = time.monotonic()
                 if cancel.is_set():
                     return

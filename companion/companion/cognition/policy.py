@@ -55,6 +55,8 @@ def build_turn_policy(state, plan, bundle, all_items, *, now=None):
     objective = "quiet" if state.stage.value == "quiet" else "listen"
     guidance = ()
     actions = ()
+    avoid = ()
+    question = None
     if not reason:
         checked = plan.checked_through_user_index >= state.user_turns
         objective = plan.objective if checked else "listen"
@@ -65,6 +67,19 @@ def build_turn_policy(state, plan, bundle, all_items, *, now=None):
         )
         reason = "verified" if checked else "unchecked_delta_non_action"
         actions = tuple(a.action_id for a in plan.candidate_actions) if checked else ()
+        if checked:
+            avoid, question = plan.avoid, plan.open_question
+            if any(a.kind == "no_advice" for a in avoid):
+                actions = ()
+                if objective not in NON_ACTION:
+                    objective = "listen"
+            actions = tuple(
+                identifier
+                for identifier in actions
+                if not any(
+                    a.kind == "no_repeat_offer" and a.target in (None, identifier) for a in avoid
+                )
+            )
     if boundaries:
         actions = ()
         if objective not in NON_ACTION:
@@ -78,6 +93,8 @@ def build_turn_policy(state, plan, bundle, all_items, *, now=None):
         else None,
         objective=objective,
         response_guidance=guidance,
+        avoid=avoid,
+        open_question=question,
         active_boundaries=tuple(
             MemoryCandidate.model_validate(b.model_dump(include=set(MemoryCandidate.model_fields)))
             for b in boundaries
@@ -95,6 +112,8 @@ def prompt_projection(frame, budget=1200):
     value = {
         "objective": frame.objective,
         "guidance": frame.response_guidance,
+        "avoid": [a.model_dump() for a in frame.avoid],
+        "open_question": frame.open_question,
         "selection": frame.selection_reason,
         "boundaries": [
             {"rule": b.boundary_rule, "target": b.target, "scope": b.scope}

@@ -144,9 +144,9 @@ class CognitiveScheduler:
     def _dispatch(self):
         while True:
             with self.condition:
-                self._refill_ends()
-                if self.closed and not self.pending and not self.active:
+                if self.closed:
                     return
+                self._refill_ends()
                 choices = [
                     (key, item)
                     for key, item in self.pending.items()
@@ -220,7 +220,7 @@ class CognitiveScheduler:
                     + " LIMIT 1",
                     (user_key,) if user_key else (),
                 )
-                if not busy and not durable:
+                if not busy and (not durable or self.closed):
                     return True
                 remaining = deadline - time.monotonic()
                 if remaining <= 0:
@@ -230,12 +230,16 @@ class CognitiveScheduler:
     def close(self):
         if not self.wait_idle(self.settings.timing.shutdown_grace_s):
             with self.condition:
+                self.closed = True
                 for item in self.active.values():
                     item.cancel.set()
                 for item in self.pending.values():
                     if item.job.kind != "end_consolidation":
                         self.store.finish_job(item.job.job_id, "cancelled", error="shutdown")
                 self.pending.clear()
+                self.condition.notify_all()
+            self.dispatcher.join(timeout=1)
+            self.pool.shutdown(wait=False)
             # HTTP requests retain their real occupied slots until they exit.
             raise TimeoutError(
                 "Shutdown grace elapsed; durable ends retained, requests still occupied"
