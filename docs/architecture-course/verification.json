@@ -1,0 +1,81 @@
+{
+  "views": [
+    {
+      "view": "overview",
+      "title": "课程升级 · 实时通路与模块协作",
+      "revision": "38fb8cfa3379919b0fa322e4f582fbe111239852",
+      "components": 12,
+      "connections": 14,
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "html_sha256": "23797085f25ac33ebc372b7922dd4c247e175b454e091df788a9423f3d7905e6",
+      "visual_review": "Actual Ego browser screenshot inspected; theme and zoom exercised. Source-only repin retains reviewed layout."
+    },
+    {
+      "view": "content",
+      "title": "课程升级 · 证据、策略与反馈闭环",
+      "revision": "38fb8cfa3379919b0fa322e4f582fbe111239852",
+      "components": 12,
+      "connections": 11,
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "html_sha256": "a368473f918b0b5012763192fa437f18841062ed28ffa3f1e634660bd3ba5523",
+      "visual_review": "Actual Ego browser screenshot inspected; theme and zoom exercised. Source-only repin retains reviewed layout."
+    },
+    {
+      "view": "collaboration",
+      "title": "课程升级 · 有限协作与按产物发布",
+      "revision": "38fb8cfa3379919b0fa322e4f582fbe111239852",
+      "components": 11,
+      "connections": 12,
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "html_sha256": "598e3fb01a7ad6ab486f6ee23424e7c0d4b3187a2d37d78a625651d716d79db3",
+      "visual_review": "Actual Ego browser screenshot inspected; theme and zoom exercised. Source-only repin retains reviewed layout."
+    },
+    {
+      "view": "memory",
+      "title": "课程升级 · 关系记忆、范围与恢复",
+      "revision": "38fb8cfa3379919b0fa322e4f582fbe111239852",
+      "components": 10,
+      "connections": 9,
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "html_sha256": "a184fb812d8737e2b79b30e59cd368bef8e66b0bc1e8db7b119237afa869ee38",
+      "visual_review": "Actual Ego browser screenshot inspected; theme and zoom exercised. Source-only repin retains reviewed layout."
+    },
+    {
+      "view": "audio",
+      "title": "课程升级 · 小智语音流水与独立接管",
+      "revision": "38fb8cfa3379919b0fa322e4f582fbe111239852",
+      "components": 10,
+      "connections": 10,
+      "gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "html_sha256": "861cbc25c200649eddb5be89f25802fe47163fa3dd819fb42c9d5694d4058777",
+      "visual_review": "Actual Ego browser screenshot inspected; theme and zoom exercised. Source-only repin retains reviewed layout."
+    }
+  ],
+  "overview_note": "One marked crossover retained after wider placement failed desktop readability; arrows remain distinguishable.",
+  "postprocess": "Removed generator trailing whitespace only; layout and runtime unchanged."
+}

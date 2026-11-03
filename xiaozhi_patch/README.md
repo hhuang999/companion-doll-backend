@@ -2,6 +2,8 @@
 
 固定上游：[xiaozhi-esp32-server / 92337881](https://github.com/xinnan-tech/xiaozhi-esp32-server/tree/92337881a7b6553614b47e137a774d02bf40512f)。六处接入已获负责人批准，并应用到本地 `vendor/xiaozhi-esp32-server`：LLM provider、Memory provider、ASR 标签、输入登记、abort 通知、wake 来源。
 
+新增 `access.patch` 在连接认证和日志处补充独立凭据检查，原六处核心 hook 保留。应用工具同时核验两份补丁且幂等。
+
 ## 本机启动
 
 在项目根目录打开 PowerShell：
@@ -14,7 +16,7 @@
 
 WebSocket 地址为 `ws://127.0.0.1:8000/xiaozhi/v1/`，HTTP 端口为 8003。首次导入 FunASR 可能需要数分钟，出现 `server listening on 127.0.0.1:8000` 后再连接。服务以 Ctrl+C 停止。
 
-接入真实设备时，在 `vendor/xiaozhi-esp32-server/main/xiaozhi-server/data/.config.yaml` 中将 `server.ip` 改为设备可访问的网卡地址，并将 `server.websocket` 改为对应 LAN 地址。设备每次连接应发送稳定的 `device-id` 请求头；连接会生成独立 session_id。当前默认仅监听本机。
+接入真实设备时，在 `vendor/xiaozhi-esp32-server/main/xiaozhi-server/data/.config.yaml` 中将 `server.ip` 改为设备可访问的网卡地址，并将 `server.websocket` 改为对应 LAN 地址。设备每次连接发送稳定的 `device-id` 和独立 Bearer token；服务端 registry 决定 user_key，连接生成独立 session_id。完整凭据、协议和测量清单见 [小智交接](../companion/docs/XIAOZHI_HANDOFF.md)。当前默认仅监听本机。
 
 ## 可重复安装
 
@@ -39,9 +41,9 @@ ASR 使用 [FunAudioLLM/SenseVoiceSmall](https://huggingface.co/FunAudioLLM/Sens
 
 ## 配置与行为
 
-核心配置独立复制到 `data/xiaozhi-config`，数据库为 `data/xiaozhi.db`，与文字入口分开。安装器保留已有配置；修改卡片、模板或模型时应同步此目录，再重新生成固定音频。LLM 与 Memory 的 project_root、config_dir 必须一致。
+核心配置独立复制到 `data/xiaozhi-config`，数据库为 `data/xiaozhi.db`，与文字入口分开。安装器通过 upgrade_config 三方合并默认值、保留定制并备份；修改内容后重新准备并绑定音频。LLM 与 Memory 的 project_root、config_dir 必须一致。
 
-v2 升级仍使用这六处接入：Core 默认启用后台角色协作、范围记忆和有界下一句音频预取。已有配置需同步新增角色提示词、Talker / stages 与 `settings.cognition`，保留独立数据库路径和自定义内容；具体命令、迁移和测量语义见 [v2 运行手册](../companion/docs/V2_OPERATIONS.md)。40 个本机语音样本及未达项见 [v2 验证报告](../companion/docs/VALIDATION.md)，不将服务端 completed 当作设备 ACK。
+v2 升级仍使用这六处接入：Core 默认启用后台角色协作、范围记忆和有界下一句音频预取。已有配置需同步新增角色提示词、Talker / stages 与 `settings.cognition`，保留独立数据库路径和自定义内容；具体命令、迁移和测量语义见 [v2 运行手册](../companion/docs/V2_OPERATIONS.md)。旧 v2 的40个本机语音样本是历史记录；本轮结果及未达项见 [v2 验证报告](../companion/docs/VALIDATION.md)，不将服务端 completed 当作设备 ACK。
 
 `Intent: nointent` 避免旧工具路由介入。开启 greeting、关闭唤醒缓存，使真实唤醒进入 Companion；关闭停止提示音，保留练习静音。空闲结束时间为 120 秒。上游 prompt 使用仅含 base_prompt 的模板，避免额外位置 / 天气查询；实际模型提示由 Companion 管理。
 
@@ -57,4 +59,4 @@ vendor/xiaozhi-venv/Scripts/python.exe scripts/probe_xiaozhi.py
 
 探针检查 hello、首次唤醒、普通回复、危机缓存音频、abort 后无旧音频、同一设备重连、官方中文样本的真实 Opus → SenseVoice → 回复链路，以及数据库开场标记、风险记录和结束分析。报告位于 `artifacts/xiaozhi-integration.json`；版本化证据与限制见 [验证报告](../companion/docs/VALIDATION.md)。
 
-这些测试使用本机协议客户端。started / completed 是服务端节奏发送估计；ESP32 / 网关真机首响、实际停声、练习静音和真实哭声音频仍需设备实测。正式内容审核及性能验收门槛保持不变。
+这些测试使用本机协议客户端。started / completed 是服务端节奏发送估计；ESP32 / 网关真机首响、实际停声、练习静音和真实哭声音频仍需设备实测。课程准入按新版内容来源、自动核查、真实回放与资源回执执行，详见 CONTENT；硬件检查交给小智同学。

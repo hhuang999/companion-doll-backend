@@ -1,0 +1,639 @@
+{
+  "revision": "15c1fe235fcaa8c594da472296729dad879046f5",
+  "catalog_version": "course-1.0",
+  "cards": [
+    {
+      "id": "kind_self_talk",
+      "name": "把苛责换成准确温和的一句话",
+      "targets": {
+        "pressure_types": [
+          "self",
+          "social_evaluative"
+        ],
+        "pathways": [
+          "self_criticism"
+        ]
+      },
+      "protocol": {
+        "version": "course-1.0",
+        "adaptation": "原创中文短步骤；仅借用研究机制，未验证本改编的效果。",
+        "burden": "一次一小步，最多三轮；可以只听、跳过或结束。",
+        "permission": "先明确询问是否愿意试；拒绝和撤回立即停止。",
+        "stop": "用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。",
+        "followup": "只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。",
+        "feedback_limits": "只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。",
+        "mechanism": "将一次表现与整个人的价值分开，可借对朋友的说法检查双重标准。",
+        "evidence_ids": [
+          "E07",
+          "E09"
+        ],
+        "minimum_information": [
+          "用户自己说出的苛责内容"
+        ],
+        "prerequisites": [
+          "用户愿意尝试换一句说法",
+          "不是正在遭受现实威胁"
+        ],
+        "excluded_contexts": [
+          "unsafe_relationship"
+        ],
+        "keywords": [
+          "没用",
+          "不够好",
+          "完美",
+          "丢脸",
+          "比不上"
+        ],
+        "counterexample": "用户被欺负时不能把外部伤害改写成用户想法有问题。",
+        "required_contexts": [],
+        "legacy_ids": []
+      },
+      "steps": [
+        "承接用户的那句自我评价，不评价长相、能力或价值高低。",
+        "邀请把同一句话换成对朋友也说得出口的准确说法；不强迫积极肯定。",
+        "接受用户自己的版本或拒绝，不要求相信新说法；可以就此停下。"
+      ],
+      "examples": [
+        "“这次没达到目标”会不会比“我整个人都不行”更贴近事实？"
+      ],
+      "not_when": [
+        "用户被欺负时不能把外部伤害改写成用户想法有问题。",
+        "当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断"
+      ],
+      "path": "companion/companion/config/cards/kind_self_talk.yaml"
+    },
+    {
+      "id": "S16",
+      "name": "从反复想转向具体的一步",
+      "targets": {
+        "pressure_types": [
+          "academic"
+        ],
+        "pathways": [
+          "rumination"
+        ]
+      },
+      "protocol": {
+        "version": "course-1.0",
+        "adaptation": "原创中文短步骤；仅借用研究机制，未验证本改编的效果。",
+        "burden": "一次一小步，最多三轮；可以只听、跳过或结束。",
+        "permission": "先明确询问是否愿意试；拒绝和撤回立即停止。",
+        "stop": "用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。",
+        "followup": "只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。",
+        "feedback_limits": "只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。",
+        "mechanism": "将抽象评价落到一个具体片段，再区分自己可以影响的一小步。",
+        "evidence_ids": [
+          "E06",
+          "E08"
+        ],
+        "minimum_information": [
+          "当前困扰的一件具体事；若已说明不重复询问"
+        ],
+        "prerequisites": [
+          "用户想试办法",
+          "问题可谈且不涉及创伤细节"
+        ],
+        "excluded_contexts": [
+          "unsafe_relationship"
+        ],
+        "keywords": [
+          "反复",
+          "一直想",
+          "作业",
+          "考试",
+          "卡住"
+        ],
+        "counterexample": "用户只想被听见时，不追问经过或要求下一步。",
+        "required_contexts": [],
+        "legacy_ids": [
+          "S16"
+        ]
+      },
+      "steps": [
+        "依据原话选一个具体片段；已明确时简短确认，不再问同样的事。",
+        "只区分一件自己可影响的小事，不能要求改变别人的行为。",
+        "用户愿意时共同选一个最小下一步；不愿行动就结束，不索取承诺。"
+      ],
+      "examples": [
+        "刚才最卡住的是那道题，还是想到成绩的时候？",
+        "只看这一小处就好，暂时不用解决全部。"
+      ],
+      "not_when": [
+        "用户只想被听见时，不追问经过或要求下一步。",
+        "当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断"
+      ],
+      "path": "companion/companion/config/cards/S16.yaml"
+    },
+    {
+      "id": "safe_communication",
+      "name": "练一句安全的表达",
+      "targets": {
+        "pressure_types": [
+          "relationship"
+        ],
+        "pathways": []
+      },
+      "protocol": {
+        "version": "course-1.0",
+        "adaptation": "原创中文短步骤；仅借用研究机制，未验证本改编的效果。",
+        "burden": "一次一小步，最多三轮；可以只听、跳过或结束。",
+        "permission": "先明确询问是否愿意试；拒绝和撤回立即停止。",
+        "stop": "用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。",
+        "followup": "只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。",
+        "feedback_limits": "只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。",
+        "mechanism": "先确认对象与时机是否安全，再草拟一句感受和请求；不自动发送。",
+        "evidence_ids": [
+          "E10",
+          "E05"
+        ],
+        "minimum_information": [
+          "想对谁表达什么",
+          "是否担心报复、泄露或伤害"
+        ],
+        "prerequisites": [
+          "用户想表达",
+          "用户说明对方相对安全且愿意谈"
+        ],
+        "excluded_contexts": [
+          "unsafe_relationship",
+          "no_private_space",
+          "bedtime"
+        ],
+        "keywords": [
+          "吵架",
+          "误会",
+          "解释",
+          "同桌",
+          "沟通"
+        ],
+        "counterexample": "有威胁或欺凌时不练劝和话术，改为寻找安全支持。",
+        "required_contexts": [
+          "safe_contact"
+        ],
+        "legacy_ids": []
+      },
+      "steps": [
+        "确认用户想表达的核心与安全时机；未知安全性只澄清，不劝去谈。",
+        "根据原话拟一句“发生这件事时我感到…，我希望…”；不替他人揣测动机。",
+        "让用户保留、改写或不使用这句话；草拟不等于已联系或关系改善。"
+      ],
+      "examples": [
+        "如果你觉得合适，可以只说：“刚才被打断时我有点难受，我想先讲完。”"
+      ],
+      "not_when": [
+        "有威胁或欺凌时不练劝和话术，改为寻找安全支持。",
+        "当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断"
+      ],
+      "path": "companion/companion/config/cards/safe_communication.yaml"
+    },
+    {
+      "id": "safe_support",
+      "name": "找到一个愿意尝试的现实支持入口",
+      "targets": {
+        "pressure_types": [
+          "relationship",
+          "academic",
+          "social_evaluative",
+          "future",
+          "self"
+        ],
+        "pathways": [
+          "loneliness"
+        ]
+      },
+      "protocol": {
+        "version": "course-1.0",
+        "adaptation": "原创中文短步骤；仅借用研究机制，未验证本改编的效果。",
+        "burden": "一次一小步，最多三轮；可以只听、跳过或结束。",
+        "permission": "先明确询问是否愿意试；拒绝和撤回立即停止。",
+        "stop": "用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。",
+        "followup": "只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。",
+        "feedback_limits": "只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。",
+        "mechanism": "把求助障碍说清楚，由用户选择安全的人或渠道及最小透露范围。",
+        "evidence_ids": [
+          "E04",
+          "E05",
+          "E13"
+        ],
+        "minimum_information": [
+          "用户是否想联系现实支持",
+          "担忧是评价、隐私、负担还是安全"
+        ],
+        "prerequisites": [
+          "用户愿意考虑现实支持",
+          "不默认任何亲属或老师安全"
+        ],
+        "excluded_contexts": [
+          "bedtime"
+        ],
+        "keywords": [
+          "孤独",
+          "没人",
+          "找谁",
+          "怕告诉",
+          "不敢说",
+          "求助"
+        ],
+        "counterexample": "明确拒绝联系的人不反复推；危急危险由独立风险通路立即接管。",
+        "required_contexts": [],
+        "legacy_ids": []
+      },
+      "steps": [
+        "承接用户对求助的顾虑，只确认一个最重要的顾虑；不许诺绝对保密。",
+        "由用户选择一个相对安全的人或学校支持入口；都不安全时不指定家长，转向其他可信成人或当地专业帮助。",
+        "可选地拟一句低负担开口话，只透露用户同意的内容；不想联系就尊重并结束。"
+      ],
+      "examples": [
+        "你希望对方先听你说，还是帮你找合适的支持？",
+        "可以只告诉对方你现在有点难受，不必一次讲完。"
+      ],
+      "not_when": [
+        "明确拒绝联系的人不反复推；危急危险由独立风险通路立即接管。",
+        "当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断"
+      ],
+      "path": "companion/companion/config/cards/safe_support.yaml"
+    },
+    {
+      "id": "values_exploration",
+      "name": "找一个暂时想了解的方向",
+      "targets": {
+        "pressure_types": [
+          "future"
+        ],
+        "pathways": []
+      },
+      "protocol": {
+        "version": "course-1.0",
+        "adaptation": "原创中文短步骤；仅借用研究机制，未验证本改编的效果。",
+        "burden": "一次一小步，最多三轮；可以只听、跳过或结束。",
+        "permission": "先明确询问是否愿意试；拒绝和撤回立即停止。",
+        "stop": "用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。",
+        "followup": "只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。",
+        "feedback_limits": "只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。",
+        "mechanism": "从用户已有兴趣或重视的事选一个可探索问题，再找可靠信息而非替用户决定。",
+        "evidence_ids": [
+          "E11",
+          "E01"
+        ],
+        "minimum_information": [
+          "用户提到的兴趣或困惑；不知道也可保留未知"
+        ],
+        "prerequisites": [
+          "用户愿意探索而非立刻定终身",
+          "不要求升学政策或医学判断"
+        ],
+        "excluded_contexts": [
+          "bedtime"
+        ],
+        "keywords": [
+          "选科",
+          "未来",
+          "专业",
+          "意义",
+          "不知道喜欢"
+        ],
+        "counterexample": "用户只想卸下焦虑时不做兴趣测评或规划。",
+        "required_contexts": [],
+        "legacy_ids": []
+      },
+      "steps": [
+        "从原话找一件有一点兴趣或在意的事，不编造天赋与职业适合度。",
+        "共同选一个想弄清的小问题，不要求现在确定未来。",
+        "用户愿意时选一个现实信息来源，如可信老师、相关从业者或官方资料；不提供未经核查的政策结论。"
+      ],
+      "examples": [
+        "现在不用决定一辈子，可以先弄清你对这件事好奇什么。"
+      ],
+      "not_when": [
+        "用户只想卸下焦虑时不做兴趣测评或规划。",
+        "当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断"
+      ],
+      "path": "companion/companion/config/cards/values_exploration.yaml"
+    },
+    {
+      "id": "worry_parking",
+      "name": "睡前把一件担心留待明天",
+      "targets": {
+        "pressure_types": [],
+        "pathways": [
+          "sleep",
+          "rumination"
+        ]
+      },
+      "protocol": {
+        "version": "course-1.0",
+        "adaptation": "原创中文短步骤；仅借用研究机制，未验证本改编的效果。",
+        "burden": "一次一小步，最多三轮；可以只听、跳过或结束。",
+        "permission": "先明确询问是否愿意试；拒绝和撤回立即停止。",
+        "stop": "用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。",
+        "followup": "只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。",
+        "feedback_limits": "只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。",
+        "mechanism": "可选地用一句话暂存一件待处理的担心，再结束对话，避免睡前反复延长。",
+        "evidence_ids": [
+          "E12",
+          "E02"
+        ],
+        "minimum_information": [
+          "用户明确准备休息或睡前困扰"
+        ],
+        "prerequisites": [
+          "当前是用户表达的休息时机",
+          "用户愿意留一句话"
+        ],
+        "excluded_contexts": [
+          "unsafe_relationship"
+        ],
+        "keywords": [
+          "睡",
+          "明天",
+          "晚上",
+          "担心"
+        ],
+        "counterexample": "持续严重睡眠困扰不自动实施睡眠限制或睡不着必须起床的治疗规则。",
+        "required_contexts": [
+          "bedtime"
+        ],
+        "legacy_ids": []
+      },
+      "steps": [
+        "确认只留一件明天再处理的事；用户不愿记录就直接短收尾。",
+        "复述用户愿意留的那一句，不加任务清单、不承诺一定入睡；随后结束。"
+      ],
+      "examples": [
+        "这件事先留在这里，今晚不用把它解决完。"
+      ],
+      "not_when": [
+        "持续严重睡眠困扰不自动实施睡眠限制或睡不着必须起床的治疗规则。",
+        "当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断"
+      ],
+      "path": "companion/companion/config/cards/worry_parking.yaml"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "bedtime",
+      "name": "睡前短暂停",
+      "protocol": {
+        "version": "course-1.0",
+        "goal": "睡前暂时停下继续处理问题，允许休息",
+        "evidence_ids": [
+          "E02",
+          "E12"
+        ],
+        "prerequisites": [
+          "用户明确处于睡前，想暂停思考",
+          "可以安静休息"
+        ],
+        "required_contexts": [
+          "bedtime"
+        ],
+        "excluded_contexts": [
+          "unsafe_relationship",
+          "body_focus_distress"
+        ],
+        "pathways": [
+          "sleep",
+          "rumination"
+        ],
+        "invitation": "愿意做一小段睡前暂停吗？不要求睡着，随时可以停。",
+        "stop": "拒绝、中止、新输入或风险接管立即取消；不自动恢复。",
+        "feedback_limits": "完成播放只说明执行，主观帮助需要用户明确反馈；一次无效不推断长期偏好。",
+        "request_phrases": [
+          "睡前暂停",
+          "睡前练习",
+          "睡前短暂停"
+        ]
+      }
+    },
+    {
+      "id": "breathing_60s",
+      "name": "自然呼吸小暂停",
+      "protocol": {
+        "version": "course-1.0",
+        "goal": "短暂停下，注意自然呼吸，不调整节律",
+        "evidence_ids": [
+          "E16"
+        ],
+        "prerequisites": [
+          "愿意尝试，当前能安全停下",
+          "没有身体聚焦引起的不适"
+        ],
+        "excluded_contexts": [
+          "body_focus_distress",
+          "unsafe_relationship"
+        ],
+        "invitation": "愿意用半分钟留意自然呼吸吗？不用深呼吸，随时可以停。",
+        "stop": "拒绝、中止、新输入或风险接管立即取消；不自动恢复。",
+        "feedback_limits": "完成播放只说明执行，主观帮助需要用户明确反馈；一次无效不推断长期偏好。",
+        "request_phrases": [
+          "呼吸练习",
+          "留意自然呼吸"
+        ]
+      }
+    },
+    {
+      "id": "grounding",
+      "name": "看看身边的一样东西",
+      "protocol": {
+        "version": "course-1.0",
+        "goal": "把注意力暂时放在身边普通物件上",
+        "evidence_ids": [
+          "E13"
+        ],
+        "prerequisites": [
+          "当前环境安全，可以自由看周围",
+          "愿意尝试短暂外部注意练习"
+        ],
+        "excluded_contexts": [
+          "unsafe_relationship"
+        ],
+        "invitation": "愿意花一小会儿看看身边一个普通物件吗？不舒服就停。",
+        "stop": "拒绝、中止、新输入或风险接管立即取消；不自动恢复。",
+        "feedback_limits": "完成播放只说明执行，主观帮助需要用户明确反馈；一次无效不推断长期偏好。",
+        "request_phrases": [
+          "看看周围",
+          "外部注意练习",
+          "定位练习"
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "E01",
+      "citation": "Ye、Cui、Yang、Liu，2019（在线 2018），[Evaluation of the Factor Structure of the Adolescent Stress Questionnaire in Chinese Adolescents](https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/)，DOI 10.1177/0033294118792686；中国中学生 N=420，量表因子研究；**全文**：摘要、方法、六因子及讨论",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/",
+      "read_scope": "全文",
+      "population": "Ye、Cui、Yang、Liu，2019（在线 2018），[Evaluation of the Factor Structure of the Adolescent Stress Questionnaire in Chinese Adolescents](https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/)，DOI 10.1177/0033294118792686；中国中学生 N=420，量表因子研究；**全文**：摘要、方法、六因子及讨论",
+      "supports": "压力领域多样，ASQ-CN 六因子 42 条、内部一致性 .82–.90；不能证明本项目五类就是量表因子，也不评价任何支持策略。",
+      "limitations": "压力领域多样，ASQ-CN 六因子 42 条、内部一致性 .82–.90；不能证明本项目五类就是量表因子，也不评价任何支持策略。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E02",
+      "citation": "Wang、Wang、Yang 等，2025，[Academic Burden and Emotional Problems Among Adolescents: A Longitudinal Mediation Analysis](https://onlinelibrary.wiley.com/doi/10.1002/jad.12471)，DOI 10.1002/jad.12471；浙江初高中生 N=2965，三波观察队列；**全文**：方法、结果、讨论、限制",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/jad.12471",
+      "read_scope": "全文",
+      "population": "Wang、Wang、Yang 等，2025，[Academic Burden and Emotional Problems Among Adolescents: A Longitudinal Mediation Analysis](https://onlinelibrary.wiley.com/doi/10.1002/jad.12471)，DOI 10.1002/jad.12471；浙江初高中生 N=2965，三波观察队列；**全文**：方法、结果、讨论、限制",
+      "supports": "学业压力和后续抑郁/焦虑症状相关，睡眠和孤独的统计中介分别占抑郁关联的 31.0%、26.8%；地区、疫情时期、自陈和残余混杂限制因果推断。未测试睡前脚本或社交练习。",
+      "limitations": "学业压力和后续抑郁/焦虑症状相关，睡眠和孤独的统计中介分别占抑郁关联的 31.0%、26.8%；地区、疫情时期、自陈和残余混杂限制因果推断。未测试睡前脚本或社交练习。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E03",
+      "citation": "Dickerson、Kemeny，2004，[Acute stressors and cortisol responses](https://pubmed.ncbi.nlm.nih.gov/15122924/)，DOI 10.1037/0033-2909.130.3.355；208 个急性压力实验的元分析；**摘要**",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15122924/",
+      "read_scope": "摘要",
+      "population": "Dickerson、Kemeny，2004，[Acute stressors and cortisol responses](https://pubmed.ncbi.nlm.nih.gov/15122924/)，DOI 10.1037/0033-2909.130.3.355；208 个急性压力实验的元分析；**摘要**",
+      "supports": "不可控且可能被负面评价的任务通常诱发更强急性皮质醇反应。实验任务/生理反应不能直接推出中国高中生的长期心理风险或产品效果。",
+      "limitations": "不可控且可能被负面评价的任务通常诱发更强急性皮质醇反应。实验任务/生理反应不能直接推出中国高中生的长期心理风险或产品效果。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E04",
+      "citation": "Zhao、Hu，2022，[A multilevel model of the help-seeking behaviors among adolescents with mental health problems](https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/)，DOI 10.3389/fnint.2022.946842；长沙四所初高中 N=3480，横断面自陈；**全文**：摘要、求助定义、表格/讨论（PMC 检索全文和期刊 PDF）",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/",
+      "read_scope": "全文",
+      "population": "Zhao、Hu，2022，[A multilevel model of the help-seeking behaviors among adolescents with mental health problems](https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/)，DOI 10.3389/fnint.2022.946842；长沙四所初高中 N=3480，横断面自陈；**全文**：摘要、求助定义、表格/讨论（PMC 检索全文和期刊 PDF）",
+      "supports": "帮助来源同时包含朋友、家人、教师和正式服务；73.0% 求助，求助者中非正式 99.3%、正式 13.9%，心理老师 10.2%。单地抽样、自陈、渠道重叠；不能推断本产品会改变求助行为。",
+      "limitations": "帮助来源同时包含朋友、家人、教师和正式服务；73.0% 求助，求助者中非正式 99.3%、正式 13.9%，心理老师 10.2%。单地抽样、自陈、渠道重叠；不能推断本产品会改变求助行为。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E05",
+      "citation": "Gulliver、Griffiths、Christensen，2010，[Perceived barriers and facilitators to mental health help-seeking in young people: a systematic review](https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/)，DOI 10.1186/1471-244X-10-113；22 项青少年/青年研究的系统综述；**全文**：摘要、纳入、结果、讨论（检索全文；直接打开 PMC 时遇验证码）",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/",
+      "read_scope": "全文",
+      "population": "Gulliver、Griffiths、Christensen，2010，[Perceived barriers and facilitators to mental health help-seeking in young people: a systematic review](https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/)，DOI 10.1186/1471-244X-10-113；22 项青少年/青年研究的系统综述；**全文**：摘要、纳入、结果、讨论（检索全文；直接打开 PMC 时遇验证码）",
+      "supports": "污名/尴尬、保密和信任、识别困难、自力更生常见；22 项中澳大利亚 10、美国 9、中国 1，求助促进因素证据较少。只支持降低评判感和给用户控制权的设计动机。",
+      "limitations": "污名/尴尬、保密和信任、识别困难、自力更生常见；22 项中澳大利亚 10、美国 9、中国 1，求助促进因素证据较少。只支持降低评判感和给用户控制权的设计动机。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E06",
+      "citation": "Leigh、Taylor、Cole、Smith，2025，[Why is rumination unhelpful in adolescents? Two studies examining the causal role of abstract processing](https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m)，DOI 10.1016/j.jad.2025.03.058；英国 11–14 岁青少年，两项抽象/具体加工实验；**全文**：任务、比较、结果、讨论",
+      "url": "https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m",
+      "read_scope": "全文",
+      "population": "Leigh、Taylor、Cole、Smith，2025，[Why is rumination unhelpful in adolescents? Two studies examining the causal role of abstract processing](https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m)，DOI 10.1016/j.jad.2025.03.058；英国 11–14 岁青少年，两项抽象/具体加工实验；**全文**：任务、比较、结果、讨论",
+      "supports": "具体加工相比抽象反复想在实验任务中伴随更好的社会问题解决和更少负面未来想法。测的是近端任务表现，不是抑郁治疗或一轮聊天的效果；年龄、文化需外推。",
+      "limitations": "具体加工相比抽象反复想在实验任务中伴随更好的社会问题解决和更少负面未来想法。测的是近端任务表现，不是抑郁治疗或一轮聊天的效果；年龄、文化需外推。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E07",
+      "citation": "Lunn、Greene、Callaghan、Egan，2023，[Associations between perfectionism and symptoms of anxiety, obsessive-compulsive disorder and depression in young people](https://pubmed.ncbi.nlm.nih.gov/37194469/)，DOI 10.1080/16506073.2023.2211736；6–24 岁，121 项研究元分析；**摘要**（全文链接未能稳定获取）",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37194469/",
+      "read_scope": "摘要",
+      "population": "Lunn、Greene、Callaghan、Egan，2023，[Associations between perfectionism and symptoms of anxiety, obsessive-compulsive disorder and depression in young people](https://pubmed.ncbi.nlm.nih.gov/37194469/)，DOI 10.1080/16506073.2023.2211736；6–24 岁，121 项研究元分析；**摘要**（全文链接未能稳定获取）",
+      "supports": "完美主义“担忧”与抑郁症状汇总相关约 r=.40；高标准追求和担忧不能混为一谈。相关关系不能证明改写自我评价会产生疗效。",
+      "limitations": "完美主义“担忧”与抑郁症状汇总相关约 r=.40；高标准追求和担忧不能混为一谈。相关关系不能证明改写自我评价会产生疗效。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E08",
+      "citation": "WHO/UNICEF，2023，[Early Adolescent Skills for Emotions (EASE): group psychological help](https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf)；10–15 岁逆境社区青少年，官方干预手册；**全文**：范围、结构、监督、Calming My Body / Changing My Actions / Managing My Problems、停止和转介",
+      "url": "https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf",
+      "read_scope": "全文",
+      "population": "WHO/UNICEF，2023，[Early Adolescent Skills for Emotions (EASE): group psychological help](https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf)；10–15 岁逆境社区青少年，官方干预手册；**全文**：范围、结构、监督、Calming My Body / Changing My Actions / Managing My Problems、停止和转介",
+      "supports": "Stop–Think–Go 要求选择“小、可解、具体”的问题；识别感受、轻量行动、缓和身体均是结构化技能。EASE 需培训、持续监督、七次小组及照护者参与；只适合机制借鉴。",
+      "limitations": "Stop–Think–Go 要求选择“小、可解、具体”的问题；识别感受、轻量行动、缓和身体均是结构化技能。EASE 需培训、持续监督、七次小组及照护者参与；只适合机制借鉴。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E09",
+      "citation": "Bluth、Lathren、Park 等，2024，[Feasibility, Acceptability, and Depression Outcomes of a Randomized Controlled Trial of Mindful Self-Compassion for Teens](https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf)，DOI 10.1002/jad.12277；美国亚临床抑郁青少年 N=59，八周小组+延续课程、主动对照随机试验；**全文**：方法、结果、限制",
+      "url": "https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf",
+      "read_scope": "全文",
+      "population": "Bluth、Lathren、Park 等，2024，[Feasibility, Acceptability, and Depression Outcomes of a Randomized Controlled Trial of Mindful Self-Compassion for Teens](https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf)，DOI 10.1002/jad.12277；美国亚临床抑郁青少年 N=59，八周小组+延续课程、主动对照随机试验；**全文**：方法、结果、限制",
+      "supports": "参与者的症状轨迹优于健康生活课程对照；样本小且以白人女性为主，两组自我关怀都增加。仅支持温和自我对话有进一步研究价值，不能据此承诺一句话减少抑郁。",
+      "limitations": "参与者的症状轨迹优于健康生活课程对照；样本小且以白人女性为主，两组自我关怀都增加。仅支持温和自我对话有进一步研究价值，不能据此承诺一句话减少抑郁。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E10",
+      "citation": "Filia、Eastwood、Herniman、Badcock，2021，[Facilitating improvements in young people’s social relationships to prevent or treat depression: A review of empirically supported interventions](https://www.nature.com/articles/s41398-021-01406-7.pdf)，DOI 10.1038/s41398-021-01406-7；青少年/青年人际干预叙述性综述；**全文**：检索范围、IPT-A 结构、沟通分析/角色练习与证据限制",
+      "url": "https://www.nature.com/articles/s41398-021-01406-7.pdf",
+      "read_scope": "全文",
+      "population": "Filia、Eastwood、Herniman、Badcock，2021，[Facilitating improvements in young people’s social relationships to prevent or treat depression: A review of empirically supported interventions](https://www.nature.com/articles/s41398-021-01406-7.pdf)，DOI 10.1038/s41398-021-01406-7；青少年/青年人际干预叙述性综述；**全文**：检索范围、IPT-A 结构、沟通分析/角色练习与证据限制",
+      "supports": "沟通分析和角色练习存在于人工 IPT-A 中；可借“先理解冲突、再练习一句可选择的表达”。临床疗程和治疗关系不可缩成自动咨询；欺凌、虐待、明显不安全关系应转安全通路。",
+      "limitations": "沟通分析和角色练习存在于人工 IPT-A 中；可借“先理解冲突、再练习一句可选择的表达”。临床疗程和治疗关系不可缩成自动咨询；欺凌、虐待、明显不安全关系应转安全通路。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E11",
+      "citation": "Chen、Chen、Ling、Gu，2022，[An Online Career Intervention for Promoting Chinese High School Students’ Career Readiness](https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/)，DOI 10.3389/fpsyg.2021.815076；江苏高一 N=957，五周教师主持在线课程/对照；**全文**：干预、结果、限制",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/",
+      "read_scope": "全文",
+      "population": "Chen、Chen、Ling、Gu，2022，[An Online Career Intervention for Promoting Chinese High School Students’ Career Readiness](https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/)，DOI 10.3389/fpsyg.2021.815076；江苏高一 N=957，五周教师主持在线课程/对照；**全文**：干预、结果、限制",
+      "supports": "探索兴趣和获取可靠专业信息与更高生涯探索、较少信息困扰相关。干预包括教师、测评和数据库；聊天中只能帮助选择下一步可核查的信息源，不能提供未经核实的选科/录取建议。",
+      "limitations": "探索兴趣和获取可靠专业信息与更高生涯探索、较少信息困扰相关。干预包括教师、测评和数据库；聊天中只能帮助选择下一步可核查的信息源，不能提供未经核实的选科/录取建议。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E12",
+      "citation": "Scullin、Krueger、Ballard、Pruett、Bliwise，2018，[The effects of bedtime writing on difficulty falling asleep](https://pubmed.ncbi.nlm.nih.gov/29058942/)，DOI 10.1037/xge0000374；美国健康青年成人 N=57，五分钟书面待办/已完成任务随机比较及睡眠多导；**摘要**",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29058942/",
+      "read_scope": "摘要",
+      "population": "Scullin、Krueger、Ballard、Pruett、Bliwise，2018，[The effects of bedtime writing on difficulty falling asleep](https://pubmed.ncbi.nlm.nih.gov/29058942/)，DOI 10.1037/xge0000374；美国健康青年成人 N=57，五分钟书面待办/已完成任务随机比较及睡眠多导；**摘要**",
+      "supports": "具体记录近期待办相比回顾已做事务，实验室入睡潜伏期更短。成年人、书写五分钟、单夜；玩偶的简短“留待明天”句不能宣称同样改善睡眠。",
+      "limitations": "具体记录近期待办相比回顾已做事务，实验室入睡潜伏期更短。成年人、书写五分钟、单夜；玩偶的简短“留待明天”句不能宣称同样改善睡眠。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E13",
+      "citation": "WHO 等，2011，[Psychological first aid: Guide for field workers](https://iris.who.int/bitstream/handle/10665/44615/9789241548205_eng.pdf?sequence=1)；严重危机后现场支持手册；**全文**：适用范围、Look–Listen–Link、儿童章节",
+      "url": "https://iris.who.int/bitstream/handle/10665/44615/9789241548205_eng.pdf?sequence=1",
+      "read_scope": "全文",
+      "population": "WHO 等，2011，[Psychological first aid: Guide for field workers](https://iris.who.int/bitstream/handle/10665/44615/9789241548205_eng.pdf?sequence=1)；严重危机后现场支持手册；**全文**：适用范围、Look–Listen–Link、儿童章节",
+      "supports": "明确尊重意愿、不强迫、倾听并连接可信支持；主要范围是近期严重危机，不是普通考试压力的日常心理干预证据。",
+      "limitations": "明确尊重意愿、不强迫、倾听并连接可信支持；主要范围是近期严重危机，不是普通考试压力的日常心理干预证据。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E14",
+      "citation": "Liu、Zheng、Demasi 等，2021，[Towards Emotional Support Dialog Systems](https://aclanthology.org/2021.acl-long.269/)，DOI 10.18653/v1/2021.acl-long.269；支持对话语料/框架；**论文页摘要与公开 PDF 中策略/标注段落**",
+      "url": "https://aclanthology.org/2021.acl-long.269/",
+      "read_scope": "论文页摘要与公开 PDF 中策略/标注段落",
+      "population": "Liu、Zheng、Demasi 等，2021，[Towards Emotional Support Dialog Systems](https://aclanthology.org/2021.acl-long.269/)，DOI 10.18653/v1/2021.acl-long.269；支持对话语料/框架；**论文页摘要与公开 PDF 中策略/标注段落**",
+      "supports": "探索、安慰、行动作为可追踪的对话技能框架有用；数据来自训练过的人类支持者及质量控制，没有验证语音玩偶或临床效果。",
+      "limitations": "探索、安慰、行动作为可追踪的对话技能框架有用；数据来自训练过的人类支持者及质量控制，没有验证语音玩偶或临床效果。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E15",
+      "citation": "Deng、Zhang、Lam、Ng、Chua，2024，[Plug-and-Play Policy Planner for Large Language Model Powered Dialogue Agents](https://openreview.net/pdf?id=MCNqgUFTHI)（ICLR 2024）；对话策略规划实验；**全文**：方法、动作到指令映射、自博弈/训练与评价",
+      "url": "https://openreview.net/pdf?id=MCNqgUFTHI",
+      "read_scope": "全文",
+      "population": "Deng、Zhang、Lam、Ng、Chua，2024，[Plug-and-Play Policy Planner for Large Language Model Powered Dialogue Agents](https://openreview.net/pdf?id=MCNqgUFTHI)（ICLR 2024）；对话策略规划实验；**全文**：方法、动作到指令映射、自博弈/训练与评价",
+      "supports": "可复用“选中策略 → 预定义短指令 → Talker”的接口思想；其结论依赖训练过的 planner 和模拟评价，不能当作当前无训练后台协作的质量证明。",
+      "limitations": "可复用“选中策略 → 预定义短指令 → Talker”的接口思想；其结论依赖训练过的 planner 和模拟评价，不能当作当前无训练后台协作的质量证明。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    },
+    {
+      "id": "E16",
+      "citation": "Dunning 等，2022，[Do mindfulness-based programmes improve the cognitive skills, behaviour and mental health of children and adolescents?](https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/)；青少年/儿童随机试验更新元分析；**全文**：主动/被动对照、随访、偏倚与限制",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/",
+      "read_scope": "全文",
+      "population": "Dunning 等，2022，[Do mindfulness-based programmes improve the cognitive skills, behaviour and mental health of children and adolescents?](https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/)；青少年/儿童随机试验更新元分析；**全文**：主动/被动对照、随访、偏倚与限制",
+      "supports": "与主动对照相比，焦虑/压力改善很小，随访未见稳定差异，伤害报告不足。练习需有自愿入口、可停、短时长；对不适者改为眼睛睁开的外部感官定位或安静陪伴。",
+      "limitations": "与主动对照相比，焦虑/压力改善很小，随访未见稳定差异，伤害报告不足。练习需有自愿入口、可停、短时长；对不适者改为眼睛睁开的外部感官定位或安静陪伴。",
+      "verification": "checked",
+      "checked_on": "2026-11-04"
+    }
+  ]
+}

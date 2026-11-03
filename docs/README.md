@@ -1,17 +1,17 @@
-# 架构图集维护与发布
+# 项目站点维护
 
-GitHub Pages 从 `main` 分支的 `/docs` 发布。`index.html`、`atlas.css` 和 `atlas.js` 提供七个专题入口，`diagrams/*.html` 是 Archify 生成的独立交互图；`.nojekyll` 保持静态发布。
+GitHub Pages 从 `main:/docs` 发布，入口是 `index.html`。`assets/project.css`、`project.js` 和 `project-data.json` 提供中文项目说明、条件筛选、协议展开和来源目录。静态页面不访问运行后端或 API key。
 
-## 本版来源
+## 当前来源
 
-源文件、提交绑定和验证记录位于 `.archify/architecture-modules-20261103-211600/`。每张图使用 `<slug>.candidate.json`，最终版本及检查记录以 `manifest.json` 为准。所有图固定到源码提交 `d24f38f0c065c2e9412c974afab5221d938b1316`。
+`architecture-course/` 保存五张架构图的可编辑 JSON 与原始生成 HTML；源码固定到实现提交，详见其中 README。`index-v2.html` / `architecture-v2/` 与 `index-v1.html` / `diagrams/` 为历史，不代表当前内容准入和模型配置。
 
 ## 更新步骤
 
-1. 对照实际代码更新相关 candidate 的模块、关系、说明和来源引用；实现有变化时同步更新绑定提交。
-2. 使用已安装的 Archify 运行 `finalize architecture <candidate> <html> --repo-root . --quality showcase --out-dir <新的检查目录> --json`。
-3. 检查实际渲染，再将验证后的 HTML 原样复制到 `docs/diagrams/`，更新 manifest 中的 SHA-256 和检查记录路径。
-4. 总图变化时，用图中“导出”生成新的 PNG，替换 `docs/assets/backend-architecture.png`。更新 README 的专题说明。
-5. 检查七个入口、深链接、单独打开、主题切换、缩放、源码引用与导出；提交后推送 `main`，等待 Pages 部署成功。
+1. 修改代码和内容后完成检查并提交。运行 `.venv/Scripts/python.exe scripts/build_project_site.py --revision HEAD`，将当前内容映射导出到公开JSON。仅对已提交的内容固定引用。
+2. 修改相应 `architecture-course/*.architecture.json`，更新具体源码依据及固定提交；用 Archify `finalize architecture <JSON> <HTML> --repo-root . --quality showcase --out-dir <新的本地证据目录> --json`。
+3. 核查实际渲染、节点、箭头、缩放、主题和源码链接。不得手改生成HTML。总图预览来自实际渲染图区域截图。
+4. 启动 `.venv/Scripts/python.exe -m http.server 8765 --bind 127.0.0.1 --directory docs`。用 Ego 浏览器检查桌面/窄屏、键盘、筛选、长内容、资源和控制台。维护 `DESIGN.md` 与验证报告。
+5. 检查提交不含私有数据，正常推送/集成 main，等待 Pages workflow 完成，并访问线上URL核对新内容。
 
-只更新架构文档时无需调用模型或运行语音测试。不要手动改动 Archify 生成的 HTML；`docs/diagrams/*.html` 保留原始字节，便于与验证记录核对。
+公开汇总来源于合成回放。原始数据库、完整运行日志、客户端凭据与音频留在忽略的 `artifacts/`、`data/`。

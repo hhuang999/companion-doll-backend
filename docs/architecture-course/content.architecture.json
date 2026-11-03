@@ -1,0 +1,363 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "课程升级 · 证据、策略与反馈闭环",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "docs/architecture-course/content.html",
+    "repository": {
+      "url": "https://github.com/hhuang999/companion-doll-backend.git",
+      "revision": "38fb8cfa3379919b0fa322e4f582fbe111239852",
+      "link_mode": "web"
+    }
+  },
+  "components": [
+    {
+      "id": "sources",
+      "label": "16 项核查来源",
+      "sublabel": "对象 / 阅读范围 / 外推限制",
+      "type": "backend",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md",
+          "line": 1,
+          "end_line": 67
+        }
+      ]
+    },
+    {
+      "id": "protocol",
+      "label": "版本化内容协议",
+      "sublabel": "六策略 / 三练习 / 固定危机",
+      "type": "backend",
+      "pos": [
+        340,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/content/models.py",
+          "line": 1,
+          "end_line": 116
+        }
+      ]
+    },
+    {
+      "id": "admission",
+      "label": "课程 demo 准入",
+      "sublabel": "来源哈希 / 回放 / WAV 绑定",
+      "type": "security",
+      "pos": [
+        640,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/content/admission.py",
+          "line": 1,
+          "end_line": 142
+        }
+      ]
+    },
+    {
+      "id": "analysis",
+      "label": "SituationAssessment",
+      "sublabel": "压力 / 路径 / 顾虑 / 情境",
+      "type": "backend",
+      "pos": [
+        40,
+        240
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/agents.py",
+          "line": 1,
+          "end_line": 220
+        }
+      ]
+    },
+    {
+      "id": "catalog",
+      "label": "条件过滤与中文排序",
+      "sublabel": "排除先行 / 当前拒绝 / 意图",
+      "type": "backend",
+      "pos": [
+        340,
+        240
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/content/catalog.py",
+          "line": 1,
+          "end_line": 137
+        }
+      ]
+    },
+    {
+      "id": "planner",
+      "label": "SupportPlan 候选",
+      "sublabel": "只选合格 ID / 单一支持焦点",
+      "type": "backend",
+      "pos": [
+        640,
+        240
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 1,
+          "end_line": 751
+        }
+      ]
+    },
+    {
+      "id": "critic",
+      "label": "独立 Brief 与评审",
+      "sublabel": "最多一次修订 / 再次核对",
+      "type": "security",
+      "pos": [
+        640,
+        440
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 1,
+          "end_line": 751
+        }
+      ]
+    },
+    {
+      "id": "consent",
+      "label": "明确许可状态机",
+      "sublabel": "邀请已播 / 同意 / 当前版本",
+      "type": "security",
+      "pos": [
+        340,
+        440
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 1,
+          "end_line": 253
+        }
+      ]
+    },
+    {
+      "id": "speech",
+      "label": "当前一步的 Talker",
+      "sublabel": "边界 / 问题预算 / 输出护栏",
+      "type": "backend",
+      "pos": [
+        40,
+        440
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/talker.py",
+          "line": 1,
+          "end_line": 218
+        }
+      ]
+    },
+    {
+      "id": "execute",
+      "label": "语音执行与事件",
+      "sublabel": "generation / 中止 / 服务器状态",
+      "type": "backend",
+      "pos": [
+        40,
+        640
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 1,
+          "end_line": 337
+        }
+      ]
+    },
+    {
+      "id": "feedback",
+      "label": "明确用户反馈归因",
+      "sublabel": "支持 ID + 版本 + 步骤",
+      "type": "backend",
+      "pos": [
+        340,
+        640
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/interaction.py",
+          "line": 1,
+          "end_line": 288
+        }
+      ]
+    },
+    {
+      "id": "memory",
+      "label": "带范围的支持经验",
+      "sublabel": "仅在用户提及时使用 / 可更正",
+      "type": "database",
+      "pos": [
+        640,
+        640
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/memory/service.py",
+          "line": 1,
+          "end_line": 334
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "sources-protocol",
+      "from": "sources",
+      "to": "protocol",
+      "label": "设计依据"
+    },
+    {
+      "id": "protocol-admission",
+      "from": "protocol",
+      "to": "admission",
+      "label": "哈希审核"
+    },
+    {
+      "id": "protocol-catalog",
+      "from": "protocol",
+      "to": "catalog",
+      "label": "结构化目录"
+    },
+    {
+      "id": "analysis-catalog",
+      "from": "analysis",
+      "to": "catalog",
+      "label": "当前情境"
+    },
+    {
+      "id": "catalog-planner",
+      "from": "catalog",
+      "to": "planner",
+      "label": "合格候选"
+    },
+    {
+      "id": "planner-critic",
+      "from": "planner",
+      "to": "critic",
+      "label": "完整评议"
+    },
+    {
+      "id": "critic-consent",
+      "from": "critic",
+      "to": "consent",
+      "label": "通过并发布"
+    },
+    {
+      "id": "consent-speech",
+      "from": "consent",
+      "to": "speech",
+      "label": "有效许可"
+    },
+    {
+      "id": "speech-execute",
+      "from": "speech",
+      "to": "execute",
+      "label": "逐句输出"
+    },
+    {
+      "id": "execute-feedback",
+      "from": "execute",
+      "to": "feedback",
+      "label": "输出来源"
+    },
+    {
+      "id": "feedback-memory",
+      "from": "feedback",
+      "to": "memory",
+      "label": "明确归因"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "研究的实际承接",
+      "items": [
+        "核查研究对象、方法及外推限制，再设计短步骤；不把完整干预的效果归给一句话。",
+        "启用目录提供适用、排除、最少信息、反例、停止条件与来源，过滤后才进入 Planner。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "控制与表达分工",
+      "items": [
+        "当前状态机决定邀请、同意和撤回；Agent 候选不授予行动许可。",
+        "Talker只执行当前一步，固定练习另走有时长上限的音频计划；安全通路独立。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "反馈改变什么",
+      "items": [
+        "服务器 completed 只证明执行。明确反馈关联实际输出、支持版本与步骤。",
+        "同会话无效反馈停止该支持；长期经验保留上下文，不从一次反馈推导永久偏好。"
+      ]
+    }
+  ]
+}

@@ -1,4 +1,6 @@
-# v2 实施与验收状态
+# v2 实施与验收状态（历史基线与当前增量）
+
+2026-11-04更新：当前研究驱动升级见 [持续状态](autonomous-upgrade/IMPLEMENTATION_STATUS.md)；本文件M0～M6与V2-01～V2-24保留为已实现基线，其自动检查随当前152项离线套件通过。下文旧实测数据为2026-11-03历史。课程内容规则已由最新TASK替代。
 
 主规格：[ARCHITECTURE_V2](ARCHITECTURE_V2.md)。分支：`codex/backend-v2`。实际起点 `43253fe9719b1f96e41d40948b6a805211dc8adc`；未重置、未覆盖无关改动。后续按用户授权同步至 GitHub `main` 并发布 v2 Pages。
 
@@ -63,6 +65,6 @@
 
 ## 外部条件与交付边界
 
-正式 S03–S19、审核危机文本及练习、ESP32 真机仍需负责人提供。默认 development 使用明确 fixture/draft，demo 审核门槛未降低。服务端 completed 不冒充设备 ACK。
+此处原内容依赖已由2026-11-04研究驱动任务解决：六类策略、三练习、固定危机课程内容已核查并建立逐项回执。development与demo准入分开，见CONTENT。ESP32真机测试交给硬件同学，服务端completed不冒充设备ACK。
 
 准确命令、升级/备份/恢复/清除说明见 [V2_OPERATIONS](V2_OPERATIONS.md)。[四张交互架构图](https://hhuang999.github.io/companion-doll-backend/) 反映最终源码；v2 开发阶段只作本地提交，后续按用户授权发布到 GitHub 和 Pages，图中源码链接固定于实现提交。原有无关未跟踪文稿、CODEX_UPGRADE_V2_PROMPT 和历史 .archify 证据保留。

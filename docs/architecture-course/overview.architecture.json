@@ -1,0 +1,416 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "课程升级 · 实时通路与模块协作",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "docs/architecture-course/overview.html",
+    "repository": {
+      "url": "https://github.com/hhuang999/companion-doll-backend.git",
+      "revision": "38fb8cfa3379919b0fa322e4f582fbe111239852",
+      "link_mode": "web"
+    }
+  },
+  "components": [
+    {
+      "id": "input",
+      "label": "输入适配",
+      "sublabel": "CLI / 小智认证与六处接入",
+      "type": "backend",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 1,
+          "end_line": 131
+        },
+        {
+          "path": "companion/companion/adapters/xiaozhi/auth.py",
+          "line": 1,
+          "end_line": 55
+        }
+      ]
+    },
+    {
+      "id": "core",
+      "label": "CompanionCore",
+      "sublabel": "去重 · generation · 用户锁",
+      "type": "backend",
+      "pos": [
+        340,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 165,
+          "end_line": 436
+        }
+      ]
+    },
+    {
+      "id": "policy",
+      "label": "当轮策略投影",
+      "sublabel": "本地有效性 · 冻结上下文",
+      "type": "backend",
+      "pos": [
+        640,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/policy.py",
+          "line": 52,
+          "end_line": 106
+        }
+      ]
+    },
+    {
+      "id": "talker",
+      "label": "Talker + 输出护栏",
+      "sublabel": "正文流式 · 跨轮问题预算",
+      "type": "backend",
+      "pos": [
+        940,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/talker.py",
+          "line": 51,
+          "end_line": 208
+        }
+      ]
+    },
+    {
+      "id": "risk",
+      "label": "独立风险通路",
+      "sublabel": "L1 / L2 · 迟到 high",
+      "type": "security",
+      "pos": [
+        340,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/risk.py",
+          "line": 1,
+          "end_line": 136
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 447,
+          "end_line": 521
+        }
+      ]
+    },
+    {
+      "id": "queue",
+      "label": "公平认知调度",
+      "sublabel": "合并 · 单用户串行 · 有界队列",
+      "type": "backend",
+      "pos": [
+        340,
+        420
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/scheduler.py",
+          "line": 1,
+          "end_line": 251
+        }
+      ]
+    },
+    {
+      "id": "memory",
+      "label": "范围关系记忆",
+      "sublabel": "范围 / 更正 / 支持版本归因",
+      "type": "backend",
+      "pos": [
+        640,
+        420
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/memory/service.py",
+          "line": 1,
+          "end_line": 334
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "label": "许可闸门与输出",
+      "sublabel": "有效 generation 才可提交",
+      "type": "backend",
+      "pos": [
+        940,
+        420
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 817,
+          "end_line": 867
+        },
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 105,
+          "end_line": 337
+        }
+      ]
+    },
+    {
+      "id": "observe",
+      "label": "CLI / 观察台",
+      "sublabel": "策略 · 评审 · 反馈 · 用量",
+      "type": "frontend",
+      "pos": [
+        640,
+        820
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/dashboard/app.py",
+          "line": 1,
+          "end_line": 306
+        }
+      ]
+    },
+    {
+      "id": "store",
+      "label": "SQLite v2 Store",
+      "sublabel": "事务 · writer lease · 迁移",
+      "type": "database",
+      "pos": [
+        640,
+        620
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/store/db.py",
+          "line": 1,
+          "end_line": 568
+        },
+        {
+          "path": "companion/companion/store/migrate.py",
+          "line": 1,
+          "end_line": 99
+        }
+      ]
+    },
+    {
+      "id": "collab",
+      "label": "有界角色协作",
+      "sublabel": "routine / deliberation / end",
+      "type": "backend",
+      "pos": [
+        340,
+        620
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 181,
+          "end_line": 468
+        },
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 502,
+          "end_line": 744
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "label": "Aihubmix 适配",
+      "sublabel": "文本 / JSON / WAV",
+      "type": "external",
+      "pos": [
+        940,
+        820
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/llm/client.py",
+          "line": 1,
+          "end_line": 144
+        },
+        {
+          "path": "companion/companion/llm/tts.py",
+          "line": 1,
+          "end_line": 66
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "input-core",
+      "from": "input",
+      "to": "core",
+      "label": "输入"
+    },
+    {
+      "id": "core-policy",
+      "from": "core",
+      "to": "policy",
+      "label": "冻结"
+    },
+    {
+      "id": "policy-talker",
+      "from": "policy",
+      "to": "talker",
+      "label": "策略数据"
+    },
+    {
+      "id": "talker-output",
+      "from": "talker",
+      "to": "output",
+      "label": "分句"
+    },
+    {
+      "id": "core-risk",
+      "from": "core",
+      "to": "risk",
+      "label": "独立检测",
+      "variant": "security"
+    },
+    {
+      "id": "risk-output",
+      "from": "risk",
+      "to": "output",
+      "label": "high 接管",
+      "variant": "security"
+    },
+    {
+      "id": "core-queue",
+      "from": "core",
+      "to": "queue",
+      "label": "事件触发",
+      "variant": "dashed"
+    },
+    {
+      "id": "policy-memory",
+      "from": "policy",
+      "to": "memory",
+      "label": "检索"
+    },
+    {
+      "id": "queue-collab",
+      "from": "queue",
+      "to": "collab",
+      "label": "任务",
+      "variant": "dashed"
+    },
+    {
+      "id": "collab-store",
+      "from": "collab",
+      "to": "store",
+      "label": "最终 CAS"
+    },
+    {
+      "id": "memory-store",
+      "from": "memory",
+      "to": "store",
+      "label": "记忆事务"
+    },
+    {
+      "id": "observe-store",
+      "from": "observe",
+      "to": "store",
+      "label": "查询"
+    },
+    {
+      "id": "collab-ai",
+      "from": "collab",
+      "to": "ai",
+      "label": "后台角色"
+    },
+    {
+      "id": "output-ai",
+      "from": "output",
+      "to": "ai",
+      "label": "动态 TTS"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "实时路径",
+      "items": [
+        "输入控制、记忆检索和策略筛选均在本地；Talker 不等待后台 Future。",
+        "未核对新增输入的策略退为非行动倾听；当前已确认行动继续由许可状态机管理。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "安全与许可",
+      "items": [
+        "high 由独立检测器决定，迟到结果仍可撤销普通输出并提交固定危机音频。",
+        "Agent 不能授予许可；提议必须对应 started，明确同意且卡片合格才能行动。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "工程范围",
+      "items": [
+        "六类策略、三种短练习用于合成案例与成年成员课程演示；内容哈希、逐项验收和音频绑定控制 demo 准入。",
+        "单 Python 模块化进程、一个库一个 Core；图中模块是代码职责，不是微服务。",
+        "点击源码可查看 GitHub 固定提交依据；v1 图集保留为历史入口。"
+      ]
+    }
+  ]
+}

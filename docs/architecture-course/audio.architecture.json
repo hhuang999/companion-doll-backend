@@ -1,0 +1,345 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "课程升级 · 小智语音流水与独立接管",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "docs/architecture-course/audio.html",
+    "repository": {
+      "url": "https://github.com/hhuang999/companion-doll-backend.git",
+      "revision": "38fb8cfa3379919b0fa322e4f582fbe111239852",
+      "link_mode": "web"
+    }
+  },
+  "components": [
+    {
+      "id": "input",
+      "label": "真实输入来源",
+      "sublabel": "WebSocket / Opus / SenseVoice",
+      "type": "backend",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 1,
+          "end_line": 131
+        }
+      ]
+    },
+    {
+      "id": "core",
+      "label": "Core + generation",
+      "sublabel": "真实 wake · abort · 冻结轮次",
+      "type": "backend",
+      "pos": [
+        350,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 949,
+          "end_line": 972
+        },
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 1,
+          "end_line": 131
+        }
+      ]
+    },
+    {
+      "id": "gate",
+      "label": "Talker / 输出闸门",
+      "sublabel": "分句 · 来源与当轮有效性",
+      "type": "backend",
+      "pos": [
+        660,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 658,
+          "end_line": 815
+        }
+      ]
+    },
+    {
+      "id": "queue",
+      "label": "XiaozhiOutputPort",
+      "sublabel": "有效代次 · 幂等输出队列",
+      "type": "backend",
+      "pos": [
+        660,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 149,
+          "end_line": 155
+        }
+      ]
+    },
+    {
+      "id": "tts",
+      "label": "当前句 + 下一句预取",
+      "sublabel": "最多预取一句 · 两个合成槽",
+      "type": "backend",
+      "pos": [
+        350,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 157,
+          "end_line": 167
+        },
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 169,
+          "end_line": 200
+        }
+      ]
+    },
+    {
+      "id": "transport",
+      "label": "编码 / 节奏发送",
+      "sublabel": "完整 WAV → Opus → WebSocket",
+      "type": "backend",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 21,
+          "end_line": 102
+        }
+      ]
+    },
+    {
+      "id": "fixed",
+      "label": "固定缓存音频",
+      "sublabel": "危机 / 练习 · 启动前核验",
+      "type": "database",
+      "pos": [
+        660,
+        400
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 236,
+          "end_line": 246
+        },
+        {
+          "path": "companion/companion/core/exercise.py",
+          "line": 1,
+          "end_line": 31
+        }
+      ]
+    },
+    {
+      "id": "cancel",
+      "label": "独立取消控制",
+      "sublabel": "取消当前任务与旧预取",
+      "type": "security",
+      "pos": [
+        350,
+        400
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 212,
+          "end_line": 229
+        }
+      ]
+    },
+    {
+      "id": "events",
+      "label": "started / completed",
+      "sublabel": "激活提议 · 服务端执行证据",
+      "type": "backend",
+      "pos": [
+        40,
+        400
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 869,
+          "end_line": 947
+        },
+        {
+          "path": "companion/companion/cognition/interaction.py",
+          "line": 242,
+          "end_line": 262
+        }
+      ]
+    },
+    {
+      "id": "metrics",
+      "label": "分段延迟与缺测",
+      "sublabel": "首 token / 首句 / 首包",
+      "type": "backend",
+      "pos": [
+        40,
+        580
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 84,
+          "end_line": 92
+        },
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 60,
+          "end_line": 79
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "input-core",
+      "from": "input",
+      "to": "core",
+      "label": "输入 / abort"
+    },
+    {
+      "id": "core-gate",
+      "from": "core",
+      "to": "gate",
+      "label": "当轮回应"
+    },
+    {
+      "id": "gate-queue",
+      "from": "gate",
+      "to": "queue",
+      "label": "有效输出"
+    },
+    {
+      "id": "queue-tts",
+      "from": "queue",
+      "to": "tts",
+      "label": "准备"
+    },
+    {
+      "id": "tts-transport",
+      "from": "tts",
+      "to": "transport",
+      "label": "按原序消费"
+    },
+    {
+      "id": "fixed-queue",
+      "from": "fixed",
+      "to": "queue",
+      "label": "固定接管",
+      "variant": "security"
+    },
+    {
+      "id": "cancel-tts",
+      "from": "cancel",
+      "to": "tts",
+      "label": "撤销预取",
+      "variant": "security"
+    },
+    {
+      "id": "cancel-transport",
+      "from": "cancel",
+      "to": "transport",
+      "label": "stop",
+      "variant": "security"
+    },
+    {
+      "id": "transport-events",
+      "from": "transport",
+      "to": "events",
+      "label": "服务端回调"
+    },
+    {
+      "id": "events-metrics",
+      "from": "events",
+      "to": "metrics",
+      "label": "证据"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "流水执行",
+      "items": [
+        "发送当前句时准备下一句 WAV / Opus；预取不触发 started，不能激活许可。",
+        "合成请求被取消后仍占实际槽位，直至 HTTP 退出；旧结果不能发送。",
+        "预取异常到消费时明确记 failed，不能静默跳过。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "固定接管",
+      "items": [
+        "危机走独立取消和已准备缓存，不等待普通合成。",
+        "每次行动一张卡，练习音频加暂停 <=90 秒，仍需明确许可。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "测量语义",
+      "items": [
+        "tts_complete 是完整 WAV 返回，opus_ready 是编码完成，opus_sent 是实际上游首包计数增长。",
+        "server_completed 是服务端估计，不能当 ESP32 播放 ACK；设备实际首响/停止本次未测。",
+        "本机真实 WebSocket / Opus / ASR 已执行，动态性能保留超时与回退。"
+      ]
+    }
+  ]
+}

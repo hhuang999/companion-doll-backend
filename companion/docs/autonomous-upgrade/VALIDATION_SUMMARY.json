@@ -1337,5 +1337,209 @@
         "cost": "Provider bill not available; tokens are not a currency estimate."
       }
     }
+  ],
+  "voice_runs": [
+    {
+      "run": "voice-final1",
+      "attempts": 30,
+      "status": {
+        "completed": 30
+      },
+      "dynamic": 30,
+      "fallbacks": 0,
+      "summary_ms": {
+        "first_token_ms": {
+          "n": 30,
+          "p50": 1171.4999999967404,
+          "p90": 1484.9999999860302
+        },
+        "first_sentence_ms": {
+          "n": 30,
+          "p50": 1257.500000006985,
+          "p90": 1641.0000000614673
+        },
+        "gate_release_ms": {
+          "n": 30,
+          "p50": 1257.500000006985,
+          "p90": 1641.0000000614673
+        },
+        "audio_queue_ms": {
+          "n": 30,
+          "p50": 1265.0000000139698,
+          "p90": 1641.0000000614673
+        },
+        "tts_start_ms": {
+          "n": 30,
+          "p50": 1265.0000000139698,
+          "p90": 1641.0000000614673
+        },
+        "tts_complete_ms": {
+          "n": 30,
+          "p50": 3609.000000054948,
+          "p90": 3984.000000054948
+        },
+        "opus_first_packet_ready_ms": {
+          "n": 30,
+          "p50": 3663.5000000242144,
+          "p90": 4030.999999959022
+        },
+        "opus_first_packet_sent_ms": {
+          "n": 30,
+          "p50": 3672.000000020489,
+          "p90": 4045.9999999729916
+        },
+        "server_completed_ms": {
+          "n": 30,
+          "p50": 9413.999999989755,
+          "p90": 11000.0
+        },
+        "client_first_packet_ms": {
+          "n": 30,
+          "p50": 3679.999999993015,
+          "p90": 4062.000000034459
+        }
+      },
+      "tts_duration_ms": {
+        "n": 30,
+        "p50": 2414.0,
+        "p90": 2735.6,
+        "max": 3266.0
+      },
+      "encoding_to_ready_ms": {
+        "n": 30,
+        "p50": 47.0,
+        "p90": 63.0,
+        "max": 78.0
+      },
+      "jobs": {
+        "completed": 8,
+        "cancelled": 1
+      },
+      "job_duration_ms": {
+        "n": 9,
+        "p50": 12626.4,
+        "p90": 14396.6,
+        "max": 14564.6
+      },
+      "roles": {
+        "completed": 24,
+        "cancelled": 1
+      },
+      "usage": {
+        "input_tokens": 79767,
+        "output_tokens": 6123,
+        "records_by_source": {
+          "provider": 85
+        },
+        "cost": "Provider bill not available; tokens are not a currency estimate."
+      },
+      "end_tasks": [
+        {
+          "status": "done"
+        }
+      ],
+      "load": "One sequential synthetic WebSocket client; ordinary background enabled; no simultaneous quality replay; dynamic TTS uncached.",
+      "hardware": "No ESP32 playback ACK or speaker onset measured."
+    },
+    {
+      "run": "voice-final2",
+      "attempts": 30,
+      "status": {
+        "completed": 30
+      },
+      "dynamic": 30,
+      "fallbacks": 0,
+      "summary_ms": {
+        "first_token_ms": {
+          "n": 30,
+          "p50": 1187.5,
+          "p90": 1359.000000054948
+        },
+        "first_sentence_ms": {
+          "n": 30,
+          "p50": 1257.500000006985,
+          "p90": 1420.9999999729916
+        },
+        "gate_release_ms": {
+          "n": 30,
+          "p50": 1257.500000006985,
+          "p90": 1420.9999999729916
+        },
+        "audio_queue_ms": {
+          "n": 30,
+          "p50": 1272.9999999864958,
+          "p90": 1420.9999999729916
+        },
+        "tts_start_ms": {
+          "n": 30,
+          "p50": 1272.9999999864958,
+          "p90": 1420.9999999729916
+        },
+        "tts_complete_ms": {
+          "n": 30,
+          "p50": 3538.9999999897555,
+          "p90": 3937.000000034459
+        },
+        "opus_first_packet_ready_ms": {
+          "n": 30,
+          "p50": 3586.0000000102445,
+          "p90": 3984.000000054948
+        },
+        "opus_first_packet_sent_ms": {
+          "n": 30,
+          "p50": 3586.0000000102445,
+          "p90": 3984.000000054948
+        },
+        "server_completed_ms": {
+          "n": 30,
+          "p50": 9273.000000044703,
+          "p90": 11031.000000075437
+        },
+        "client_first_packet_ms": {
+          "n": 30,
+          "p50": 3608.9999999967404,
+          "p90": 4015.00000001397
+        }
+      },
+      "tts_duration_ms": {
+        "n": 30,
+        "p50": 2266.0,
+        "p90": 2582.7,
+        "max": 2766.0
+      },
+      "encoding_to_ready_ms": {
+        "n": 30,
+        "p50": 47.0,
+        "p90": 64.5,
+        "max": 94.0
+      },
+      "jobs": {
+        "completed": 8
+      },
+      "job_duration_ms": {
+        "n": 8,
+        "p50": 12610.7,
+        "p90": 15316.3,
+        "max": 15707.5
+      },
+      "roles": {
+        "completed": 21
+      },
+      "usage": {
+        "input_tokens": 73521,
+        "output_tokens": 5681,
+        "records_by_source": {
+          "provider": 81
+        },
+        "cost": "Provider bill not available; tokens are not a currency estimate."
+      },
+      "end_tasks": [
+        {
+          "status": "done"
+        }
+      ],
+      "load": "One sequential synthetic WebSocket client; ordinary background enabled; no simultaneous quality replay; dynamic TTS uncached.",
+      "hardware": "No ESP32 playback ACK or speaker onset measured."
+    }
   ]
 }

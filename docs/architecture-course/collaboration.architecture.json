@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "课程升级 · 有限协作与按产物发布",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "docs/architecture-course/collaboration.html",
+    "repository": {
+      "url": "https://github.com/hhuang999/companion-doll-backend.git",
+      "revision": "38fb8cfa3379919b0fa322e4f582fbe111239852",
+      "link_mode": "web"
+    }
+  },
+  "components": [
+    {
+      "id": "events",
+      "label": "交互触发",
+      "sublabel": "周期 / 求助 / 拒绝 / 边界",
+      "type": "backend",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/interaction.py",
+          "line": 66,
+          "end_line": 219
+        }
+      ]
+    },
+    {
+      "id": "scheduler",
+      "label": "公平调度器",
+      "sublabel": "每用户一个活动任务",
+      "type": "backend",
+      "pos": [
+        350,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/scheduler.py",
+          "line": 1,
+          "end_line": 251
+        }
+      ]
+    },
+    {
+      "id": "budget",
+      "label": "共享预算",
+      "sublabel": "总时限 / 真实用量 / 余量修复",
+      "type": "backend",
+      "pos": [
+        660,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/budget.py",
+          "line": 1,
+          "end_line": 75
+        }
+      ]
+    },
+    {
+      "id": "analysis",
+      "label": "Analysis",
+      "sublabel": "需求 / 混合压力 / 适用情境",
+      "type": "backend",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 181,
+          "end_line": 468
+        },
+        {
+          "path": "companion/companion/config/prompts/analysis.j2",
+          "line": 1,
+          "end_line": 9
+        }
+      ]
+    },
+    {
+      "id": "brief",
+      "label": "独立 ReviewBrief",
+      "sublabel": "只见原始证据 · 不见候选",
+      "type": "backend",
+      "pos": [
+        350,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 181,
+          "end_line": 468
+        },
+        {
+          "path": "companion/companion/config/prompts/brief.j2",
+          "line": 1,
+          "end_line": 3
+        }
+      ]
+    },
+    {
+      "id": "planner",
+      "label": "Planner",
+      "sublabel": "本地过滤后选择一个支持",
+      "type": "backend",
+      "pos": [
+        40,
+        400
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 181,
+          "end_line": 468
+        },
+        {
+          "path": "companion/companion/config/prompts/planner.j2",
+          "line": 1,
+          "end_line": 9
+        }
+      ]
+    },
+    {
+      "id": "critic",
+      "label": "Critic",
+      "sublabel": "绑定 candidate ID / version",
+      "type": "backend",
+      "pos": [
+        350,
+        400
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 181,
+          "end_line": 468
+        },
+        {
+          "path": "companion/companion/config/prompts/critic.j2",
+          "line": 1,
+          "end_line": 8
+        }
+      ]
+    },
+    {
+      "id": "delta",
+      "label": "DeltaGuard",
+      "sublabel": "ordinary 新输入最多核对一次",
+      "type": "backend",
+      "pos": [
+        660,
+        400
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 470,
+          "end_line": 500
+        }
+      ]
+    },
+    {
+      "id": "cas",
+      "label": "最终 CAS",
+      "sublabel": "轮次 / 策略 / 边界 / 依赖",
+      "type": "backend",
+      "pos": [
+        660,
+        580
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 502,
+          "end_line": 744
+        }
+      ]
+    },
+    {
+      "id": "commit",
+      "label": "独立产物提交",
+      "sublabel": "计划 / 记忆 / 总结分别判定",
+      "type": "backend",
+      "pos": [
+        350,
+        580
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 502,
+          "end_line": 744
+        }
+      ]
+    },
+    {
+      "id": "audit",
+      "label": "持久执行记录",
+      "sublabel": "completed / partial / 失败原因",
+      "type": "database",
+      "pos": [
+        40,
+        580
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/store/cognition.py",
+          "line": 159,
+          "end_line": 188
+        },
+        {
+          "path": "companion/companion/store/cognition.py",
+          "line": 190,
+          "end_line": 225
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "events-scheduler",
+      "from": "events",
+      "to": "scheduler",
+      "label": "合并",
+      "variant": "dashed"
+    },
+    {
+      "id": "scheduler-budget",
+      "from": "scheduler",
+      "to": "budget",
+      "label": "执行预算"
+    },
+    {
+      "id": "scheduler-analysis",
+      "from": "scheduler",
+      "to": "analysis",
+      "label": "分析"
+    },
+    {
+      "id": "scheduler-brief",
+      "from": "scheduler",
+      "to": "brief",
+      "label": "完整评议"
+    },
+    {
+      "id": "analysis-planner",
+      "from": "analysis",
+      "to": "planner",
+      "label": "已验来源"
+    },
+    {
+      "id": "brief-critic",
+      "from": "brief",
+      "to": "critic",
+      "label": "独立关注点"
+    },
+    {
+      "id": "planner-critic",
+      "from": "planner",
+      "to": "critic",
+      "label": "候选 v1/v2"
+    },
+    {
+      "id": "critic-planner",
+      "from": "critic",
+      "to": "planner",
+      "label": "最多修订一次",
+      "variant": "dashed"
+    },
+    {
+      "id": "critic-delta",
+      "from": "critic",
+      "to": "delta",
+      "label": "通过确切版本"
+    },
+    {
+      "id": "delta-cas",
+      "from": "delta",
+      "to": "cas",
+      "label": "再次核对"
+    },
+    {
+      "id": "cas-commit",
+      "from": "cas",
+      "to": "commit",
+      "label": "事务"
+    },
+    {
+      "id": "commit-audit",
+      "from": "commit",
+      "to": "audit",
+      "label": "记录结果"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "两种深度",
+      "items": [
+        "routine：Analysis → Planner，只允许 listen / clarify / comfort / reflect / quiet，不产生行动候选。",
+        "deliberation：Analysis 与独立 Brief 并行，Planner → Critic；revise 只允许一次，v2 必须重新评审。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "有界失败",
+      "items": [
+        "共同 20 秒硬预算；后台模型槽位默认 2，任务共享一次 schema 修复，失败保留 usage。",
+        "Brief 失败或复核未通过不能标 approved。普通新输入最多一次 DeltaGuard；Guard 后再变更由 CAS 拒绝，不循环追加。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "产物分离",
+      "items": [
+        "TTL 从原始任务时间起算，读取不续命；依赖记忆版本或 policy/topic/boundary 改变会阻止旧策略。",
+        "计划失效但独立有来源记忆仍可写入，终态 partial；结束绑定 final_turn_id，不改新会话。",
+        "执行开始重新捕获串行前驱提交后的版本；排队年龄保持。"
+      ]
+    }
+  ]
+}

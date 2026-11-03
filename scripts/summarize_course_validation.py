@@ -89,15 +89,62 @@ def quality(path):
     }
 
 
+def voice(path):
+    data = json.loads(path.read_text(encoding="utf-8"))
+    turns = [s.get("metrics", {}) for s in data["samples"]]
+    runs, jobs = data["agent_runs"], data["jobs"]
+    durations = [
+        (
+            datetime.fromisoformat(j["finished_at"]) - datetime.fromisoformat(j["started_at"])
+        ).total_seconds()
+        * 1000
+        for j in jobs
+        if j["started_at"] and j["finished_at"]
+    ]
+    return {
+        "run": path.parent.name,
+        "attempts": len(data["samples"]),
+        "status": dict(Counter(s["status"] for s in data["samples"])),
+        "dynamic": sum(bool(s.get("dynamic")) for s in data["samples"]),
+        "fallbacks": sum(bool(t.get("fallback")) for t in turns),
+        "summary_ms": data["summary"],
+        "tts_duration_ms": distribution(
+            [
+                t["tts_complete_ms"] - t["tts_start_ms"]
+                for t in turns
+                if "tts_complete_ms" in t and "tts_start_ms" in t
+            ]
+        ),
+        "encoding_to_ready_ms": distribution(
+            [
+                t["opus_first_packet_ready_ms"] - t["tts_complete_ms"]
+                for t in turns
+                if "opus_first_packet_ready_ms" in t and "tts_complete_ms" in t
+            ]
+        ),
+        "jobs": dict(Counter(j["status"] for j in jobs)),
+        "job_duration_ms": distribution(durations),
+        "roles": dict(Counter(r["status"] for r in runs)),
+        "usage": usage_summary(runs, turns),
+        "end_tasks": data["end_tasks"],
+        "load": "One sequential synthetic WebSocket client; ordinary background enabled; no simultaneous quality replay; dynamic TTS uncached.",
+        "hardware": "No ESP32 playback ACK or speaker onset measured.",
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("reports", nargs="+", type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--voice", nargs="*", type=Path, default=[])
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(
-            {"quality_runs": [quality(p) for p in args.reports]},
+            {
+                "quality_runs": [quality(p) for p in args.reports],
+                "voice_runs": [voice(p) for p in args.voice],
+            },
             ensure_ascii=False,
             indent=2,
         )

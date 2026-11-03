@@ -2,17 +2,19 @@
 
 依据 [v2 主规格](companion/docs/ARCHITECTURE_V2.md) 升级的 Python 3.10 模块化后端。默认 development 已接入实时 Talker、后台 Analysis / Planner / 独立 Critic、版本化策略、四类关系记忆、独立风险接管与小智语音流水。
 
-当前默认运行 `development`：S16 是开发夹具，危机文本是明确标注的测试占位内容，三段练习是待审核草稿。正式 17 张行动卡、审核话术和真机验收仍待补齐；`demo` 模式会检查这些条件。最新证据与未达项见 [验证报告](companion/docs/VALIDATION.md)。
+当前内容版本为 `course-1.0`：六类支持策略、三段可中止短练习、固定危机支持文本，已接入默认 development 路径。研究情境是中国大陆高中生日常压力；课程演示仅用合成案例或成年成员扮演。来源核查、自动内容审查、真实回放和音频资源分别验收，课程回执已绑定当前版本，准备本机固定音频后可使用 `--mode demo`。当前升级进度见 [实施状态](companion/docs/autonomous-upgrade/IMPLEMENTATION_STATUS.md)，实测与未达项见 [验证报告](companion/docs/VALIDATION.md)。
 
-## v2 架构与工程状态
+## 研究、策略与架构
 
-[![v2 模块总图](docs/architecture-v2/preview.png)](https://hhuang999.github.io/companion-doll-backend/)
+[![课程后端模块总图](docs/architecture-course/preview.png)](https://hhuang999.github.io/companion-doll-backend/)
 
-[打开 v2 交互架构图集](https://hhuang999.github.io/companion-doll-backend/) · [逐项验收状态](companion/docs/V2_IMPLEMENTATION_STATUS.md) · [运行与迁移手册](companion/docs/V2_OPERATIONS.md)
+[打开项目展示与交互架构](https://hhuang999.github.io/companion-doll-backend/) · [逐项验收状态](companion/docs/V2_IMPLEMENTATION_STATUS.md) · [运行与迁移手册](companion/docs/V2_OPERATIONS.md)
 
-图集包含四个可交互视图：实时与安全通路、有限协作与版本发布、长期关系记忆、小智语音流水。点击节点可追溯到固定实现提交的 GitHub 源码；HTML 下载后也可以独立打开。
+图集包含五个可交互视图：研究与策略执行闭环、实时与安全通路、有限协作与版本发布、长期关系记忆、小智语音流水。点击节点可追溯到固定实现提交的 GitHub 源码；HTML 下载后也可以独立打开。
 
-[v1 历史图集](https://hhuang999.github.io/companion-doll-backend/index-v1.html) 保留供比较，固定于历史提交 `d24f38f`。当前默认代码与 Pages 首页均为 v2。
+[v1 历史图集](https://hhuang999.github.io/companion-doll-backend/index-v1.html) 保留供比较，固定于历史提交 `d24f38f`。默认代码基于 v2，项目站增加研究证据、策略筛选和反馈记忆的解释。
+
+六类支持的来源、适用与排除条件见 [策略设计](companion/docs/autonomous-upgrade/STRATEGY_DESIGN.md)；完整核查见 [16项研究证据](companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md)。短语音步骤是原创改编，不继承完整人工干预的效果。
 
 ## 立即运行
 
@@ -60,6 +62,8 @@ Windows 上解释器路径为 `.venv/Scripts/python.exe`。锁文件对应此次
 
 ## 验证
 
+当前离线 **152 passed / 3 online deselected**。预固定17段真实多轮及定点修复均留有证据；最终30次动态语音全部成功，文本首句P50 1.26秒、客户端首包P50 3.61秒。900ms文本首句和常规后台8秒未稳定达到，真机首响交由硬件同学测量。完整分母、失败和语言限制见[验证报告](companion/docs/VALIDATION.md)，现场步骤见[课程展示脚本](companion/docs/autonomous-upgrade/DEMO.md)。
+
 ```powershell
 # Ruff、格式检查和全部离线 pytest；不访问网络
 ./scripts/run.ps1 test
@@ -67,10 +71,10 @@ Windows 上解释器路径为 `.venv/Scripts/python.exe`。锁文件对应此次
 # 真实模型与语音检查、120 条风险回归，会消耗 API 额度
 .venv/Scripts/python.exe -m pytest companion/tests -m online --basetemp artifacts/pytest-online-manual
 
-# 至少 30 个成功的普通模型回复；失败和备用句另报
+# 文字延迟探针；语音30次全尝试另见小智交接包
 .venv/Scripts/python.exe -m companion.tools.bench --env-file .env --count 30 --output artifacts/latency.json
 
-# 生成并测量固定练习和危机测试音频，小智启动前执行
+# 生成并测量固定音频；部署绑定命令见内容说明
 ./scripts/run.ps1 audio
 ```
 
@@ -85,7 +89,7 @@ Windows 上解释器路径为 `.venv/Scripts/python.exe`。锁文件对应此次
 | `settings.yaml` | 模型、预算、线程池、数据库、时区、TTS |
 | `persona.yaml` / `stages.yaml` | 身份介绍、开场、收尾、各阶段及提议模板 |
 | `rules.yaml` / `risk_lexicon.yaml` | 确定性规则、输出护栏、第一层风险检测 |
-| `cards/*.yaml` | 行动卡及来源、约束、状态 |
+| `cards/*.yaml` / `content_manifest.yaml` | 可执行策略、来源核查、版本摘要与准入回执 |
 | `crisis.yaml` | 固定危机话术和审核信息 |
 | `exercises/*.yaml` | 练习文本、句后停顿及可选已测量音频 |
 | `prompts/*.j2` | Talker、风险及 Analysis / Brief / Planner / Critic / Delta / Memory / End 提示词 |
@@ -115,7 +119,7 @@ v1 数据库会通过一致备份和事务迁移到 v2，重复启动不重复�
 ./scripts/setup_xiaozhi.ps1
 ```
 
-默认 WebSocket 地址为 `ws://127.0.0.1:8000/xiaozhi/v1/`。设备接入配置、在线探针和重建补丁说明见接入包文档。
+默认 WebSocket 地址为 `ws://127.0.0.1:8000/xiaozhi/v1/`。连接需要独立设备 Bearer 凭据；服务端映射 user_key，不能只凭 device-id 读取记忆。完整安装、协议、错误处理和硬件分工见 [小智交接包](companion/docs/XIAOZHI_HANDOFF.md)。
 
 小智适配器通过统一 OutputPort 发送普通语音、固定危机音频与练习计划，具有独立取消入口。服务端的队列排空估计与设备实际播放完成分开记录，设备首响及停止时刻仍须真机采集。
 
@@ -124,9 +128,10 @@ v1 数据库会通过一致备份和事务迁移到 v2，重复启动不重复�
 - `companion/companion/core/api.py`：输入、风险回调、输出、播放回执和会话结束。
 - `companion/companion/core/state_machine.py`：阶段、同意对象与行动次数。
 - `companion/companion/cognition/`：公平调度、共享预算、独立评议、DeltaGuard 与最终 CAS；`core/validator.py` 保留行动校验。
+- `companion/companion/content/`：结构化内容过滤、来源/hash准入、固定音频绑定。
 - `companion/companion/memory/`：四类记忆、来源、范围、中文相关性与更正。
 - `companion/companion/store/`：SQLite 事务、快照、记忆、跟进与恢复。
 - `companion/companion/adapters/`：文字、剧本与小智适配器。
 - `companion/companion/dashboard/`：本地观察看板。
 
-实现取舍见 [DECISIONS.md](companion/docs/DECISIONS.md)，正式材料接入步骤见 [内容准备](companion/docs/CONTENT.md)。
+实现取舍见 [DECISIONS.md](companion/docs/DECISIONS.md)，课程内容准入与准备见 [内容准备](companion/docs/CONTENT.md)。

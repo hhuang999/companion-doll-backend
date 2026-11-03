@@ -15,7 +15,7 @@
 
 同一数据库一次只启动一个 Core。CLI 使用 `/policy` 查询最近轮次的冻结策略与当前发布计划，`/memory` 查询当前范围的记忆，`/jobs` 查询协作、评审与最终采用，`/wait` 等待后台空闲；`/state`、`/cry`、`/emotion`、`/end`、`/quit` 保留。
 
-`settings.yaml` 的 `cognition` 配置角色模型、后台模型并发、队列上限、计划 TTL、1200 token 投影预算及四类任务预算。唯一认知硬时限仍为 `timing.reasoner_timeout_s=20`，排队过期另算。Talker、风险和后台使用独立执行资源；后台角色共享调用、token、一次 schema 修复预算。schema 修复也可能因剩余 token 不足而被拒绝。
+`settings.yaml` 的 `cognition` 配置角色模型、后台模型并发、队列上限、计划 TTL、1200 token 投影预算及四类任务预算。唯一认知硬时限仍为 `timing.reasoner_timeout_s=20`，排队过期另算。Talker、风险和后台使用独立执行资源；后台角色共享调用、token、一次 schema/记忆来源修复预算。修复按剩余输出额度分配，至少128 token才派发。schema 修复也可能因剩余 token 不足而被拒绝。
 
 所有真实模型调用通过 Aihubmix。CLI 的 `--env-file` 和根目录脚本加载 `AIHUBMIXKEY`，环境变量优先。不要将 `.env`、数据库或实际对话日志加入提交。
 
@@ -63,17 +63,17 @@ vendor/xiaozhi-venv/Scripts/python.exe scripts/bench_v2_voice.py --count 30 --ou
 
 小智使用锁定上游与已批准六处补丁。新机器按根 README 安装 vendor 环境、FFmpeg、SenseVoice；服务监听后再运行探针。普通语音为完整 WAV 合成、Opus 编码和节奏发送，当前句播放时最多预取下一句。每次 generation 变化取消旧输出；固定危机/练习使用启动前核验的音频，不等待普通 TTS 预取。
 
-现有安装的 `data/xiaozhi-config` 是独立配置副本，安装器不会覆盖它。升级时检查并同步新增七角色提示词、更新的 Talker / stages 和 `settings.cognition`；保留 `storage.db_path: data/xiaozhi.db` 及用户自定义内容。当前工作区已同步本次提示词与 cognition 配置，最终启动记录为 `artifacts/v2/xiaozhi-release-startup.log`。内容文字变化后需重新准备相应固定音频。
+部署配置用 `.venv/Scripts/python.exe -m companion.tools.upgrade_config data/xiaozhi-config` 升级：以安装版本基线做三方合并，保留定制 settings、预校验、备份，重复运行不改动。每次内容/提示词变化都会使旧课程回执失效；音频文本或声音变化后重新执行 `prepare_audio --config-dir data/xiaozhi-config --output data/fixed_audio --bind-config`。最新操作见 [小智交接包](XIAOZHI_HANDOFF.md)。六核心接入点外新增独立 access.patch，用随机设备凭据映射用户。
 
 `first_sentence_ms` 是文本成句，`tts_start_ms` / `tts_complete_ms` 是首句合成时间，`opus_first_packet_ready_ms` 是编码完成，`opus_first_packet_sent_ms` 是实际上游发送计数增长，`server_completed_ms` 是服务端节奏发送估计。自定义上游发送延迟使首包异步排队时，不能确认的 sent 字段留缺测。客户端另记录收到首包的时间。以上都不等于 ESP32 扬声器实际首响或播放 ACK。
 
 ## 固定验收与安装包
 
 ```powershell
-# 完整离线协议与 12 段固定场景
-.venv/Scripts/python.exe -m companion.tools.v2_acceptance quality --fake --output artifacts/v2/fake-manual
-# 付费：真实 12 段多轮；保存每轮输出、策略、角色与 usage
-.venv/Scripts/python.exe -m companion.tools.v2_acceptance quality --output artifacts/v2/live-manual
+# 当前课程固定17段；T01–T09定向覆盖，N01–N08自然选择
+.venv/Scripts/python.exe -m companion.tools.course_acceptance --fake --output artifacts/course-fake-manual
+# 付费真实回放，每次用新目录；不是设备播放测试
+.venv/Scripts/python.exe -m companion.tools.course_acceptance --final --output artifacts/course-live-manual
 # 付费：保留原有 120 条风险回归、对话和 TTS 检查
 .venv/Scripts/python.exe -m pytest companion/tests/test_online.py -m online --basetemp artifacts/v2/online-manual
 
