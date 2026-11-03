@@ -61,4 +61,6 @@ Token统计把provider与estimated分开标记。第二完整批次记录输入4
 
 ## 复现与范围
 
+新版[GitHub Pages](https://hhuang999.github.io/companion-doll-backend/)已部署，[工作流41696251499](https://github.com/hhuang999/companion-doll-backend/actions/runs/41696251499)成功。浏览器逐张验证五个架构视图、首页真实汇总、策略筛选和390px窄屏；九项内部资源均HTTP 200。发布记录与本地证据索引见[实施状态](autonomous-upgrade/IMPLEMENTATION_STATUS.md#github-与-pages-发布验收)。
+
 命令见 [V2_OPERATIONS](V2_OPERATIONS.md)、[CONTENT](CONTENT.md) 和 [展示脚本](autonomous-upgrade/DEMO.md)。检查原始产物必须使用新输出目录；公开仓库不含API key、数据库、客户端令牌或私人音频。新TASK已授权由Codex完成课程内容核查与验收，固定S03–S19及人工签字不再是本课程发布前置条件。

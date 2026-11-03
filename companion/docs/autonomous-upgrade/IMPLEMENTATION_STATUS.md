@@ -1,8 +1,8 @@
 # 研究驱动升级：持续实施状态
 
-更新时间：2026-11-04（Asia/Singapore）。权威任务：[TASK.md](TASK.md)。状态：进行中。
+更新时间：2026-11-04（Asia/Singapore）。权威任务：[TASK.md](TASK.md)。状态：本次可独立完成的开发、验收、文档与线上发布已完成；硬件检查交接。
 分支 `codex/research-support-upgrade`；起点 `3cb20bc8b47ef15924ca1a3c6557951a5680cd0c`。
-实现提交：319d59e、272e825、15c1fe2、4de1836、bc189f0、480d4a8、38fb8cf。开发、真实验收与本地网站已完成；正在发布。
+实现提交：319d59e、272e825、15c1fe2、4de1836、bc189f0、480d4a8、38fb8cf；网站与文档8c14c78、源码固定27c2062。任务分支已正常快进集成main，Pages已部署并在线检查。
 本文件是跨上下文继续工作的入口；未列证据的项目不算完成。
 
 ## 已核实基线
@@ -33,8 +33,8 @@
 | U12 §9.3 | 固定多轮质量审读 | 完成；17段两次完整及12段补测；QUALITY_REVIEW/VALIDATION_SUMMARY；措辞和超时限制保留 |
 | U13 §9.4 | CLI、观察台、WS/Opus/ASR | 完成；CLI fake/live、观察台真实任务/反馈；xiaozhi-probe-final通过 |
 | U14 §9.5 | 30次最终语音与性能 | 完成；voice-final2 30/30动态、21/21角色；首句1257.5/1421ms、首包3609/4015ms；参考目标未全达 |
-| U15 §10 | 项目站与五张架构图 | 本地完成；浏览器与自动四关通过，固定源码38fb8cf；待线上核验 |
-| U16 §11 | 文档、提交与GitHub/Pages | 文档和交接完成；正在整理发布提交，尚未推送 |
+| U15 §10 | 项目站与五张架构图 | 完成；自动四关与实际线上五图渲染通过，固定实现源码38fb8cf；桌面/390px/筛选/链接检查 |
+| U16 §11 | 文档、提交与GitHub/Pages | 完成；正常push任务分支/main，Pages部署41696251499成功；浏览器证据见末节 |
 
 ## 实施决定
 
@@ -42,7 +42,7 @@
 2. 课程内容准入将明确区分来源核查、自动审查、工程回放与适用范围；不能将机器核查记为人工/临床审核。
 3. 新策略使用语义化 ID，保留已知 S16 映射与旧记录可读性；不猜测缺失 S03–S19 的原义。
 
-## 进行中的工作与下一步
+## 实施过程记录（按时间保留，当前状态见顶部与末节）
 
 - research 技能要求的子任务 `research_evidence` 已完成，仅写 EVIDENCE_REVIEW.md；主线程已阅读其结果。
 - 主线程：检查当前内容/校验/Agent/状态路径，先完成可运行的内容检索与执行纵向链路，再补全内容和真实验收。
@@ -129,3 +129,12 @@
 - xiaozhi-probe-final实际通过wake/普通/危机abort/重连/Opus真实ASR，两个结束done；首包93/3140/109/47/3797ms。无ESP32播放ACK或真机测量。
 - 最终wheel-check4及隔离wheel-demo通过；CLI实时一次Critic超时保留、结束done；当前文档已明确历史与课程结果、范围和未达项。
 - 目前只剩发布提交、普通push/main集成、Pages在线内容/链接检查。服务可留供用户使用：小智8000/session21191、观察台8503/session14877；本地站8765/session66209。所有付费验收任务已结束。
+
+## GitHub 与 Pages 发布验收
+
+- 2026-11-04，任务分支 `codex/research-support-upgrade` 推送成功，`main` 从3cb20bc正常快进到27c2062；后续仅补充本发布记录与站点文档引用固定值。
+- [Pages部署41696251499](https://github.com/hhuang999/companion-doll-backend/actions/runs/41696251499) completed/success；来源main:/docs。
+- 已实际访问 [项目网站](https://hhuang999.github.io/companion-doll-backend/)：六策略、三练习、16来源、152检查、17段场景、30/30语音及真实延迟均显示；五张架构图逐张加载与目视检查，九个内部资源HTTP 200。
+- 线上“只想被听见”进入无行动空态，重置恢复六策略；390px视口无横向溢出。GitHub插件读回新版README与固定提交的小智交接文档成功。
+- 本地证据：`artifacts/autonomous-upgrade/browser/pages-online.json`、`diagrams-online.json`、`pages-online-mobile.json`及对应截图；全升级115个变更文件通过实际凭据值扫描，原始API/设备凭据与运行数据保留在忽略路径。
+- 已完成全部可独立完成范围。仍保留语言精修、偶发角色超时、900ms/8s参考性能差距；真机首响、停声、麦克风和物理交互按XIAOZHI_HANDOFF由硬件同学验收。此状态不代表真实未成年人或临床适用性验证。
