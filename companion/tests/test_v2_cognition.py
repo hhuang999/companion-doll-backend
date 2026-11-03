@@ -182,6 +182,16 @@ def test_end_evidence_repair_keeps_invalid_memory_out_of_store(engine):
     assert "EvidenceValidationError" in runs[0]["error"]
 
 
+def test_blocked_invitation_cannot_become_unconsented_talker_advice(engine):
+    core, fake, port = engine
+    input_turn(core, "不要告诉我必须选哪个专业")
+    fake.streams.append("从一个小问题开始试试。")
+    input_turn(core, "有什么办法能从一个小问题开始吗？")
+    assert core.sessions["s"].state.pending_offer is None
+    assert port.events[-1].text == core.config.stages["templates"]["boundary_hold"]
+    assert "试试" not in port.events[-1].text
+
+
 def test_v2_06_budget_reservations_deadline_shared_repair():
     clock = [0.0]
     budget = Budget(

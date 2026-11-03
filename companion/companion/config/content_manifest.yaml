@@ -2,27 +2,27 @@ version: course-1.0
 scope: course_synthetic_adult_roleplay
 sources:
 - id: E01
-  citation: Ye、Cui、Yang、Liu，2019（在线 2018），[Evaluation of the Factor Structure of the
-    Adolescent Stress Questionnaire in Chinese Adolescents](https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/)，DOI
-    10.1177/0033294118792686；中国中学生 N=420，量表因子研究；**全文**：摘要、方法、六因子及讨论
+  citation: Ye、Cui、Yang、Liu，2019（在线 2018），[Evaluation of the Factor Structure of the Adolescent Stress
+    Questionnaire in Chinese Adolescents](https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/)，DOI 10.1177/0033294118792686；中国中学生
+    N=420，量表因子研究；**全文**：摘要、方法、六因子及讨论
   url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/
   read_scope: 全文
-  population: Ye、Cui、Yang、Liu，2019（在线 2018），[Evaluation of the Factor Structure of
-    the Adolescent Stress Questionnaire in Chinese Adolescents](https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/)，DOI
-    10.1177/0033294118792686；中国中学生 N=420，量表因子研究；**全文**：摘要、方法、六因子及讨论
+  population: Ye、Cui、Yang、Liu，2019（在线 2018），[Evaluation of the Factor Structure of the Adolescent Stress
+    Questionnaire in Chinese Adolescents](https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/)，DOI 10.1177/0033294118792686；中国中学生
+    N=420，量表因子研究；**全文**：摘要、方法、六因子及讨论
   supports: 压力领域多样，ASQ-CN 六因子 42 条、内部一致性 .82–.90；不能证明本项目五类就是量表因子，也不评价任何支持策略。
   limitations: 压力领域多样，ASQ-CN 六因子 42 条、内部一致性 .82–.90；不能证明本项目五类就是量表因子，也不评价任何支持策略。
   verification: checked
   checked_on: '2026-11-04'
 - id: E02
-  citation: 'Wang、Wang、Yang 等，2025，[Academic Burden and Emotional Problems Among Adolescents:
-    A Longitudinal Mediation Analysis](https://onlinelibrary.wiley.com/doi/10.1002/jad.12471)，DOI
-    10.1002/jad.12471；浙江初高中生 N=2965，三波观察队列；**全文**：方法、结果、讨论、限制'
+  citation: 'Wang、Wang、Yang 等，2025，[Academic Burden and Emotional Problems Among Adolescents: A Longitudinal
+    Mediation Analysis](https://onlinelibrary.wiley.com/doi/10.1002/jad.12471)，DOI 10.1002/jad.12471；浙江初高中生
+    N=2965，三波观察队列；**全文**：方法、结果、讨论、限制'
   url: https://onlinelibrary.wiley.com/doi/10.1002/jad.12471
   read_scope: 全文
-  population: 'Wang、Wang、Yang 等，2025，[Academic Burden and Emotional Problems Among
-    Adolescents: A Longitudinal Mediation Analysis](https://onlinelibrary.wiley.com/doi/10.1002/jad.12471)，DOI
-    10.1002/jad.12471；浙江初高中生 N=2965，三波观察队列；**全文**：方法、结果、讨论、限制'
+  population: 'Wang、Wang、Yang 等，2025，[Academic Burden and Emotional Problems Among Adolescents: A Longitudinal
+    Mediation Analysis](https://onlinelibrary.wiley.com/doi/10.1002/jad.12471)，DOI 10.1002/jad.12471；浙江初高中生
+    N=2965，三波观察队列；**全文**：方法、结果、讨论、限制'
   supports: 学业压力和后续抑郁/焦虑症状相关，睡眠和孤独的统计中介分别占抑郁关联的 31.0%、26.8%；地区、疫情时期、自陈和残余混杂限制因果推断。未测试睡前脚本或社交练习。
   limitations: 学业压力和后续抑郁/焦虑症状相关，睡眠和孤独的统计中介分别占抑郁关联的 31.0%、26.8%；地区、疫情时期、自陈和残余混杂限制因果推断。未测试睡前脚本或社交练习。
   verification: checked
@@ -39,125 +39,114 @@ sources:
   verification: checked
   checked_on: '2026-11-04'
 - id: E04
-  citation: Zhao、Hu，2022，[A multilevel model of the help-seeking behaviors among adolescents
-    with mental health problems](https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/)，DOI
-    10.3389/fnint.2022.946842；长沙四所初高中 N=3480，横断面自陈；**全文**：摘要、求助定义、表格/讨论（PMC 检索全文和期刊
-    PDF）
+  citation: Zhao、Hu，2022，[A multilevel model of the help-seeking behaviors among adolescents with mental
+    health problems](https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/)，DOI 10.3389/fnint.2022.946842；长沙四所初高中
+    N=3480，横断面自陈；**全文**：摘要、求助定义、表格/讨论（PMC 检索全文和期刊 PDF）
   url: https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/
   read_scope: 全文
-  population: Zhao、Hu，2022，[A multilevel model of the help-seeking behaviors among
-    adolescents with mental health problems](https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/)，DOI
-    10.3389/fnint.2022.946842；长沙四所初高中 N=3480，横断面自陈；**全文**：摘要、求助定义、表格/讨论（PMC 检索全文和期刊
-    PDF）
+  population: Zhao、Hu，2022，[A multilevel model of the help-seeking behaviors among adolescents with mental
+    health problems](https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/)，DOI 10.3389/fnint.2022.946842；长沙四所初高中
+    N=3480，横断面自陈；**全文**：摘要、求助定义、表格/讨论（PMC 检索全文和期刊 PDF）
   supports: 帮助来源同时包含朋友、家人、教师和正式服务；73.0% 求助，求助者中非正式 99.3%、正式 13.9%，心理老师 10.2%。单地抽样、自陈、渠道重叠；不能推断本产品会改变求助行为。
   limitations: 帮助来源同时包含朋友、家人、教师和正式服务；73.0% 求助，求助者中非正式 99.3%、正式 13.9%，心理老师 10.2%。单地抽样、自陈、渠道重叠；不能推断本产品会改变求助行为。
   verification: checked
   checked_on: '2026-11-04'
 - id: E05
-  citation: 'Gulliver、Griffiths、Christensen，2010，[Perceived barriers and facilitators
-    to mental health help-seeking in young people: a systematic review](https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/)，DOI
+  citation: 'Gulliver、Griffiths、Christensen，2010，[Perceived barriers and facilitators to mental health
+    help-seeking in young people: a systematic review](https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/)，DOI
     10.1186/1471-244X-10-113；22 项青少年/青年研究的系统综述；**全文**：摘要、纳入、结果、讨论（检索全文；直接打开 PMC 时遇验证码）'
   url: https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/
   read_scope: 全文
-  population: 'Gulliver、Griffiths、Christensen，2010，[Perceived barriers and facilitators
-    to mental health help-seeking in young people: a systematic review](https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/)，DOI
+  population: 'Gulliver、Griffiths、Christensen，2010，[Perceived barriers and facilitators to mental health
+    help-seeking in young people: a systematic review](https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/)，DOI
     10.1186/1471-244X-10-113；22 项青少年/青年研究的系统综述；**全文**：摘要、纳入、结果、讨论（检索全文；直接打开 PMC 时遇验证码）'
   supports: 污名/尴尬、保密和信任、识别困难、自力更生常见；22 项中澳大利亚 10、美国 9、中国 1，求助促进因素证据较少。只支持降低评判感和给用户控制权的设计动机。
   limitations: 污名/尴尬、保密和信任、识别困难、自力更生常见；22 项中澳大利亚 10、美国 9、中国 1，求助促进因素证据较少。只支持降低评判感和给用户控制权的设计动机。
   verification: checked
   checked_on: '2026-11-04'
 - id: E06
-  citation: Leigh、Taylor、Cole、Smith，2025，[Why is rumination unhelpful in adolescents?
-    Two studies examining the causal role of abstract processing](https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m)，DOI
+  citation: Leigh、Taylor、Cole、Smith，2025，[Why is rumination unhelpful in adolescents? Two studies examining
+    the causal role of abstract processing](https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m)，DOI
     10.1016/j.jad.2025.03.058；英国 11–14 岁青少年，两项抽象/具体加工实验；**全文**：任务、比较、结果、讨论
   url: https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m
   read_scope: 全文
-  population: Leigh、Taylor、Cole、Smith，2025，[Why is rumination unhelpful in adolescents?
-    Two studies examining the causal role of abstract processing](https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m)，DOI
+  population: Leigh、Taylor、Cole、Smith，2025，[Why is rumination unhelpful in adolescents? Two studies examining
+    the causal role of abstract processing](https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m)，DOI
     10.1016/j.jad.2025.03.058；英国 11–14 岁青少年，两项抽象/具体加工实验；**全文**：任务、比较、结果、讨论
   supports: 具体加工相比抽象反复想在实验任务中伴随更好的社会问题解决和更少负面未来想法。测的是近端任务表现，不是抑郁治疗或一轮聊天的效果；年龄、文化需外推。
   limitations: 具体加工相比抽象反复想在实验任务中伴随更好的社会问题解决和更少负面未来想法。测的是近端任务表现，不是抑郁治疗或一轮聊天的效果；年龄、文化需外推。
   verification: checked
   checked_on: '2026-11-04'
 - id: E07
-  citation: Lunn、Greene、Callaghan、Egan，2023，[Associations between perfectionism and
-    symptoms of anxiety, obsessive-compulsive disorder and depression in young people](https://pubmed.ncbi.nlm.nih.gov/37194469/)，DOI
+  citation: Lunn、Greene、Callaghan、Egan，2023，[Associations between perfectionism and symptoms of anxiety,
+    obsessive-compulsive disorder and depression in young people](https://pubmed.ncbi.nlm.nih.gov/37194469/)，DOI
     10.1080/16506073.2023.2211736；6–24 岁，121 项研究元分析；**摘要**（全文链接未能稳定获取）
   url: https://pubmed.ncbi.nlm.nih.gov/37194469/
   read_scope: 摘要
-  population: Lunn、Greene、Callaghan、Egan，2023，[Associations between perfectionism
-    and symptoms of anxiety, obsessive-compulsive disorder and depression in young
-    people](https://pubmed.ncbi.nlm.nih.gov/37194469/)，DOI 10.1080/16506073.2023.2211736；6–24
-    岁，121 项研究元分析；**摘要**（全文链接未能稳定获取）
+  population: Lunn、Greene、Callaghan、Egan，2023，[Associations between perfectionism and symptoms of anxiety,
+    obsessive-compulsive disorder and depression in young people](https://pubmed.ncbi.nlm.nih.gov/37194469/)，DOI
+    10.1080/16506073.2023.2211736；6–24 岁，121 项研究元分析；**摘要**（全文链接未能稳定获取）
   supports: 完美主义“担忧”与抑郁症状汇总相关约 r=.40；高标准追求和担忧不能混为一谈。相关关系不能证明改写自我评价会产生疗效。
   limitations: 完美主义“担忧”与抑郁症状汇总相关约 r=.40；高标准追求和担忧不能混为一谈。相关关系不能证明改写自我评价会产生疗效。
   verification: checked
   checked_on: '2026-11-04'
 - id: E08
-  citation: 'WHO/UNICEF，2023，[Early Adolescent Skills for Emotions (EASE): group psychological
-    help](https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf)；10–15
-    岁逆境社区青少年，官方干预手册；**全文**：范围、结构、监督、Calming My Body / Changing My Actions / Managing
-    My Problems、停止和转介'
+  citation: 'WHO/UNICEF，2023，[Early Adolescent Skills for Emotions (EASE): group psychological help](https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf)；10–15
+    岁逆境社区青少年，官方干预手册；**全文**：范围、结构、监督、Calming My Body / Changing My Actions / Managing My Problems、停止和转介'
   url: https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf
   read_scope: 全文
-  population: 'WHO/UNICEF，2023，[Early Adolescent Skills for Emotions (EASE): group
-    psychological help](https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf)；10–15
-    岁逆境社区青少年，官方干预手册；**全文**：范围、结构、监督、Calming My Body / Changing My Actions / Managing
-    My Problems、停止和转介'
+  population: 'WHO/UNICEF，2023，[Early Adolescent Skills for Emotions (EASE): group psychological help](https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf)；10–15
+    岁逆境社区青少年，官方干预手册；**全文**：范围、结构、监督、Calming My Body / Changing My Actions / Managing My Problems、停止和转介'
   supports: Stop–Think–Go 要求选择“小、可解、具体”的问题；识别感受、轻量行动、缓和身体均是结构化技能。EASE 需培训、持续监督、七次小组及照护者参与；只适合机制借鉴。
   limitations: Stop–Think–Go 要求选择“小、可解、具体”的问题；识别感受、轻量行动、缓和身体均是结构化技能。EASE 需培训、持续监督、七次小组及照护者参与；只适合机制借鉴。
   verification: checked
   checked_on: '2026-11-04'
 - id: E09
-  citation: Bluth、Lathren、Park 等，2024，[Feasibility, Acceptability, and Depression
-    Outcomes of a Randomized Controlled Trial of Mindful Self-Compassion for Teens](https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf)，DOI
+  citation: Bluth、Lathren、Park 等，2024，[Feasibility, Acceptability, and Depression Outcomes of a Randomized
+    Controlled Trial of Mindful Self-Compassion for Teens](https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf)，DOI
     10.1002/jad.12277；美国亚临床抑郁青少年 N=59，八周小组+延续课程、主动对照随机试验；**全文**：方法、结果、限制
   url: https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf
   read_scope: 全文
-  population: Bluth、Lathren、Park 等，2024，[Feasibility, Acceptability, and Depression
-    Outcomes of a Randomized Controlled Trial of Mindful Self-Compassion for Teens](https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf)，DOI
+  population: Bluth、Lathren、Park 等，2024，[Feasibility, Acceptability, and Depression Outcomes of a Randomized
+    Controlled Trial of Mindful Self-Compassion for Teens](https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf)，DOI
     10.1002/jad.12277；美国亚临床抑郁青少年 N=59，八周小组+延续课程、主动对照随机试验；**全文**：方法、结果、限制
   supports: 参与者的症状轨迹优于健康生活课程对照；样本小且以白人女性为主，两组自我关怀都增加。仅支持温和自我对话有进一步研究价值，不能据此承诺一句话减少抑郁。
   limitations: 参与者的症状轨迹优于健康生活课程对照；样本小且以白人女性为主，两组自我关怀都增加。仅支持温和自我对话有进一步研究价值，不能据此承诺一句话减少抑郁。
   verification: checked
   checked_on: '2026-11-04'
 - id: E10
-  citation: 'Filia、Eastwood、Herniman、Badcock，2021，[Facilitating improvements in young
-    people’s social relationships to prevent or treat depression: A review of empirically
-    supported interventions](https://www.nature.com/articles/s41398-021-01406-7.pdf)，DOI
+  citation: 'Filia、Eastwood、Herniman、Badcock，2021，[Facilitating improvements in young people’s social
+    relationships to prevent or treat depression: A review of empirically supported interventions](https://www.nature.com/articles/s41398-021-01406-7.pdf)，DOI
     10.1038/s41398-021-01406-7；青少年/青年人际干预叙述性综述；**全文**：检索范围、IPT-A 结构、沟通分析/角色练习与证据限制'
   url: https://www.nature.com/articles/s41398-021-01406-7.pdf
   read_scope: 全文
-  population: 'Filia、Eastwood、Herniman、Badcock，2021，[Facilitating improvements in
-    young people’s social relationships to prevent or treat depression: A review of
-    empirically supported interventions](https://www.nature.com/articles/s41398-021-01406-7.pdf)，DOI
+  population: 'Filia、Eastwood、Herniman、Badcock，2021，[Facilitating improvements in young people’s social
+    relationships to prevent or treat depression: A review of empirically supported interventions](https://www.nature.com/articles/s41398-021-01406-7.pdf)，DOI
     10.1038/s41398-021-01406-7；青少年/青年人际干预叙述性综述；**全文**：检索范围、IPT-A 结构、沟通分析/角色练习与证据限制'
   supports: 沟通分析和角色练习存在于人工 IPT-A 中；可借“先理解冲突、再练习一句可选择的表达”。临床疗程和治疗关系不可缩成自动咨询；欺凌、虐待、明显不安全关系应转安全通路。
   limitations: 沟通分析和角色练习存在于人工 IPT-A 中；可借“先理解冲突、再练习一句可选择的表达”。临床疗程和治疗关系不可缩成自动咨询；欺凌、虐待、明显不安全关系应转安全通路。
   verification: checked
   checked_on: '2026-11-04'
 - id: E11
-  citation: Chen、Chen、Ling、Gu，2022，[An Online Career Intervention for Promoting Chinese
-    High School Students’ Career Readiness](https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/)，DOI
-    10.3389/fpsyg.2021.815076；江苏高一 N=957，五周教师主持在线课程/对照；**全文**：干预、结果、限制
+  citation: Chen、Chen、Ling、Gu，2022，[An Online Career Intervention for Promoting Chinese High School Students’
+    Career Readiness](https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/)，DOI 10.3389/fpsyg.2021.815076；江苏高一
+    N=957，五周教师主持在线课程/对照；**全文**：干预、结果、限制
   url: https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/
   read_scope: 全文
-  population: Chen、Chen、Ling、Gu，2022，[An Online Career Intervention for Promoting
-    Chinese High School Students’ Career Readiness](https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/)，DOI
-    10.3389/fpsyg.2021.815076；江苏高一 N=957，五周教师主持在线课程/对照；**全文**：干预、结果、限制
+  population: Chen、Chen、Ling、Gu，2022，[An Online Career Intervention for Promoting Chinese High School
+    Students’ Career Readiness](https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/)，DOI 10.3389/fpsyg.2021.815076；江苏高一
+    N=957，五周教师主持在线课程/对照；**全文**：干预、结果、限制
   supports: 探索兴趣和获取可靠专业信息与更高生涯探索、较少信息困扰相关。干预包括教师、测评和数据库；聊天中只能帮助选择下一步可核查的信息源，不能提供未经核实的选科/录取建议。
   limitations: 探索兴趣和获取可靠专业信息与更高生涯探索、较少信息困扰相关。干预包括教师、测评和数据库；聊天中只能帮助选择下一步可核查的信息源，不能提供未经核实的选科/录取建议。
   verification: checked
   checked_on: '2026-11-04'
 - id: E12
-  citation: Scullin、Krueger、Ballard、Pruett、Bliwise，2018，[The effects of bedtime writing
-    on difficulty falling asleep](https://pubmed.ncbi.nlm.nih.gov/29058942/)，DOI 10.1037/xge0000374；美国健康青年成人
-    N=57，五分钟书面待办/已完成任务随机比较及睡眠多导；**摘要**
+  citation: Scullin、Krueger、Ballard、Pruett、Bliwise，2018，[The effects of bedtime writing on difficulty
+    falling asleep](https://pubmed.ncbi.nlm.nih.gov/29058942/)，DOI 10.1037/xge0000374；美国健康青年成人 N=57，五分钟书面待办/已完成任务随机比较及睡眠多导；**摘要**
   url: https://pubmed.ncbi.nlm.nih.gov/29058942/
   read_scope: 摘要
-  population: Scullin、Krueger、Ballard、Pruett、Bliwise，2018，[The effects of bedtime
-    writing on difficulty falling asleep](https://pubmed.ncbi.nlm.nih.gov/29058942/)，DOI
-    10.1037/xge0000374；美国健康青年成人 N=57，五分钟书面待办/已完成任务随机比较及睡眠多导；**摘要**
+  population: Scullin、Krueger、Ballard、Pruett、Bliwise，2018，[The effects of bedtime writing on difficulty
+    falling asleep](https://pubmed.ncbi.nlm.nih.gov/29058942/)，DOI 10.1037/xge0000374；美国健康青年成人 N=57，五分钟书面待办/已完成任务随机比较及睡眠多导；**摘要**
   supports: 具体记录近期待办相比回顾已做事务，实验室入睡潜伏期更短。成年人、书写五分钟、单夜；玩偶的简短“留待明天”句不能宣称同样改善睡眠。
   limitations: 具体记录近期待办相比回顾已做事务，实验室入睡潜伏期更短。成年人、书写五分钟、单夜；玩偶的简短“留待明天”句不能宣称同样改善睡眠。
   verification: checked
@@ -183,25 +172,23 @@ sources:
   verification: checked
   checked_on: '2026-11-04'
 - id: E15
-  citation: Deng、Zhang、Lam、Ng、Chua，2024，[Plug-and-Play Policy Planner for Large Language
-    Model Powered Dialogue Agents](https://openreview.net/pdf?id=MCNqgUFTHI)（ICLR
-    2024）；对话策略规划实验；**全文**：方法、动作到指令映射、自博弈/训练与评价
+  citation: Deng、Zhang、Lam、Ng、Chua，2024，[Plug-and-Play Policy Planner for Large Language Model Powered
+    Dialogue Agents](https://openreview.net/pdf?id=MCNqgUFTHI)（ICLR 2024）；对话策略规划实验；**全文**：方法、动作到指令映射、自博弈/训练与评价
   url: https://openreview.net/pdf?id=MCNqgUFTHI
   read_scope: 全文
-  population: Deng、Zhang、Lam、Ng、Chua，2024，[Plug-and-Play Policy Planner for Large
-    Language Model Powered Dialogue Agents](https://openreview.net/pdf?id=MCNqgUFTHI)（ICLR
-    2024）；对话策略规划实验；**全文**：方法、动作到指令映射、自博弈/训练与评价
+  population: Deng、Zhang、Lam、Ng、Chua，2024，[Plug-and-Play Policy Planner for Large Language Model Powered
+    Dialogue Agents](https://openreview.net/pdf?id=MCNqgUFTHI)（ICLR 2024）；对话策略规划实验；**全文**：方法、动作到指令映射、自博弈/训练与评价
   supports: 可复用“选中策略 → 预定义短指令 → Talker”的接口思想；其结论依赖训练过的 planner 和模拟评价，不能当作当前无训练后台协作的质量证明。
   limitations: 可复用“选中策略 → 预定义短指令 → Talker”的接口思想；其结论依赖训练过的 planner 和模拟评价，不能当作当前无训练后台协作的质量证明。
   verification: checked
   checked_on: '2026-11-04'
 - id: E16
-  citation: Dunning 等，2022，[Do mindfulness-based programmes improve the cognitive
-    skills, behaviour and mental health of children and adolescents?](https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/)；青少年/儿童随机试验更新元分析；**全文**：主动/被动对照、随访、偏倚与限制
+  citation: Dunning 等，2022，[Do mindfulness-based programmes improve the cognitive skills, behaviour and
+    mental health of children and adolescents?](https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/)；青少年/儿童随机试验更新元分析；**全文**：主动/被动对照、随访、偏倚与限制
   url: https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/
   read_scope: 全文
-  population: Dunning 等，2022，[Do mindfulness-based programmes improve the cognitive
-    skills, behaviour and mental health of children and adolescents?](https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/)；青少年/儿童随机试验更新元分析；**全文**：主动/被动对照、随访、偏倚与限制
+  population: Dunning 等，2022，[Do mindfulness-based programmes improve the cognitive skills, behaviour
+    and mental health of children and adolescents?](https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/)；青少年/儿童随机试验更新元分析；**全文**：主动/被动对照、随访、偏倚与限制
   supports: 与主动对照相比，焦虑/压力改善很小，随访未见稳定差异，伤害报告不足。练习需有自愿入口、可停、短时长；对不适者改为眼睛睁开的外部感官定位或安静陪伴。
   limitations: 与主动对照相比，焦虑/压力改善很小，随访未见稳定差异，伤害报告不足。练习需有自愿入口、可停、短时长；对不适者改为眼睛睁开的外部感官定位或安静陪伴。
   verification: checked
@@ -305,4 +292,146 @@ reviews:
   reviewer: codex_automated
   reviewed_on: '2026-11-04'
   rationale: 采用尊重、安全和现实支持原则；不假称已通知，不提供未经地区核实的热线，不强制联系不安全家人；仅课程模拟。
-acceptance: null
+acceptance:
+  package_digest: b96b7803596548766e2b700b18ccec702cdd61352564e6176fe15b960aa5d373
+  check_version: course-release-1
+  deterministic: passed
+  live_replay: passed
+  scenario_ids:
+  - T01
+  - T02
+  - T03
+  - T04
+  - T05
+  - T06
+  - T07
+  - T08
+  - T09
+  - N01
+  - N02
+  - N03
+  - N04
+  - N05
+  - N06
+  - N07
+  - N08
+  evidence_path: companion/docs/autonomous-upgrade/QUALITY_REVIEW.md
+  items:
+  - item: cards/kind_self_talk.yaml
+    deterministic_cases: &id001
+    - companion/tests/test_course_strategies.py::test_each_course_strategy_filters_refusal_and_exclusions
+    - companion/tests/test_course_strategies.py::test_each_strategy_runs_roles_permission_step_feedback_and_exit
+    live_scenarios:
+    - quality-final2/T02
+    covered_behaviors:
+    - applicable
+    - excluded
+    - permission_refusal
+    - exit
+    - feedback
+    result: passed
+  - item: cards/S16.yaml
+    deterministic_cases: *id001
+    live_scenarios:
+    - quality-final2/T01
+    covered_behaviors:
+    - applicable
+    - excluded
+    - permission_refusal
+    - exit
+    - feedback
+    result: passed
+  - item: cards/safe_communication.yaml
+    deterministic_cases: *id001
+    live_scenarios:
+    - quality-final4/T03
+    covered_behaviors:
+    - applicable
+    - excluded
+    - permission_refusal
+    - exit
+    - feedback
+    result: passed
+  - item: cards/safe_support.yaml
+    deterministic_cases: *id001
+    live_scenarios:
+    - quality-final3/T04
+    covered_behaviors:
+    - applicable
+    - excluded
+    - permission_refusal
+    - exit
+    - feedback
+    result: passed
+  - item: cards/values_exploration.yaml
+    deterministic_cases: *id001
+    live_scenarios:
+    - quality-final3/T05
+    covered_behaviors:
+    - applicable
+    - excluded
+    - permission_refusal
+    - exit
+    - feedback
+    result: passed
+  - item: cards/worry_parking.yaml
+    deterministic_cases: *id001
+    live_scenarios:
+    - quality-final2/T06
+    covered_behaviors:
+    - applicable
+    - excluded
+    - permission_refusal
+    - exit
+    - feedback
+    result: passed
+  - item: exercises/bedtime.yaml
+    deterministic_cases: &id002
+    - companion/tests/test_course_exercises.py::test_exercise_filter_and_role_execution
+    - companion/tests/test_course_exercises.py::test_exercise_refusal_does_not_execute_or_reoffer
+    live_scenarios:
+    - quality-final2/T09
+    covered_behaviors:
+    - applicable
+    - excluded
+    - permission_refusal
+    - exit
+    - feedback
+    result: passed
+  - item: exercises/breathing_60s.yaml
+    deterministic_cases: *id002
+    live_scenarios:
+    - quality-final2/T07
+    covered_behaviors:
+    - applicable
+    - excluded
+    - permission_refusal
+    - exit
+    - feedback
+    result: passed
+  - item: exercises/grounding.yaml
+    deterministic_cases: *id002
+    live_scenarios:
+    - quality-final2/T08
+    covered_behaviors:
+    - applicable
+    - excluded
+    - permission_refusal
+    - exit
+    - feedback
+    result: passed
+  - item: crisis.yaml
+    deterministic_cases:
+    - companion/tests/test_core.py::test_high_risk_bypasses_models_and_is_sticky
+    - companion/tests/test_core.py::test_cancellation_rejects_old_output
+    - companion/tests/test_risk_and_playback.py::test_lexicon_does_not_promote_negation_and_quotation
+    - companion/tests/test_v2_memory.py::test_v2_15_execution_does_not_create_positive_memory
+    live_scenarios:
+    - quality-final3/N08
+    covered_behaviors:
+    - applicable
+    - excluded
+    - permission_refusal
+    - exit
+    - feedback
+    result: passed

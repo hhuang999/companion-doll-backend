@@ -1,6 +1,6 @@
 # 从研究证据到可执行支持
 
-版本：course-1.0，2026-11-04。研究依据见 [EVIDENCE_REVIEW](research/EVIDENCE_REVIEW.md)。六项支持、三段练习已进入 development 主路径，课程 demo 的音频与真实验收回执仍待完成。`enabled` 是来源与自动内容核查状态；完整 demo 准入另检查逐项工程、真实回放和资源，当前不放行。
+版本：course-1.0，2026-11-04。研究依据见 [EVIDENCE_REVIEW](research/EVIDENCE_REVIEW.md)。六项支持、三段练习已进入 development 主路径；课程回执course-release-1已绑定逐项工程与真实回放证据。部署副本完成固定音频准备后实际demo准入通过。`enabled` 仍只表示来源与自动核查状态；demo会另外验证当前摘要与实际音频。见QUALITY_REVIEW及VALIDATION。
 
 ## 内容分工
 

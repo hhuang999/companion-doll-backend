@@ -282,7 +282,7 @@ class CompanionCore:
                     ) and directive in ("action_offer", "exercise_offer", "resume_offer"):
                         state.pending_offer = None
                         self.machine.move(state, Stage.explore)
-                        directive = None
+                        directive = "boundary_hold"
                     if control_changed and not triggers:
                         triggers = ("boundary",)
                     if (
