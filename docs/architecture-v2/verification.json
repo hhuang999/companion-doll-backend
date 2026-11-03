@@ -9,7 +9,7 @@
         "browser-check": "pass"
       },
       "html_sha256": "d81faf2c7c31a5b57cddf8afc6a0911f5f9a63790395063c10c3d374cc396cd6",
-      "source_sha256": "259c25ef017a33e17be7d9f50af484099570fa07386b79e1aa30bdbe4d0c05f4",
+      "source_sha256": "d16e0d74b0f3dc07ba8fec321d6a8e990ce937fb0447d2072485caffeead1b05",
       "visual_review": "Layout unchanged from prior inspected light/dark overview; public source links revalidated by browser-check"
     },
     "collaboration": {
@@ -20,7 +20,7 @@
         "browser-check": "pass"
       },
       "html_sha256": "d7334964c4d2ff6dbd448191600490be4c4d5f2ad17f77b6a47e79806916a89d",
-      "source_sha256": "1b44ace9f01af59b8b1d4c19cc9d14ed5244cc025daa4955f28ff6c642f381cb",
+      "source_sha256": "3ca3709ed13363ab23fb22d94cd7ce82ad703a443320dd4c1c45934d10531f99",
       "visual_review": "automated browser only"
     },
     "memory": {
@@ -31,7 +31,7 @@
         "browser-check": "pass"
       },
       "html_sha256": "2c9bfa73c077c6a06c9bcb4425163f4e5bf556d26c18b36890bb157fae03cdd0",
-      "source_sha256": "51bcb99e20ae7b3ec37d24efae188028183bca1eb8cf81fa43598459c190063e",
+      "source_sha256": "1f96ab5da1468efa927ca2fef2a2f84e22e3a89c163e8f929f0bbec8de1c791a",
       "visual_review": "automated browser only"
     },
     "audio": {
@@ -42,8 +42,9 @@
         "browser-check": "pass"
       },
       "html_sha256": "f31dc2273f72a5cbecee4811d79807499fd11c466b28630b54714653c02e23bf",
-      "source_sha256": "d78cb5efee79b0fb8bffb661e58db39b970122ea0881e6d5077c2d0589b7328a",
+      "source_sha256": "d0024042173c81e7f39ba53f39c984e7574100f6336fbb0d73a49a0782ddadfa",
       "visual_review": "automated browser only"
     }
-  }
+  },
+  "hash_basis": "Published Git blob bytes; Windows working-tree line endings may differ"
 }
