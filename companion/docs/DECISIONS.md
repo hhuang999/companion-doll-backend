@@ -1,5 +1,17 @@
 # 实现决定
 
+## 研究驱动课程升级（2026-11-04，实施中）
+
+最新授权与完成标准见 `autonomous-upgrade/TASK.md`，实施证据见该目录 `IMPLEMENTATION_STATUS.md`。以下 v1/v2 内容签字与固定卡片数量要求是历史决定，由本次课程范围准入替代；独立风险、许可、取消与来源规则继续适用。
+
+策略目录先做目标、当前意愿、情绪/准备度、上下文排除、拒绝及使用次数过滤，再用可解释的中文关键词作有限排序。Planner 与 Critic 收到同一候选内容摘要，独立 Brief 仍不看候选。检索完整结果保存在 CognitiveJob 和已发布 SupportPlan 的 JSON 中，兼容旧记录缺省字段；不为附加 JSON 字段新增无用途 SQL 迁移。
+
+内容使用语义 ID，并允许已知历史 S16；`enabled` 表示可追溯课程内容，和运行时 Critic 的 `approved` 分开。demo 要求来源核查、Codex 自动审查、内容 hash、逐项确定性行为与真实回放验收以及实测音频；不再硬编码 S03–S19 或虚构人工 reviewer。内容脚本/暂停和角色提示变化会让验收摘要失效；音频本机路径与实测时长不改变研究内容摘要，音频另作存在/实测校验。此阶段尚未启用新内容。
+
+原 `test_config_has_every_stage_and_rejects_unreviewed_demo` 的错误消息断言改为缺课程内容清单，仍断言缺少准入证据时拒绝启动。不是删除旧安全检查。
+
+接口核查：Aihubmix [TTS 文档](https://docs.aihubmix.com/cn/api/TTS)（2026-11-04 读取）FAQ 明确当前接口返回完整文件、不支持流式输出；正文“音频流”指二进制响应，不作为增量播放能力证明。优先优化句长、无效等待与现有预取，不将 `stream_to_file` 当成低首包增量合成。
+
 ## v2 实施决定（实现提交 e3ef674）
 
 默认 development 已切到 `Cognition`；旧 Reasoner 不再作为发布执行器。`reasoner_runs` 保留历史，新的角色调用和最终事务结果写入 `agent_runs` / `cognitive_jobs`。Snapshot 是经代码卡片检查后的 SupportPlan 兼容投影；`active_support_plan_id` 与旧播放 `active_plan_id` 分开。

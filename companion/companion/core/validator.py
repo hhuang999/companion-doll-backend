@@ -50,6 +50,10 @@ class Validator:
             if (
                 not card
                 or card.status == "draft"
+                or (
+                    card.status == "enabled"
+                    and not self.config.content_reviewed(f"cards/{identifier}.yaml")
+                )
                 or not item
                 or not sourced(item)
                 or not item.when_met

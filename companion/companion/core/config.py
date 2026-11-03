@@ -7,6 +7,8 @@ from typing import Literal
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
+from companion.content.models import ContentManifest, StrategyProtocol
+
 from .models import PlaybackSegment, Stage
 
 
@@ -139,9 +141,9 @@ class CardTalker(SettingsModel):
 
 
 class Card(SettingsModel):
-    id: str = Field(pattern=r"^S(0[3-9]|1[0-9])$")
+    id: str = Field(pattern=r"^(S(0[3-9]|1[0-9])|[a-z][a-z0-9_]{2,47})$")
     name: str
-    status: Literal["fixture", "draft", "approved"]
+    status: Literal["fixture", "draft", "approved", "enabled"]
     requires_permission: Literal[True] = True
     targets: Targets
     constraints: dict[str, list[str]]
@@ -150,12 +152,13 @@ class Card(SettingsModel):
     limits: dict[str, int]
     emo: str
     source: dict[str, str]
+    protocol: StrategyProtocol | None = None
 
 
 class Exercise(SettingsModel):
     id: str
     name: str
-    status: Literal["draft", "approved"]
+    status: Literal["draft", "approved", "enabled"]
     emo: str
     lines: list[PlaybackSegment] = Field(min_length=1)
 
@@ -171,6 +174,11 @@ class Config:
         self.stages = self.read("stages.yaml")
         self.crisis = self.read("crisis.yaml")
         self.lexicon = self.read("risk_lexicon.yaml")
+        self.content = (
+            ContentManifest.model_validate(self.read("content_manifest.yaml"))
+            if (self.directory / "content_manifest.yaml").is_file()
+            else None
+        )
         self.cards = {}
         for path in sorted((self.directory / "cards").glob("*.yaml")):
             card = Card.model_validate(self.read(str(path.relative_to(self.directory))))
@@ -179,6 +187,10 @@ class Config:
             if card.limits.get("per_session", 0) < 1:
                 raise ValueError(f"Invalid card limit: {card.id}")
             self.cards[card.id] = card
+            if card.status == "enabled" and (
+                card.protocol is None or not self.content_reviewed(f"cards/{card.id}.yaml")
+            ):
+                raise ValueError(f"Enabled strategy has incomplete/stale content review: {card.id}")
         self.exercises = {}
         for path in sorted((self.directory / "exercises").glob("*.yaml")):
             exercise = Exercise.model_validate(self.read(str(path.relative_to(self.directory))))
@@ -217,17 +229,11 @@ class Config:
         return value
 
     def validate_demo(self) -> None:
-        expected = {f"S{i:02}" for i in range(3, 20)}
-        approved = {c.id for c in self.cards.values() if c.status == "approved"}
-        if approved != expected:
-            raise ValueError("Demo requires approved cards S03-S19")
-        if not all(self.crisis.get(k) for k in ("approved", "reviewer", "reviewed_at")):
-            raise ValueError("Demo requires reviewed crisis templates")
-        for exercise in self.exercises.values():
-            if exercise.status != "approved":
-                raise ValueError(f"Exercise not approved: {exercise.id}")
-            for segment in exercise.lines:
-                if not segment.audio_path or segment.audio_duration_s is None:
-                    raise ValueError(f"Exercise audio not measured: {exercise.id}")
-                if not (self.directory / segment.audio_path).is_file():
-                    raise ValueError(f"Exercise audio missing: {segment.audio_path}")
+        from companion.content.admission import validate_course_content
+
+        validate_course_content(self)
+
+    def content_reviewed(self, relative: str) -> bool:
+        from companion.content.admission import review_valid
+
+        return review_valid(self, relative)

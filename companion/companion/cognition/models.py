@@ -5,6 +5,7 @@ from typing import Literal
 
 from pydantic import Field
 
+from companion.content.models import StrategySelection
 from companion.memory.models import MemoryBundle, MemoryCandidate
 
 from .base import Contract, EvidenceRef, utcnow
@@ -66,6 +67,19 @@ class SituationAssessment(Contract):
     pathway_signals: tuple[Literal["rumination", "self_criticism", "sleep", "loneliness"], ...] = ()
     emotion_intensity: Literal["low", "medium", "high"] = "medium"
     readiness: Literal["low", "medium", "high"] = "low"
+    support_constraints: tuple[
+        Literal[
+            "unsafe_relationship",
+            "no_private_space",
+            "bedtime",
+            "limited_time",
+            "body_focus_distress",
+        ],
+        ...,
+    ] = ()
+    help_seeking_barriers: tuple[
+        Literal["judgment", "privacy", "burden", "unsafe_contact", "unknown_options"], ...
+    ] = ()
 
 
 class CandidateAction(Contract):
@@ -115,6 +129,7 @@ class SupportPlan(PlanCandidate):
     review_status: Literal["not_required", "approved", "rejected", "incomplete"]
     review_run_id: str | None = None
     status: Literal["active", "superseded", "invalidated", "expired"] = "active"
+    strategy_selection: StrategySelection | None = None
 
 
 class ReviewBrief(Contract):
@@ -253,6 +268,7 @@ class CognitiveJob(Contract):
     finished_at: datetime | None = None
     error: str | None = None
     budget_limits: dict[str, int | float] = Field(default_factory=dict)
+    strategy_selection: StrategySelection | None = None
 
 
 class Usage(Contract):

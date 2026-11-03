@@ -9,6 +9,21 @@ from companion.memory.models import MemoryItem
 
 
 class CognitionStore:
+    def record_strategy_selection(self, job_id, selection):
+        with self.transaction() as db:
+            row = db.execute(
+                "SELECT data,status FROM cognitive_jobs WHERE job_id=?", (job_id,)
+            ).fetchone()
+            if row is None or row["status"] != "running":
+                return False
+            job = CognitiveJob.model_validate_json(row["data"]).model_copy(
+                update={"strategy_selection": selection}
+            )
+            db.execute(
+                "UPDATE cognitive_jobs SET data=? WHERE job_id=?", (job.model_dump_json(), job_id)
+            )
+            return True
+
     def revisions(self, user_key, db=None):
         row = (
             (db or self.connection())

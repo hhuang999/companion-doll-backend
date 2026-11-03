@@ -5,3 +5,6 @@
 # Keep the published copy identical to the validated Archify artifact.
 docs/index.html -text whitespace=cr-at-eol,-blank-at-eol
 docs/diagrams/*.html -text whitespace=cr-at-eol,-blank-at-eol
+
+# Preserve the provided research export, including its original line endings.
+"companion/docs/autonomous-upgrade/research/研究链-v3.md" -text whitespace=-blank-at-eol

@@ -10,6 +10,7 @@ from datetime import timedelta
 from openai import APITimeoutError
 from pydantic import BaseModel
 
+from companion.content.catalog import StrategyCatalog
 from companion.core.models import (
     Assessment,
     CardEvidence,
@@ -59,6 +60,7 @@ class Cognition:
         factory = getattr(core.llm, "background_client", None)
         self.llm = factory() if factory else core.llm
         self.agents = Agents(core.config, core.store, self.llm)
+        self.catalog = StrategyCatalog(self.config)
         self.brief_pool = ThreadPoolExecutor(
             max_workers=core.config.settings.pools.reasoner_workers,
             thread_name_prefix="independent-brief",
@@ -258,24 +260,20 @@ class Cognition:
                             timeout=max(0, budget.deadline - time.monotonic())
                         )
                         self._validate(job, brief, allowed)
+                    selection = self.catalog.select(
+                        analysis,
+                        state,
+                        " ".join(
+                            row["text"] for row in payload["history"] if row["role"] == "user"
+                        ),
+                    )
+                    strategy_cards = self.catalog.project(selection)
+                    self.store.record_strategy_selection(job.job_id, selection)
                     planner_input = {
                         **payload,
                         "analysis": analysis.model_dump(mode="json"),
-                        "cards": [
-                            c.model_dump(
-                                include={
-                                    "id",
-                                    "status",
-                                    "requires_permission",
-                                    "targets",
-                                    "constraints",
-                                    "reasoner",
-                                    "limits",
-                                }
-                            )
-                            for c in self.config.cards.values()
-                            if c.status != "draft"
-                        ],
+                        "cards": strategy_cards,
+                        "catalog_version": selection.catalog_version,
                         "exercises": list(self.config.exercises),
                     }
                     candidate_id = uuid.uuid4().hex
@@ -291,6 +289,11 @@ class Cognition:
                             candidate_version=version,
                         )
                         self._validate(job, candidate, allowed)
+                        if any(
+                            action.kind == "card" and action.action_id not in selection.selected_ids
+                            for action in candidate.candidate_actions
+                        ):
+                            raise ValueError("Candidate action was excluded by strategy retrieval")
                         if job.kind == "routine":
                             if candidate.objective not in NON_ACTION or candidate.candidate_actions:
                                 raise ValueError("Routine cannot propose action/information")
@@ -302,6 +305,8 @@ class Cognition:
                             "candidate_id": candidate_id,
                             "candidate_version": version,
                             "candidate": candidate.model_dump(mode="json"),
+                            "cards": strategy_cards,
+                            "exercises": list(self.config.exercises),
                         }
                         review, review_id = self.agents.call(
                             job,
@@ -358,6 +363,7 @@ class Cognition:
                         max_user_turn_delta=self.config.settings.cognition.plan_turn_delta,
                         review_status=review_status,
                         review_run_id=review_id,
+                        strategy_selection=selection,
                     )
                     plan, plan_reason = self._delta(job, plan, budget)
                 finally:

@@ -68,6 +68,10 @@ class StateMachine:
             if (
                 card
                 and card.status != "draft"
+                and (
+                    card.status != "enabled"
+                    or self.config.content_reviewed(f"cards/{identifier}.yaml")
+                )
                 and identifier not in state.cards_refused
                 and state.cards_used.get(identifier, 0) < card.limits["per_session"]
                 and snapshot.assessment.seeker_state.emotion_intensity

@@ -2,3 +2,4 @@
 只输出 JSON。区分 facts、hypotheses、open_questions；不诊断。引用只能用输入中提供的 user_turn/memory/interaction_event 的 ID，quote 必须逐字匹配。最多三条事实、一个假设；没有充分依据时留空。memory_candidates 只提取用户明说的事实或边界，单次体验不概括成长期偏好。不要从播放完成推断有帮助。
 保持紧凑：通常1–2条 facts，每条statement/claim不超过25个汉字，引用只提供必要 ID，省略 quote 与空的可选字段。memory_candidates 不超过1项；valid_from 和 recorded_at 由程序提供，不要填日期占位。boundary_candidates 只有输入尚未包含的明确边界才提供，已知边界无需重复提取。
 schema: {{ schema }}
+压力可以混合，五类压力与四条共同路径分别判断；反复想不等于所有烦恼，情绪强度不是诊断。support_constraints 只在用户事实支持时填写：unsafe_relationship（欺凌/威胁/虐待或明确不安全联系人）、no_private_space、bedtime、limited_time、body_focus_distress。help_seeking_barriers 区分怕评价、隐私、怕添负担、不安全联系人和不知渠道；未知保持空数组。不因关系身份默认父母/老师安全，不把一次不愿聊记成永久偏好。对应判断必须有 facts 及其用户来源支撑。

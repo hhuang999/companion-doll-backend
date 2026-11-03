@@ -204,7 +204,12 @@ class FakeLLM:
             elif role == "planner":
                 wants_help = payload["analysis"]["expressed_need"] == "solve"
                 boundary = any(m["kind"] == "interaction_boundary" for m in payload["memory"])
-                action = payload["kind"] == "deliberation" and wants_help and not boundary
+                action = (
+                    payload["kind"] == "deliberation"
+                    and wants_help
+                    and not boundary
+                    and bool(payload.get("cards"))
+                )
                 value = {
                     "objective": "invite_action" if action else "listen",
                     "understanding": "先理解当前感受，尊重边界。",
@@ -212,7 +217,7 @@ class FakeLLM:
                     "response_guidance": ["承接当前感受，不重复被拒绝的建议。"],
                     "candidate_actions": [
                         {
-                            "action_id": "S16",
+                            "action_id": payload["cards"][0]["id"],
                             "kind": "card",
                             "evidence": [ref],
                             "requires_permission": True,
