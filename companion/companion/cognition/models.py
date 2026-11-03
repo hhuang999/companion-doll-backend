@@ -74,6 +74,7 @@ class SituationAssessment(Contract):
             "bedtime",
             "limited_time",
             "body_focus_distress",
+            "safe_contact",
         ],
         ...,
     ] = ()

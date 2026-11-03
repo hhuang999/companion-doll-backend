@@ -16,6 +16,7 @@ class StrategyProtocol(ContentModel):
     adaptation: str = Field(min_length=1)
     minimum_information: tuple[str, ...] = Field(min_length=1)
     prerequisites: tuple[str, ...] = Field(min_length=1)
+    required_contexts: tuple[str, ...] = ()
     excluded_contexts: tuple[str, ...] = ()
     burden: str = Field(min_length=1)
     permission: str = Field(min_length=1)

@@ -177,7 +177,13 @@ class StateMachine:
                     trigger_reasons=tuple(triggers + ["missing_card"]), directive="waiting_card"
                 )
             return RuleResult(trigger_reasons=tuple(triggers), directive="clarify_offer")
-        if state.stage == Stage.action and state.action_turns >= settings.max_action_turns:
+        card = self.config.cards.get(state.card_in_use)
+        action_limit = (
+            min(settings.max_action_turns, len(card.talker.steps))
+            if card
+            else settings.max_action_turns
+        )
+        if state.stage == Stage.action and state.action_turns >= action_limit:
             self.move(state, Stage.closing)
             return RuleResult(fired_rules=("R8",), trigger_reasons=tuple(triggers))
         if state.stage == Stage.closing and state.closing_turns >= 2:

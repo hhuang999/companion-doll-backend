@@ -1,9 +1,13 @@
 id: grounding
-name: 双脚落地
-status: draft
+name: 看看身边的一样东西
+status: enabled
 emo: 😌
 lines:
-  - {text: 把双脚轻轻放在地上。, pause_s: 5}
-  - {text: 感受脚底和地面接触的地方。, pause_s: 8}
-  - {text: 看看周围，留意眼前的颜色。, pause_s: 8}
-  - {text: 让呼吸保持自然，我们慢慢停下来。, pause_s: 3}
+- text: 如果周围安全，看看身边一样普通的东西。
+  pause_s: 3
+- text: 只留意它的一种颜色，不用告诉我答案。
+  pause_s: 4
+- text: 感觉一下脚下或椅子的支撑，哪里不舒服就跳过。
+  pause_s: 4
+- text: 不需要让自己马上平静，我们先停一下。
+  pause_s: 0

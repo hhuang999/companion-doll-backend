@@ -17,8 +17,11 @@ from companion.llm.fake import FakeLLM
 
 
 def test_filter_before_ranking_and_user_state_isolation(config):
+    config.cards = {"S16": config.cards["S16"]}
     catalog = StrategyCatalog(config)
-    assessment = SituationAssessment(expressed_need="solve", pathway_signals=("rumination",))
+    assessment = SituationAssessment(
+        expressed_need="solve", pathway_signals=("rumination",), readiness="medium"
+    )
     a, b = SessionState(session_id="a", user_key="a"), SessionState(session_id="b", user_key="b")
     a.cards_refused.add("S16")
     assert catalog.select(assessment, a, "反复想").selected_ids == ()
@@ -26,7 +29,7 @@ def test_filter_before_ranking_and_user_state_isolation(config):
     for changes, expected in [
         ({"expressed_need": "listen"}, "current_need_has_no_action"),
         ({"emotion_intensity": "high"}, "emotion_excluded"),
-        ({"pathway_signals": (), "pressure_types": ("academic",)}, "no_target_match"),
+        ({"pathway_signals": (), "pressure_types": ("future",)}, "no_target_match"),
     ]:
         result = catalog.select(assessment.model_copy(update=changes), b, "反复想")
         assert not result.selected_ids
@@ -76,11 +79,13 @@ def test_retrieval_reaches_planner_and_independent_critic_and_persists(config, s
         assert requests["planner"]["cards"] == requests["critic"]["cards"]
         assert requests["critic"]["cards"][0]["id"] == "S16"
         plan = store.active_support_plan("s")
-        assert plan.strategy_selection.selected_ids == ("S16",)
+        assert "S16" in plan.strategy_selection.selected_ids
         job = json.loads(
             store.query("SELECT data FROM cognitive_jobs WHERE kind='deliberation'")[0]["data"]
         )
-        assert job["strategy_selection"]["decisions"][0]["eligible"]
+        assert next(d for d in job["strategy_selection"]["decisions"] if d["strategy_id"] == "S16")[
+            "eligible"
+        ]
     finally:
         core.close()
 
@@ -148,7 +153,7 @@ def test_enabled_content_never_uses_missing_review_default(config, tmp_path):
     shutil.copytree(config.directory, directory)
     card = directory / "cards/S16.yaml"
     data = yaml.safe_load(card.read_text(encoding="utf-8"))
-    data["status"] = "enabled"
+    data["name"] = "changed without new review"
     card.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
     with pytest.raises(ValueError, match="incomplete/stale content review"):
         Config(directory)
@@ -159,6 +164,9 @@ def synthetic_admitted_config(config, tmp_path):
     """Fabricated receipts exist only inside this isolated validation unit test."""
     directory = tmp_path / "admission"
     shutil.copytree(config.directory, directory)
+    for path in (directory / "cards").glob("*.yaml"):
+        if path.stem != "S16":
+            path.unlink()
     with wave.open(str(directory / "unit.wav"), "wb") as audio:
         audio.setparams((1, 2, 16000, 0, "NONE", "not compressed"))
         audio.writeframes(b"\0\0" * 1600)

@@ -37,9 +37,26 @@ class Agents:
             "memory": 1800,
             "end": 1800,
         }[role]
+        role_schema = compact_schema(schema.model_json_schema())
+        if role == "analysis":
+            # Routing fields are optional for persisted legacy records, but every new
+            # assessment must actually classify them rather than omit all defaults.
+            role_schema["required"] = list(
+                dict.fromkeys(
+                    [
+                        *role_schema.get("required", []),
+                        "expressed_need",
+                        "pressure_types",
+                        "pathway_signals",
+                        "emotion_intensity",
+                        "readiness",
+                        "support_constraints",
+                    ]
+                )
+            )
         prompt = self.templates.get_template(f"{role}.j2").render(
             schema=json.dumps(
-                compact_schema(schema.model_json_schema()),
+                role_schema,
                 ensure_ascii=False,
                 separators=(",", ":"),
             )

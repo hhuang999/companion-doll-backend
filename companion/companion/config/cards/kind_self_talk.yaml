@@ -1,0 +1,68 @@
+id: kind_self_talk
+name: 把苛责换成准确温和的一句话
+status: enabled
+requires_permission: true
+targets:
+  pressure_types:
+  - self
+  - social_evaluative
+  pathways:
+  - self_criticism
+constraints:
+  excluded_emotion_intensities:
+  - high
+  excluded_readiness:
+  - low
+reasoner:
+  when_any: &id001
+  - 用户愿意尝试换一句说法
+  - 不是正在遭受现实威胁
+  not_when:
+  - 用户被欺负时不能把外部伤害改写成用户想法有问题。
+  - 当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断
+  success: 用户自愿采用更具体的表达或明确指出不适合；不推断自尊改善。
+  exit: 用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。
+talker:
+  steps:
+  - 承接用户的那句自我评价，不评价长相、能力或价值高低。
+  - 邀请把同一句话换成对朋友也说得出口的准确说法；不强迫积极肯定。
+  - 接受用户自己的版本或拒绝，不要求相信新说法；可以就此停下。
+  examples:
+  - “这次没达到目标”会不会比“我整个人都不行”更贴近事实？
+  never_say:
+  - 你就是最棒的
+  - 你一点问题都没有
+  - 你不胖
+limits:
+  per_session: 1
+emo: 🤔
+source:
+  document: 研究驱动课程内容 course-1.0
+  verification: codex_source_checked
+  evidence: companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md
+protocol:
+  version: course-1.0
+  adaptation: 原创中文短步骤；仅借用研究机制，未验证本改编的效果。
+  burden: 一次一小步，最多三轮；可以只听、跳过或结束。
+  permission: 先明确询问是否愿意试；拒绝和撤回立即停止。
+  stop: 用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。
+  followup: 只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。
+  feedback_limits: 只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。
+  mechanism: 将一次表现与整个人的价值分开，可借对朋友的说法检查双重标准。
+  evidence_ids:
+  - E07
+  - E09
+  minimum_information:
+  - 用户自己说出的苛责内容
+  prerequisites: *id001
+  excluded_contexts:
+  - unsafe_relationship
+  keywords:
+  - 没用
+  - 不够好
+  - 完美
+  - 丢脸
+  - 比不上
+  counterexample: 用户被欺负时不能把外部伤害改写成用户想法有问题。
+  required_contexts: []
+  legacy_ids: []

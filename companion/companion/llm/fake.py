@@ -65,6 +65,11 @@ class FakeLLM:
             value = (
                 f"<<state={stage};card={card};emo=😶;offer=->>\n{self.content['replies'][stage]}"
             )
+            if stage == "action" and card in self.content.get("strategy_replies", {}):
+                step = re.search(r"只做第 (\d+) 步", messages[0]["content"])
+                index = int(step.group(1)) - 1 if step else 0
+                replies = self.content["strategy_replies"][card]
+                value = f"<<state={stage};card={card};emo=😶;offer=->>\n{replies[min(index, len(replies) - 1)]}"
         for index in range(0, len(value), 3):
             if cancel.is_set():
                 return

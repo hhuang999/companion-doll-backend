@@ -1,11 +1,12 @@
-version: fixture-v1
-approved: false
-reviewer: null
-reviewed_at: null
+version: course-1.0
+status: enabled
+review_scope: course_synthetic_adult_roleplay
+reviewer: codex_automated
+reviewed_at: '2026-11-04'
 emoji: 😶
-opening: '[测试占位：危机开场话术待人工审核]'
+opening: 我听见你现在很难受。先到相对安全的地方，远离可能伤到你的东西，找一个你信任且安全的人来陪你。
 responses:
-  - '[测试占位：倾听回应一待人工审核]'
-  - '[测试占位：倾听回应二待人工审核]'
-resources: '[测试占位：援助信息待人工审核]'
-closing: '[测试占位：危机会话结束话术待人工审核]'
+- 现在最要紧的是有人在现实中陪着你。可以联系你信任的成年人；如果家里的人让你不安全，就找其他可信的人。
+- 你不必一次把事情讲完。可以先告诉那个安全的人：“我现在需要你陪我，不要让我一个人扛。”
+resources: 如果危险就在眼前，请立即联系当地急救或警方，或请身边安全的人代为联系。我不能替你拨号或通知别人。
+closing: 这次对话先到这里。请尽量留在安全、有人能照应的地方，并联系现实中的帮助。

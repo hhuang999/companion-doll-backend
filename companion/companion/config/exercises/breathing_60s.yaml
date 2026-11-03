@@ -1,13 +1,15 @@
 id: breathing_60s
-name: 呼吸练习
-status: draft
+name: 自然呼吸小暂停
+status: enabled
 emo: 😌
 lines:
-  - {text: 找个舒服的姿势，我们慢慢来。, pause_s: 2}
-  - {text: 轻轻吸气。, pause_s: 4}
-  - {text: 慢慢呼气。, pause_s: 6}
-  - {text: 轻轻吸气。, pause_s: 4}
-  - {text: 慢慢呼气。, pause_s: 6}
-  - {text: 再轻轻吸气。, pause_s: 4}
-  - {text: 慢慢呼气，让呼吸恢复自然。, pause_s: 6}
-  - {text: 我们先停在这里。, pause_s: 0}
+- text: 保持你舒服的姿势，眼睛可以睁着。
+  pause_s: 2
+- text: 不用把呼吸变深，也不用数拍子。
+  pause_s: 3
+- text: 只留意一次自然的吸气和呼气。
+  pause_s: 5
+- text: 不舒服就停，看看周围也可以。
+  pause_s: 3
+- text: 让呼吸照自己的节奏，我们先停在这里。
+  pause_s: 0

@@ -1,17 +1,68 @@
 id: S16
-name: 从为什么到具体经过（开发夹具）
-status: fixture
-targets: {pressure_types: [], pathways: [rumination]}
-constraints: {excluded_emotion_intensities: [high]}
+name: 从反复想转向具体的一步
+status: enabled
+requires_permission: true
+targets:
+  pressure_types:
+  - academic
+  pathways:
+  - rumination
+constraints:
+  excluded_emotion_intensities:
+  - high
+  excluded_readiness:
+  - low
 reasoner:
-  when_any: [学生反复思考同一件事]
-  not_when: [学生还没觉得被听见, 情绪强度为高]
-  success: 学生说出一个具体经过或下一步
-  exit: 学生表示没用或情绪上升
+  when_any: &id001
+  - 用户想试办法
+  - 问题可谈且不涉及创伤细节
+  not_when:
+  - 用户只想被听见时，不追问经过或要求下一步。
+  - 当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断
+  success: 用户说清一个片段或选择一个可控步骤；不等于困扰已经解决。
+  exit: 用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。
 talker:
-  steps: [温和指出反复思考, 询问具体经过, 讨论一个小的下一步]
-  examples: [那天具体是怎么发生的？]
-  never_say: [你又在钻牛角尖]
-limits: {per_session: 1}
+  steps:
+  - 依据原话选一个具体片段；已明确时简短确认，不再问同样的事。
+  - 只区分一件自己可影响的小事，不能要求改变别人的行为。
+  - 用户愿意时共同选一个最小下一步；不愿行动就结束，不索取承诺。
+  examples:
+  - 刚才最卡住的是那道题，还是想到成绩的时候？
+  - 只看这一小处就好，暂时不用解决全部。
+  never_say:
+  - 你又在钻牛角尖
+  - 别想了去做就好了
+limits:
+  per_session: 1
 emo: 🤔
-source: {document: 研究链 v3, verification: pending}
+source:
+  document: 研究驱动课程内容 course-1.0
+  verification: codex_source_checked
+  evidence: companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md
+protocol:
+  version: course-1.0
+  adaptation: 原创中文短步骤；仅借用研究机制，未验证本改编的效果。
+  burden: 一次一小步，最多三轮；可以只听、跳过或结束。
+  permission: 先明确询问是否愿意试；拒绝和撤回立即停止。
+  stop: 用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。
+  followup: 只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。
+  feedback_limits: 只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。
+  mechanism: 将抽象评价落到一个具体片段，再区分自己可以影响的一小步。
+  evidence_ids:
+  - E06
+  - E08
+  minimum_information:
+  - 当前困扰的一件具体事；若已说明不重复询问
+  prerequisites: *id001
+  excluded_contexts:
+  - unsafe_relationship
+  keywords:
+  - 反复
+  - 一直想
+  - 作业
+  - 考试
+  - 卡住
+  counterexample: 用户只想被听见时，不追问经过或要求下一步。
+  required_contexts: []
+  legacy_ids:
+  - S16

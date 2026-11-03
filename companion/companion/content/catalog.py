@@ -35,6 +35,10 @@ class StrategyCatalog:
                 assessment.support_constraints
             ):
                 reasons.append("context_excluded")
+            if protocol and not set(protocol.required_contexts) <= set(
+                assessment.support_constraints
+            ):
+                reasons.append("missing_required_context")
             matched = pressure.intersection(card.targets.pressure_types)
             matched_paths = pathways.intersection(card.targets.pathways)
             if (card.targets.pressure_types or card.targets.pathways) and not (
@@ -67,29 +71,20 @@ class StrategyCatalog:
         result = []
         for identifier in selection.selected_ids:
             card = self.config.cards[identifier]
-            value = card.model_dump(
-                include={
-                    "id",
-                    "name",
-                    "status",
-                    "requires_permission",
-                    "targets",
-                    "constraints",
-                    "reasoner",
-                    "limits",
-                }
-            )
+            value = {
+                "id": card.id,
+                "name": card.name,
+                "when": card.reasoner.when_any,
+                "not_when": card.reasoner.not_when,
+            }
             if card.protocol:
                 value["protocol"] = card.protocol.model_dump(
                     include={
                         "version",
                         "mechanism",
                         "evidence_ids",
-                        "prerequisites",
+                        "required_contexts",
                         "excluded_contexts",
-                        "burden",
-                        "stop",
-                        "feedback_limits",
                     }
                 )
             result.append(value)

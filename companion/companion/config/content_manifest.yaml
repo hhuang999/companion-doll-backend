@@ -1,0 +1,310 @@
+version: course-1.0
+scope: course_synthetic_adult_roleplay
+sources:
+- id: E01
+  citation: Ye、Cui、Yang、Liu，2019（在线 2018），[Evaluation of the Factor Structure of the
+    Adolescent Stress Questionnaire in Chinese Adolescents](https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/)，DOI
+    10.1177/0033294118792686；中国中学生 N=420，量表因子研究；**全文**：摘要、方法、六因子及讨论
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/
+  read_scope: 全文
+  population: Ye、Cui、Yang、Liu，2019（在线 2018），[Evaluation of the Factor Structure of
+    the Adolescent Stress Questionnaire in Chinese Adolescents](https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/)，DOI
+    10.1177/0033294118792686；中国中学生 N=420，量表因子研究；**全文**：摘要、方法、六因子及讨论
+  supports: 压力领域多样，ASQ-CN 六因子 42 条、内部一致性 .82–.90；不能证明本项目五类就是量表因子，也不评价任何支持策略。
+  limitations: 压力领域多样，ASQ-CN 六因子 42 条、内部一致性 .82–.90；不能证明本项目五类就是量表因子，也不评价任何支持策略。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E02
+  citation: 'Wang、Wang、Yang 等，2025，[Academic Burden and Emotional Problems Among Adolescents:
+    A Longitudinal Mediation Analysis](https://onlinelibrary.wiley.com/doi/10.1002/jad.12471)，DOI
+    10.1002/jad.12471；浙江初高中生 N=2965，三波观察队列；**全文**：方法、结果、讨论、限制'
+  url: https://onlinelibrary.wiley.com/doi/10.1002/jad.12471
+  read_scope: 全文
+  population: 'Wang、Wang、Yang 等，2025，[Academic Burden and Emotional Problems Among
+    Adolescents: A Longitudinal Mediation Analysis](https://onlinelibrary.wiley.com/doi/10.1002/jad.12471)，DOI
+    10.1002/jad.12471；浙江初高中生 N=2965，三波观察队列；**全文**：方法、结果、讨论、限制'
+  supports: 学业压力和后续抑郁/焦虑症状相关，睡眠和孤独的统计中介分别占抑郁关联的 31.0%、26.8%；地区、疫情时期、自陈和残余混杂限制因果推断。未测试睡前脚本或社交练习。
+  limitations: 学业压力和后续抑郁/焦虑症状相关，睡眠和孤独的统计中介分别占抑郁关联的 31.0%、26.8%；地区、疫情时期、自陈和残余混杂限制因果推断。未测试睡前脚本或社交练习。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E03
+  citation: Dickerson、Kemeny，2004，[Acute stressors and cortisol responses](https://pubmed.ncbi.nlm.nih.gov/15122924/)，DOI
+    10.1037/0033-2909.130.3.355；208 个急性压力实验的元分析；**摘要**
+  url: https://pubmed.ncbi.nlm.nih.gov/15122924/
+  read_scope: 摘要
+  population: Dickerson、Kemeny，2004，[Acute stressors and cortisol responses](https://pubmed.ncbi.nlm.nih.gov/15122924/)，DOI
+    10.1037/0033-2909.130.3.355；208 个急性压力实验的元分析；**摘要**
+  supports: 不可控且可能被负面评价的任务通常诱发更强急性皮质醇反应。实验任务/生理反应不能直接推出中国高中生的长期心理风险或产品效果。
+  limitations: 不可控且可能被负面评价的任务通常诱发更强急性皮质醇反应。实验任务/生理反应不能直接推出中国高中生的长期心理风险或产品效果。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E04
+  citation: Zhao、Hu，2022，[A multilevel model of the help-seeking behaviors among adolescents
+    with mental health problems](https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/)，DOI
+    10.3389/fnint.2022.946842；长沙四所初高中 N=3480，横断面自陈；**全文**：摘要、求助定义、表格/讨论（PMC 检索全文和期刊
+    PDF）
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/
+  read_scope: 全文
+  population: Zhao、Hu，2022，[A multilevel model of the help-seeking behaviors among
+    adolescents with mental health problems](https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/)，DOI
+    10.3389/fnint.2022.946842；长沙四所初高中 N=3480，横断面自陈；**全文**：摘要、求助定义、表格/讨论（PMC 检索全文和期刊
+    PDF）
+  supports: 帮助来源同时包含朋友、家人、教师和正式服务；73.0% 求助，求助者中非正式 99.3%、正式 13.9%，心理老师 10.2%。单地抽样、自陈、渠道重叠；不能推断本产品会改变求助行为。
+  limitations: 帮助来源同时包含朋友、家人、教师和正式服务；73.0% 求助，求助者中非正式 99.3%、正式 13.9%，心理老师 10.2%。单地抽样、自陈、渠道重叠；不能推断本产品会改变求助行为。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E05
+  citation: 'Gulliver、Griffiths、Christensen，2010，[Perceived barriers and facilitators
+    to mental health help-seeking in young people: a systematic review](https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/)，DOI
+    10.1186/1471-244X-10-113；22 项青少年/青年研究的系统综述；**全文**：摘要、纳入、结果、讨论（检索全文；直接打开 PMC 时遇验证码）'
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/
+  read_scope: 全文
+  population: 'Gulliver、Griffiths、Christensen，2010，[Perceived barriers and facilitators
+    to mental health help-seeking in young people: a systematic review](https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/)，DOI
+    10.1186/1471-244X-10-113；22 项青少年/青年研究的系统综述；**全文**：摘要、纳入、结果、讨论（检索全文；直接打开 PMC 时遇验证码）'
+  supports: 污名/尴尬、保密和信任、识别困难、自力更生常见；22 项中澳大利亚 10、美国 9、中国 1，求助促进因素证据较少。只支持降低评判感和给用户控制权的设计动机。
+  limitations: 污名/尴尬、保密和信任、识别困难、自力更生常见；22 项中澳大利亚 10、美国 9、中国 1，求助促进因素证据较少。只支持降低评判感和给用户控制权的设计动机。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E06
+  citation: Leigh、Taylor、Cole、Smith，2025，[Why is rumination unhelpful in adolescents?
+    Two studies examining the causal role of abstract processing](https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m)，DOI
+    10.1016/j.jad.2025.03.058；英国 11–14 岁青少年，两项抽象/具体加工实验；**全文**：任务、比较、结果、讨论
+  url: https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m
+  read_scope: 全文
+  population: Leigh、Taylor、Cole、Smith，2025，[Why is rumination unhelpful in adolescents?
+    Two studies examining the causal role of abstract processing](https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m)，DOI
+    10.1016/j.jad.2025.03.058；英国 11–14 岁青少年，两项抽象/具体加工实验；**全文**：任务、比较、结果、讨论
+  supports: 具体加工相比抽象反复想在实验任务中伴随更好的社会问题解决和更少负面未来想法。测的是近端任务表现，不是抑郁治疗或一轮聊天的效果；年龄、文化需外推。
+  limitations: 具体加工相比抽象反复想在实验任务中伴随更好的社会问题解决和更少负面未来想法。测的是近端任务表现，不是抑郁治疗或一轮聊天的效果；年龄、文化需外推。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E07
+  citation: Lunn、Greene、Callaghan、Egan，2023，[Associations between perfectionism and
+    symptoms of anxiety, obsessive-compulsive disorder and depression in young people](https://pubmed.ncbi.nlm.nih.gov/37194469/)，DOI
+    10.1080/16506073.2023.2211736；6–24 岁，121 项研究元分析；**摘要**（全文链接未能稳定获取）
+  url: https://pubmed.ncbi.nlm.nih.gov/37194469/
+  read_scope: 摘要
+  population: Lunn、Greene、Callaghan、Egan，2023，[Associations between perfectionism
+    and symptoms of anxiety, obsessive-compulsive disorder and depression in young
+    people](https://pubmed.ncbi.nlm.nih.gov/37194469/)，DOI 10.1080/16506073.2023.2211736；6–24
+    岁，121 项研究元分析；**摘要**（全文链接未能稳定获取）
+  supports: 完美主义“担忧”与抑郁症状汇总相关约 r=.40；高标准追求和担忧不能混为一谈。相关关系不能证明改写自我评价会产生疗效。
+  limitations: 完美主义“担忧”与抑郁症状汇总相关约 r=.40；高标准追求和担忧不能混为一谈。相关关系不能证明改写自我评价会产生疗效。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E08
+  citation: 'WHO/UNICEF，2023，[Early Adolescent Skills for Emotions (EASE): group psychological
+    help](https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf)；10–15
+    岁逆境社区青少年，官方干预手册；**全文**：范围、结构、监督、Calming My Body / Changing My Actions / Managing
+    My Problems、停止和转介'
+  url: https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf
+  read_scope: 全文
+  population: 'WHO/UNICEF，2023，[Early Adolescent Skills for Emotions (EASE): group
+    psychological help](https://iris.who.int/bitstream/handle/10665/374996/9789240082755-eng.pdf)；10–15
+    岁逆境社区青少年，官方干预手册；**全文**：范围、结构、监督、Calming My Body / Changing My Actions / Managing
+    My Problems、停止和转介'
+  supports: Stop–Think–Go 要求选择“小、可解、具体”的问题；识别感受、轻量行动、缓和身体均是结构化技能。EASE 需培训、持续监督、七次小组及照护者参与；只适合机制借鉴。
+  limitations: Stop–Think–Go 要求选择“小、可解、具体”的问题；识别感受、轻量行动、缓和身体均是结构化技能。EASE 需培训、持续监督、七次小组及照护者参与；只适合机制借鉴。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E09
+  citation: Bluth、Lathren、Park 等，2024，[Feasibility, Acceptability, and Depression
+    Outcomes of a Randomized Controlled Trial of Mindful Self-Compassion for Teens](https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf)，DOI
+    10.1002/jad.12277；美国亚临床抑郁青少年 N=59，八周小组+延续课程、主动对照随机试验；**全文**：方法、结果、限制
+  url: https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf
+  read_scope: 全文
+  population: Bluth、Lathren、Park 等，2024，[Feasibility, Acceptability, and Depression
+    Outcomes of a Randomized Controlled Trial of Mindful Self-Compassion for Teens](https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf)，DOI
+    10.1002/jad.12277；美国亚临床抑郁青少年 N=59，八周小组+延续课程、主动对照随机试验；**全文**：方法、结果、限制
+  supports: 参与者的症状轨迹优于健康生活课程对照；样本小且以白人女性为主，两组自我关怀都增加。仅支持温和自我对话有进一步研究价值，不能据此承诺一句话减少抑郁。
+  limitations: 参与者的症状轨迹优于健康生活课程对照；样本小且以白人女性为主，两组自我关怀都增加。仅支持温和自我对话有进一步研究价值，不能据此承诺一句话减少抑郁。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E10
+  citation: 'Filia、Eastwood、Herniman、Badcock，2021，[Facilitating improvements in young
+    people’s social relationships to prevent or treat depression: A review of empirically
+    supported interventions](https://www.nature.com/articles/s41398-021-01406-7.pdf)，DOI
+    10.1038/s41398-021-01406-7；青少年/青年人际干预叙述性综述；**全文**：检索范围、IPT-A 结构、沟通分析/角色练习与证据限制'
+  url: https://www.nature.com/articles/s41398-021-01406-7.pdf
+  read_scope: 全文
+  population: 'Filia、Eastwood、Herniman、Badcock，2021，[Facilitating improvements in
+    young people’s social relationships to prevent or treat depression: A review of
+    empirically supported interventions](https://www.nature.com/articles/s41398-021-01406-7.pdf)，DOI
+    10.1038/s41398-021-01406-7；青少年/青年人际干预叙述性综述；**全文**：检索范围、IPT-A 结构、沟通分析/角色练习与证据限制'
+  supports: 沟通分析和角色练习存在于人工 IPT-A 中；可借“先理解冲突、再练习一句可选择的表达”。临床疗程和治疗关系不可缩成自动咨询；欺凌、虐待、明显不安全关系应转安全通路。
+  limitations: 沟通分析和角色练习存在于人工 IPT-A 中；可借“先理解冲突、再练习一句可选择的表达”。临床疗程和治疗关系不可缩成自动咨询；欺凌、虐待、明显不安全关系应转安全通路。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E11
+  citation: Chen、Chen、Ling、Gu，2022，[An Online Career Intervention for Promoting Chinese
+    High School Students’ Career Readiness](https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/)，DOI
+    10.3389/fpsyg.2021.815076；江苏高一 N=957，五周教师主持在线课程/对照；**全文**：干预、结果、限制
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/
+  read_scope: 全文
+  population: Chen、Chen、Ling、Gu，2022，[An Online Career Intervention for Promoting
+    Chinese High School Students’ Career Readiness](https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/)，DOI
+    10.3389/fpsyg.2021.815076；江苏高一 N=957，五周教师主持在线课程/对照；**全文**：干预、结果、限制
+  supports: 探索兴趣和获取可靠专业信息与更高生涯探索、较少信息困扰相关。干预包括教师、测评和数据库；聊天中只能帮助选择下一步可核查的信息源，不能提供未经核实的选科/录取建议。
+  limitations: 探索兴趣和获取可靠专业信息与更高生涯探索、较少信息困扰相关。干预包括教师、测评和数据库；聊天中只能帮助选择下一步可核查的信息源，不能提供未经核实的选科/录取建议。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E12
+  citation: Scullin、Krueger、Ballard、Pruett、Bliwise，2018，[The effects of bedtime writing
+    on difficulty falling asleep](https://pubmed.ncbi.nlm.nih.gov/29058942/)，DOI 10.1037/xge0000374；美国健康青年成人
+    N=57，五分钟书面待办/已完成任务随机比较及睡眠多导；**摘要**
+  url: https://pubmed.ncbi.nlm.nih.gov/29058942/
+  read_scope: 摘要
+  population: Scullin、Krueger、Ballard、Pruett、Bliwise，2018，[The effects of bedtime
+    writing on difficulty falling asleep](https://pubmed.ncbi.nlm.nih.gov/29058942/)，DOI
+    10.1037/xge0000374；美国健康青年成人 N=57，五分钟书面待办/已完成任务随机比较及睡眠多导；**摘要**
+  supports: 具体记录近期待办相比回顾已做事务，实验室入睡潜伏期更短。成年人、书写五分钟、单夜；玩偶的简短“留待明天”句不能宣称同样改善睡眠。
+  limitations: 具体记录近期待办相比回顾已做事务，实验室入睡潜伏期更短。成年人、书写五分钟、单夜；玩偶的简短“留待明天”句不能宣称同样改善睡眠。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E13
+  citation: 'WHO 等，2011，[Psychological first aid: Guide for field workers](https://iris.who.int/bitstream/handle/10665/44615/9789241548205_eng.pdf?sequence=1)；严重危机后现场支持手册；**全文**：适用范围、Look–Listen–Link、儿童章节'
+  url: https://iris.who.int/bitstream/handle/10665/44615/9789241548205_eng.pdf?sequence=1
+  read_scope: 全文
+  population: 'WHO 等，2011，[Psychological first aid: Guide for field workers](https://iris.who.int/bitstream/handle/10665/44615/9789241548205_eng.pdf?sequence=1)；严重危机后现场支持手册；**全文**：适用范围、Look–Listen–Link、儿童章节'
+  supports: 明确尊重意愿、不强迫、倾听并连接可信支持；主要范围是近期严重危机，不是普通考试压力的日常心理干预证据。
+  limitations: 明确尊重意愿、不强迫、倾听并连接可信支持；主要范围是近期严重危机，不是普通考试压力的日常心理干预证据。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E14
+  citation: Liu、Zheng、Demasi 等，2021，[Towards Emotional Support Dialog Systems](https://aclanthology.org/2021.acl-long.269/)，DOI
+    10.18653/v1/2021.acl-long.269；支持对话语料/框架；**论文页摘要与公开 PDF 中策略/标注段落**
+  url: https://aclanthology.org/2021.acl-long.269/
+  read_scope: 论文页摘要与公开 PDF 中策略/标注段落
+  population: Liu、Zheng、Demasi 等，2021，[Towards Emotional Support Dialog Systems](https://aclanthology.org/2021.acl-long.269/)，DOI
+    10.18653/v1/2021.acl-long.269；支持对话语料/框架；**论文页摘要与公开 PDF 中策略/标注段落**
+  supports: 探索、安慰、行动作为可追踪的对话技能框架有用；数据来自训练过的人类支持者及质量控制，没有验证语音玩偶或临床效果。
+  limitations: 探索、安慰、行动作为可追踪的对话技能框架有用；数据来自训练过的人类支持者及质量控制，没有验证语音玩偶或临床效果。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E15
+  citation: Deng、Zhang、Lam、Ng、Chua，2024，[Plug-and-Play Policy Planner for Large Language
+    Model Powered Dialogue Agents](https://openreview.net/pdf?id=MCNqgUFTHI)（ICLR
+    2024）；对话策略规划实验；**全文**：方法、动作到指令映射、自博弈/训练与评价
+  url: https://openreview.net/pdf?id=MCNqgUFTHI
+  read_scope: 全文
+  population: Deng、Zhang、Lam、Ng、Chua，2024，[Plug-and-Play Policy Planner for Large
+    Language Model Powered Dialogue Agents](https://openreview.net/pdf?id=MCNqgUFTHI)（ICLR
+    2024）；对话策略规划实验；**全文**：方法、动作到指令映射、自博弈/训练与评价
+  supports: 可复用“选中策略 → 预定义短指令 → Talker”的接口思想；其结论依赖训练过的 planner 和模拟评价，不能当作当前无训练后台协作的质量证明。
+  limitations: 可复用“选中策略 → 预定义短指令 → Talker”的接口思想；其结论依赖训练过的 planner 和模拟评价，不能当作当前无训练后台协作的质量证明。
+  verification: checked
+  checked_on: '2026-11-04'
+- id: E16
+  citation: Dunning 等，2022，[Do mindfulness-based programmes improve the cognitive
+    skills, behaviour and mental health of children and adolescents?](https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/)；青少年/儿童随机试验更新元分析；**全文**：主动/被动对照、随访、偏倚与限制
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/
+  read_scope: 全文
+  population: Dunning 等，2022，[Do mindfulness-based programmes improve the cognitive
+    skills, behaviour and mental health of children and adolescents?](https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/)；青少年/儿童随机试验更新元分析；**全文**：主动/被动对照、随访、偏倚与限制
+  supports: 与主动对照相比，焦虑/压力改善很小，随访未见稳定差异，伤害报告不足。练习需有自愿入口、可停、短时长；对不适者改为眼睛睁开的外部感官定位或安静陪伴。
+  limitations: 与主动对照相比，焦虑/压力改善很小，随访未见稳定差异，伤害报告不足。练习需有自愿入口、可停、短时长；对不适者改为眼睛睁开的外部感官定位或安静陪伴。
+  verification: checked
+  checked_on: '2026-11-04'
+reviews:
+- item: cards/S16.yaml
+  sha256: ffadf1bb89f13379661b8e8ffbda922d5ca3ee6f008938431cf40710e955b8c1
+  evidence_ids:
+  - E06
+  - E08
+  source_check: passed
+  automatic_review: passed
+  reviewer: codex_automated
+  reviewed_on: '2026-11-04'
+  rationale: 依据EVIDENCE_REVIEW核查来源与外推限制；短步骤明确适用、排除、许可、退出和反馈边界；工程与真实回放准入仍单列待完成。
+- item: cards/kind_self_talk.yaml
+  sha256: 2c693a1856d43f74e997ae3d8ff09d96c82a542e4ab08c665162c72b19c93fc0
+  evidence_ids:
+  - E07
+  - E09
+  source_check: passed
+  automatic_review: passed
+  reviewer: codex_automated
+  reviewed_on: '2026-11-04'
+  rationale: 依据EVIDENCE_REVIEW核查来源与外推限制；短步骤明确适用、排除、许可、退出和反馈边界；工程与真实回放准入仍单列待完成。
+- item: cards/safe_communication.yaml
+  sha256: 91f7b9fab014a51afc7fa8823953c08cbbb0a810d358ebdabd80933e909d97fd
+  evidence_ids:
+  - E10
+  - E05
+  source_check: passed
+  automatic_review: passed
+  reviewer: codex_automated
+  reviewed_on: '2026-11-04'
+  rationale: 依据EVIDENCE_REVIEW核查来源与外推限制；短步骤明确适用、排除、许可、退出和反馈边界；工程与真实回放准入仍单列待完成。
+- item: cards/safe_support.yaml
+  sha256: 35378901e3dc22e799323d05ff4c240540fa8223502b32bc299304fd0a1ed7ae
+  evidence_ids:
+  - E04
+  - E05
+  - E13
+  source_check: passed
+  automatic_review: passed
+  reviewer: codex_automated
+  reviewed_on: '2026-11-04'
+  rationale: 依据EVIDENCE_REVIEW核查来源与外推限制；短步骤明确适用、排除、许可、退出和反馈边界；工程与真实回放准入仍单列待完成。
+- item: cards/values_exploration.yaml
+  sha256: 95316df8cb7a7ab1df86aa5f5c4177bf3262a3f810f2fcf854ad919bc763294c
+  evidence_ids:
+  - E11
+  - E01
+  source_check: passed
+  automatic_review: passed
+  reviewer: codex_automated
+  reviewed_on: '2026-11-04'
+  rationale: 依据EVIDENCE_REVIEW核查来源与外推限制；短步骤明确适用、排除、许可、退出和反馈边界；工程与真实回放准入仍单列待完成。
+- item: cards/worry_parking.yaml
+  sha256: bc7641dfdf2600aa847f627acd2d39ee1d7aa5901f976268e3372aaf2ee52342
+  evidence_ids:
+  - E12
+  - E02
+  source_check: passed
+  automatic_review: passed
+  reviewer: codex_automated
+  reviewed_on: '2026-11-04'
+  rationale: 依据EVIDENCE_REVIEW核查来源与外推限制；短步骤明确适用、排除、许可、退出和反馈边界；工程与真实回放准入仍单列待完成。
+- item: exercises/breathing_60s.yaml
+  sha256: baab4f684313e2ee186bbdb70aa55a540a870a33b39fd4d88b6e6f014f24c2de
+  evidence_ids:
+  - E08
+  - E16
+  source_check: passed
+  automatic_review: passed
+  reviewer: codex_automated
+  reviewed_on: '2026-11-04'
+  rationale: 短时自愿、自然呼吸、不屏气、不强迫闭眼；不适立即停止；不继承完整课程效果。音频与真实回放待验收。
+- item: exercises/grounding.yaml
+  sha256: bb4a15656311e5f63c229f0b56cfd3e1ca3999a63b683f743a5bf9209a82e03d
+  evidence_ids:
+  - E08
+  - E16
+  source_check: passed
+  automatic_review: passed
+  reviewer: codex_automated
+  reviewed_on: '2026-11-04'
+  rationale: 短时自愿、自然呼吸、不屏气、不强迫闭眼；不适立即停止；不继承完整课程效果。音频与真实回放待验收。
+- item: exercises/bedtime.yaml
+  sha256: a8c28668c6fa295887b77d93ffb5246c4d93beae75196bf0686f689b6ba9d2ed
+  evidence_ids:
+  - E08
+  - E16
+  source_check: passed
+  automatic_review: passed
+  reviewer: codex_automated
+  reviewed_on: '2026-11-04'
+  rationale: 短时自愿、自然呼吸、不屏气、不强迫闭眼；不适立即停止；不继承完整课程效果。音频与真实回放待验收。
+- item: crisis.yaml
+  sha256: ea0cb5f04936f0c86a663456f268b3f3137ff95f220ccca90be6800984bfbcd6
+  evidence_ids:
+  - E13
+  source_check: passed
+  automatic_review: passed
+  reviewer: codex_automated
+  reviewed_on: '2026-11-04'
+  rationale: 采用尊重、安全和现实支持原则；不假称已通知，不提供未经地区核实的热线，不强制联系不安全家人；仅课程模拟。
+acceptance: null

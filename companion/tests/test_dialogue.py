@@ -3,6 +3,8 @@ import time
 
 import pytest
 from companion.core.models import (
+    Assessment,
+    SeekerState,
     SessionState,
     Snapshot,
     Stage,
@@ -27,7 +29,13 @@ def test_consent_waits_for_card_and_survives_clarification(config):
     machine.apply_rules(state, "好，你说", TurnSignals(), snapshot, now=100)
     assert state.pending_offer.status == "accepted_waiting_card"
     state.user_turns = 3
-    snapshot = snapshot.model_copy(update={"allowed_cards": ("S16",), "preferred_card": "S16"})
+    snapshot = snapshot.model_copy(
+        update={
+            "allowed_cards": ("S16",),
+            "preferred_card": "S16",
+            "assessment": Assessment(seeker_state=SeekerState(readiness="medium")),
+        }
+    )
     machine.apply_rules(state, "数学最让我担心", TurnSignals(), snapshot, now=101)
     assert state.stage == Stage.action
     assert state.card_in_use == "S16"

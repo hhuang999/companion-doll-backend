@@ -8,7 +8,7 @@ from pydantic import ValidationError
 
 def test_config_has_every_stage_and_rejects_unreviewed_demo(config):
     assert len(config.exercises) == 3
-    with pytest.raises(ValueError, match="course content manifest"):
+    with pytest.raises(ValueError, match="Exercise audio not measured"):
         Config(mode="demo")
 
 

@@ -179,6 +179,8 @@ class Config:
             if (self.directory / "content_manifest.yaml").is_file()
             else None
         )
+        if self.crisis.get("status") == "enabled" and not self.content_reviewed("crisis.yaml"):
+            raise ValueError("Enabled crisis content has incomplete/stale review")
         self.cards = {}
         for path in sorted((self.directory / "cards").glob("*.yaml")):
             card = Card.model_validate(self.read(str(path.relative_to(self.directory))))
@@ -200,6 +202,12 @@ class Config:
             if total > self.settings.timing.exercise_max_s:
                 raise ValueError(f"Exercise exceeds time limit: {exercise.id}")
             self.exercises[exercise.id] = exercise
+            if exercise.status == "enabled" and not self.content_reviewed(
+                f"exercises/{exercise.id}.yaml"
+            ):
+                raise ValueError(
+                    f"Enabled exercise has incomplete/stale content review: {exercise.id}"
+                )
         for stage in Stage:
             if not self.stages.get(stage.value, {}).get("fallback"):
                 raise ValueError(f"Missing stage: {stage.value}")

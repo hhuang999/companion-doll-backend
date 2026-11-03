@@ -1,0 +1,76 @@
+id: safe_support
+name: 找到一个愿意尝试的现实支持入口
+status: enabled
+requires_permission: true
+targets:
+  pressure_types:
+  - relationship
+  - academic
+  - social_evaluative
+  - future
+  - self
+  pathways:
+  - loneliness
+constraints:
+  excluded_emotion_intensities:
+  - high
+  excluded_readiness:
+  - low
+reasoner:
+  when_any: &id001
+  - 用户愿意考虑现实支持
+  - 不默认任何亲属或老师安全
+  not_when:
+  - 明确拒绝联系的人不反复推；危急危险由独立风险通路立即接管。
+  - 当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断
+  success: 用户自己选择或拒绝一个入口；只有其明确说已联系才记录联系事实。
+  exit: 用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。
+talker:
+  steps:
+  - 承接用户对求助的顾虑，只确认一个最重要的顾虑；不许诺绝对保密。
+  - 由用户选择一个相对安全的人或学校支持入口；都不安全时不指定家长，转向其他可信成人或当地专业帮助。
+  - 可选地拟一句低负担开口话，只透露用户同意的内容；不想联系就尊重并结束。
+  examples:
+  - 你希望对方先听你说，还是帮你找合适的支持？
+  - 可以只告诉对方你现在有点难受，不必一次讲完。
+  never_say:
+  - 只有我懂你
+  - 你必须告诉父母
+  - 我已经通知老师了
+  - 我保证绝不会有人知道
+limits:
+  per_session: 1
+emo: 🤔
+source:
+  document: 研究驱动课程内容 course-1.0
+  verification: codex_source_checked
+  evidence: companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md
+protocol:
+  version: course-1.0
+  adaptation: 原创中文短步骤；仅借用研究机制，未验证本改编的效果。
+  burden: 一次一小步，最多三轮；可以只听、跳过或结束。
+  permission: 先明确询问是否愿意试；拒绝和撤回立即停止。
+  stop: 用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。
+  followup: 只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。
+  feedback_limits: 只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。
+  mechanism: 把求助障碍说清楚，由用户选择安全的人或渠道及最小透露范围。
+  evidence_ids:
+  - E04
+  - E05
+  - E13
+  minimum_information:
+  - 用户是否想联系现实支持
+  - 担忧是评价、隐私、负担还是安全
+  prerequisites: *id001
+  excluded_contexts:
+  - bedtime
+  keywords:
+  - 孤独
+  - 没人
+  - 找谁
+  - 怕告诉
+  - 不敢说
+  - 求助
+  counterexample: 明确拒绝联系的人不反复推；危急危险由独立风险通路立即接管。
+  required_contexts: []
+  legacy_ids: []

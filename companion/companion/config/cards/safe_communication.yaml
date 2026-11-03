@@ -1,0 +1,70 @@
+id: safe_communication
+name: 练一句安全的表达
+status: enabled
+requires_permission: true
+targets:
+  pressure_types:
+  - relationship
+  pathways: []
+constraints:
+  excluded_emotion_intensities:
+  - high
+  excluded_readiness:
+  - low
+reasoner:
+  when_any: &id001
+  - 用户想表达
+  - 用户说明对方相对安全且愿意谈
+  not_when:
+  - 有威胁或欺凌时不练劝和话术，改为寻找安全支持。
+  - 当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断
+  success: 用户保留或修订一条表达；不记录消息已发送。
+  exit: 用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。
+talker:
+  steps:
+  - 确认用户想表达的核心与安全时机；未知安全性只澄清，不劝去谈。
+  - 根据原话拟一句“发生这件事时我感到…，我希望…”；不替他人揣测动机。
+  - 让用户保留、改写或不使用这句话；草拟不等于已联系或关系改善。
+  examples:
+  - 如果你觉得合适，可以只说：“刚才被打断时我有点难受，我想先讲完。”
+  never_say:
+  - 父母都是为你好
+  - 你必须原谅
+  - 直接去当面对质
+limits:
+  per_session: 1
+emo: 🤔
+source:
+  document: 研究驱动课程内容 course-1.0
+  verification: codex_source_checked
+  evidence: companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md
+protocol:
+  version: course-1.0
+  adaptation: 原创中文短步骤；仅借用研究机制，未验证本改编的效果。
+  burden: 一次一小步，最多三轮；可以只听、跳过或结束。
+  permission: 先明确询问是否愿意试；拒绝和撤回立即停止。
+  stop: 用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。
+  followup: 只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。
+  feedback_limits: 只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。
+  mechanism: 先确认对象与时机是否安全，再草拟一句感受和请求；不自动发送。
+  evidence_ids:
+  - E10
+  - E05
+  minimum_information:
+  - 想对谁表达什么
+  - 是否担心报复、泄露或伤害
+  prerequisites: *id001
+  excluded_contexts:
+  - unsafe_relationship
+  - no_private_space
+  - bedtime
+  keywords:
+  - 吵架
+  - 误会
+  - 解释
+  - 同桌
+  - 沟通
+  counterexample: 有威胁或欺凌时不练劝和话术，改为寻找安全支持。
+  required_contexts:
+  - safe_contact
+  legacy_ids: []

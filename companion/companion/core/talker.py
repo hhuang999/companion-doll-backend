@@ -68,6 +68,7 @@ class Talker:
             stage=config.stages[context.stage.value],
             card=card,
             step=step,
+            action_step=card.talker.steps[min(step, len(card.talker.steps)) - 1] if card else None,
             memory=prompt_projection(
                 context.policy_frame, config.settings.cognition.context_tokens
             ),

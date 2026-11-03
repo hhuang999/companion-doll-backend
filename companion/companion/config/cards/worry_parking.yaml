@@ -1,0 +1,66 @@
+id: worry_parking
+name: 睡前把一件担心留待明天
+status: enabled
+requires_permission: true
+targets:
+  pressure_types: []
+  pathways:
+  - sleep
+  - rumination
+constraints:
+  excluded_emotion_intensities:
+  - high
+  excluded_readiness:
+  - low
+reasoner:
+  when_any: &id001
+  - 当前是用户表达的休息时机
+  - 用户愿意留一句话
+  not_when:
+  - 持续严重睡眠困扰不自动实施睡眠限制或睡不着必须起床的治疗规则。
+  - 当前只想倾诉或明确拒绝该支持；邀请与执行许可分别判断
+  success: 用户自愿暂存或拒绝后结束；不推断睡眠已经改善。
+  exit: 用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。
+talker:
+  steps:
+  - 确认只留一件明天再处理的事；用户不愿记录就直接短收尾。
+  - 复述用户愿意留的那一句，不加任务清单、不承诺一定入睡；随后结束。
+  examples:
+  - 这件事先留在这里，今晚不用把它解决完。
+  never_say:
+  - 你一定能睡着
+  - 睡不着就一直和我聊
+  - 今晚必须想明白
+limits:
+  per_session: 1
+emo: 🤔
+source:
+  document: 研究驱动课程内容 course-1.0
+  verification: codex_source_checked
+  evidence: companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md
+protocol:
+  version: course-1.0
+  adaptation: 原创中文短步骤；仅借用研究机制，未验证本改编的效果。
+  burden: 一次一小步，最多三轮；可以只听、跳过或结束。
+  permission: 先明确询问是否愿意试；拒绝和撤回立即停止。
+  stop: 用户说停、没用、不舒服、只想说或出现安全信号时停止；不连续换方法。
+  followup: 只有用户明确提出后续事件或同意跟进才记录；下次真实唤醒尊重边界。
+  feedback_limits: 只记录明确且可归因的反馈；完成、沉默和一次感觉变化不能证明策略有效或长期偏好。
+  mechanism: 可选地用一句话暂存一件待处理的担心，再结束对话，避免睡前反复延长。
+  evidence_ids:
+  - E12
+  - E02
+  minimum_information:
+  - 用户明确准备休息或睡前困扰
+  prerequisites: *id001
+  excluded_contexts:
+  - unsafe_relationship
+  keywords:
+  - 睡
+  - 明天
+  - 晚上
+  - 担心
+  counterexample: 持续严重睡眠困扰不自动实施睡眠限制或睡不着必须起床的治疗规则。
+  required_contexts:
+  - bedtime
+  legacy_ids: []
