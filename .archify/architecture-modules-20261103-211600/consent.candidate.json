@@ -1,0 +1,573 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "03 · 状态机、许可与行动卡",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": ".archify/architecture-modules-20261103-211600/consent.html",
+    "repository": {
+      "url": "https://github.com/hhuang999/companion-doll-backend.git",
+      "revision": "d24f38f0c065c2e9412c974afab5221d938b1316",
+      "link_mode": "web"
+    }
+  },
+  "components": [
+    {
+      "id": "signals",
+      "label": "用户文字与信号",
+      "sublabel": "agree / refuse / Cry / topic",
+      "type": "external",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 79,
+          "end_line": 107
+        }
+      ]
+    },
+    {
+      "id": "rules",
+      "label": "确定性规则优先",
+      "sublabel": "quiet / topic / refusal",
+      "type": "backend",
+      "pos": [
+        360,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 89,
+          "end_line": 125
+        }
+      ]
+    },
+    {
+      "id": "offer",
+      "label": "PendingOffer",
+      "sublabel": "目标 / 话题 / 发起轮次",
+      "type": "backend",
+      "pos": [
+        680,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 48,
+          "end_line": 58
+        },
+        {
+          "path": "companion/companion/core/models.py",
+          "line": 158,
+          "end_line": 168
+        }
+      ]
+    },
+    {
+      "id": "spoken",
+      "label": "提议模板输出",
+      "sublabel": "绑定 offer_id",
+      "type": "backend",
+      "pos": [
+        1000,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 498,
+          "end_line": 515
+        }
+      ]
+    },
+    {
+      "id": "exit",
+      "label": "清理提议 / 退出行动",
+      "sublabel": "拒绝 · 换题 · 纠正 · 哭声",
+      "type": "backend",
+      "pos": [
+        40,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 97,
+          "end_line": 147
+        }
+      ]
+    },
+    {
+      "id": "expiry",
+      "label": "许可有效期检查",
+      "sublabel": "话题与轮数 / 同意后 30 s",
+      "type": "security",
+      "pos": [
+        360,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 126,
+          "end_line": 147
+        },
+        {
+          "path": "companion/companion/config/settings.yaml",
+          "line": 24,
+          "end_line": 26
+        }
+      ]
+    },
+    {
+      "id": "consent",
+      "label": "明确同意识别",
+      "sublabel": "仅 offer.active 可接受",
+      "type": "security",
+      "pos": [
+        680,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 148,
+          "end_line": 157
+        }
+      ]
+    },
+    {
+      "id": "receipt",
+      "label": "播放 started 回执",
+      "sublabel": "激活匹配的 PendingOffer",
+      "type": "backend",
+      "pos": [
+        1000,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 630,
+          "end_line": 662
+        }
+      ]
+    },
+    {
+      "id": "snapshot",
+      "label": "Reasoner 有效快照",
+      "sublabel": "allowed / preferred / 状态",
+      "type": "backend",
+      "pos": [
+        40,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/models.py",
+          "line": 142,
+          "end_line": 155
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 847,
+          "end_line": 873
+        }
+      ]
+    },
+    {
+      "id": "eligible",
+      "label": "eligible 再筛选",
+      "sublabel": "强度 / readiness / 拒绝 / 次数",
+      "type": "security",
+      "pos": [
+        360,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 60,
+          "end_line": 77
+        }
+      ]
+    },
+    {
+      "id": "waiting",
+      "label": "已同意，等待卡片",
+      "sublabel": "accepted_waiting_card",
+      "type": "backend",
+      "pos": [
+        680,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 155,
+          "end_line": 171
+        }
+      ]
+    },
+    {
+      "id": "exercise",
+      "label": "练习 / 续播同意",
+      "sublabel": "mode → exercise",
+      "type": "backend",
+      "pos": [
+        1000,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 148,
+          "end_line": 154
+        },
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 191,
+          "end_line": 197
+        }
+      ]
+    },
+    {
+      "id": "proposal",
+      "label": "阶段建议白名单",
+      "sublabel": "Q_TRANSITIONS",
+      "type": "security",
+      "pos": [
+        40,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 10,
+          "end_line": 34
+        },
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 203,
+          "end_line": 225
+        }
+      ]
+    },
+    {
+      "id": "action",
+      "label": "进入 action",
+      "sublabel": "card_in_use + action_id",
+      "type": "backend",
+      "pos": [
+        360,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 158,
+          "end_line": 168
+        }
+      ]
+    },
+    {
+      "id": "count",
+      "label": "成功提交才计数",
+      "sublabel": "used / action_turns",
+      "type": "backend",
+      "pos": [
+        680,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 599,
+          "end_line": 613
+        },
+        {
+          "path": "companion/companion/store/db.py",
+          "line": 428,
+          "end_line": 441
+        }
+      ]
+    },
+    {
+      "id": "closing",
+      "label": "收尾与安静",
+      "sublabel": "行动 4 轮 / 收尾 2 轮",
+      "type": "backend",
+      "pos": [
+        1000,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 173,
+          "end_line": 178
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 664,
+          "end_line": 672
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "signals-rules",
+      "from": "signals",
+      "to": "rules",
+      "label": "输入",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rules-offer",
+      "from": "rules",
+      "to": "offer",
+      "label": "求助时提议",
+      "variant": "emphasis"
+    },
+    {
+      "id": "offer-spoken",
+      "from": "offer",
+      "to": "spoken",
+      "label": "确定性模板",
+      "variant": "emphasis"
+    },
+    {
+      "id": "spoken-receipt",
+      "from": "spoken",
+      "to": "receipt",
+      "label": "开始播放",
+      "variant": "emphasis"
+    },
+    {
+      "id": "receipt-consent",
+      "from": "receipt",
+      "to": "consent",
+      "label": "active=true",
+      "variant": "emphasis"
+    },
+    {
+      "id": "offer-expiry",
+      "from": "offer",
+      "to": "expiry",
+      "label": "有效期",
+      "variant": "default"
+    },
+    {
+      "id": "expiry-consent",
+      "from": "expiry",
+      "to": "consent",
+      "label": "未过期",
+      "variant": "default"
+    },
+    {
+      "id": "rules-exit",
+      "from": "rules",
+      "to": "exit",
+      "label": "退出规则",
+      "variant": "default"
+    },
+    {
+      "id": "expiry-exit",
+      "from": "expiry",
+      "to": "exit",
+      "label": "拒绝 / 失效",
+      "variant": "default"
+    },
+    {
+      "id": "consent-waiting",
+      "from": "consent",
+      "to": "waiting",
+      "label": "行动提议同意",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consent-exercise",
+      "from": "consent",
+      "to": "exercise",
+      "label": "练习提议同意",
+      "variant": "default"
+    },
+    {
+      "id": "waiting-eligible",
+      "from": "waiting",
+      "to": "eligible",
+      "label": "每轮检查",
+      "variant": "emphasis"
+    },
+    {
+      "id": "eligible-snapshot",
+      "from": "eligible",
+      "to": "snapshot",
+      "label": "读取可用卡",
+      "variant": "default"
+    },
+    {
+      "id": "eligible-action",
+      "from": "eligible",
+      "to": "action",
+      "label": "有合格卡",
+      "variant": "emphasis"
+    },
+    {
+      "id": "eligible-waiting",
+      "from": "eligible",
+      "to": "waiting",
+      "label": "无卡继续等",
+      "variant": "default"
+    },
+    {
+      "id": "action-count",
+      "from": "action",
+      "to": "count",
+      "label": "有效回复提交",
+      "variant": "emphasis"
+    },
+    {
+      "id": "count-closing",
+      "from": "count",
+      "to": "closing",
+      "label": "达到轮次上限",
+      "variant": "default"
+    },
+    {
+      "id": "snapshot-proposal",
+      "from": "snapshot",
+      "to": "proposal",
+      "label": "新阶段建议",
+      "variant": "default"
+    },
+    {
+      "id": "proposal-rules",
+      "from": "proposal",
+      "to": "rules",
+      "label": "白名单内应用",
+      "variant": "default"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三个独立状态维度",
+      "items": [
+        "stage：opening → explore / comfort → permission → action → closing / quiet；转换受规则与当前状态约束。",
+        "mode：normal / exercise / crisis。lifecycle：active / ending / closed。进入危机切换 mode，结束会话切换 lifecycle。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "许可是一个具体对象",
+      "items": [
+        "PendingOffer 记录 offer_id、kind、target_id、topic_revision、offered_turn_id 和 offered_user_index。创建时 active=false。",
+        "只有绑定该 offer_id 的输出收到 started 回执，提议才激活；明确同意随后才能进入等待卡片或练习。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "等待与失效",
+      "items": [
+        "提议默认可跨 2 个用户轮次。明确同意后保留 accepted_at / accepted_user_index，等待上限 30 s，用户轮次差超过 2 也失效。",
+        "换题、拒绝会清理提议；行动提议遇哭声、纠正或高情绪强度也失效。每次输入检查期限，没有独立到期计时器自动执行行动。"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "卡片分为策略与表达两部分",
+      "items": [
+        "Card.reasoner 提供 when_any、not_when、success、exit；Card.talker 提供 steps、examples、never_say。targets / constraints / limits 限制适用范围。",
+        "Validator 先审查模型候选卡，StateMachine.eligible 再按当前会话筛选；优先选 preferred，若不可用则选首张合格卡。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "后台建议不能直接进入 action",
+      "items": [
+        "Q_TRANSITIONS 允许 explore → comfort、comfort → permission、action → closing，以及指定阶段退回 explore。",
+        "action 的入口由明确同意 + 合格卡片决定；行动输出成功提交后才增加 action_turns，card_usage 用 action_id/outcome 去重。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "退出与续播",
+      "items": [
+        "行动中拒绝、纠正或哭声退回 explore；拒绝可把正在使用的卡记入 cards_refused。",
+        "练习被打断保存 resume_script_id / resume_index。下一次续播仍要提出 resume_exercise 提议并取得同意。"
+      ]
+    }
+  ]
+}

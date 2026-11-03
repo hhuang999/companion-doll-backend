@@ -6,11 +6,23 @@
 
 ## 交互式后端架构
 
-[![情感陪伴玩偶后端架构图](docs/assets/backend-architecture.png)](https://hhuang999.github.io/companion-doll-backend/)
+[![情感陪伴玩偶后端模块架构图](docs/assets/backend-architecture.png)](https://hhuang999.github.io/companion-doll-backend/)
 
-**[打开交互架构图 →](https://hhuang999.github.io/companion-doll-backend/)** · 可缩放、切换主题、按流程聚焦，并通过组件源码链接查看对应实现。页面下方详细解释实时对话、风险接管、后台分析、记忆和播放机制。
+**[打开完整架构图集 →](https://hhuang999.github.io/companion-doll-backend/)**
 
-GitHub README 显示静态预览，完整交互页面由 GitHub Pages 发布。架构图绑定到页面标注的源码提交；最新验证状态见上方验证报告。
+总图展开 22 个模块，另有六张专题图解释内部设计。每张图均支持缩放、关系追踪、主题切换和导出，节点附有固定到源码提交的行号依据，图下说明数据契约、并发、失败与恢复机制。
+
+| 专题 | 主要内容 |
+| --- | --- |
+| [01 模块总图](https://hhuang999.github.io/companion-doll-backend/#overview) | 入口、核心、风险、分析、输出、存储与外部模型接口 |
+| [02 实时回复](https://hhuang999.github.io/companion-doll-backend/#turn) | 输入去重、TurnContext、提示词、分句、OutputRail 与输出闸门 |
+| [03 状态与许可](https://hhuang999.github.io/companion-doll-backend/#consent) | 提议激活、明确同意、等待卡片、退出行动与练习续播 |
+| [04 风险接管](https://hhuang999.github.io/companion-doll-backend/#risk) | L1/L2 检测、600 ms 闸门、2.5 s 预算、迟到 high 与取消 |
+| [05 后台分析](https://hhuang999.github.io/companion-doll-backend/#reasoner) | 串行调度、Validator、过期检查、事务提交与快照发布 |
+| [06 语音链路](https://hhuang999.github.io/companion-doll-backend/#audio) | 六处补丁、缓存、动态 TTS、Opus、代次隔离与播放回执 |
+| [07 数据与恢复](https://hhuang999.github.io/companion-doll-backend/#data) | 12 张表、结构化记忆、跟进预留、结束任务与启动恢复 |
+
+GitHub README 显示静态预览；交互图集通过 GitHub Pages 发布。图集绑定源码提交 `d24f38f`，当前验收状态见上方验证报告。
 
 ## 立即运行
 

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\reasoner.candidate.json",
+    "sha256": "0dd316a12d1835c0190d7310692d4bb1bba8fc7c181cade1c3b552f4f389af33",
+    "bytes": 13737
+  },
+  "artifact": {
+    "path": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\reasoner.html",
+    "sha256": "0dcb133759f2aad2d04b7f30839418cb3db21bd37d9ebb087a10725825ec81ab",
+    "bytes": 872190
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\review-2\\reasoner.finalize.json",
+    "summaryReceipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\review-2\\reasoner.finalize-summary.json",
+    "browserCheckReceipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\review-2\\reasoner.browser-check.json"
+  },
+  "visualReview": "not-requested",
+  "durationMs": 8656,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

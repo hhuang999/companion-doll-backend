@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "scope": "Inspected overview light and the complete exported PNG; inspected turn/risk/audio light and consent/reasoner/data dark at 1440x900. Archify automated checks cover both themes at 1440x900 and 2048x1320.",
+  "observations": [
+    "Labels are legible, main and exception paths are traceable, and no nodes are obscured.",
+    "Dense overview and data maps retain explicit crossing bridges; detailed topics separate the control paths.",
+    "The tall overview scrolls vertically at laptop size. Native PNG export includes all 22 nodes."
+  ],
+  "interaction_checks": [
+    "All seven navigation links and hash routes select the correct iframe and standalone URL.",
+    "Theme switching, 125% zoom, node source panel and PNG export passed in Ego browser."
+  ],
+  "artifacts": [
+    {
+      "slug": "overview",
+      "sha256": "8f97763e7c1fcab5ad01fea6ecff7a3e49da37dfebb654e9cbee4a7e7755a708"
+    },
+    {
+      "slug": "turn",
+      "sha256": "a4f36429db811fba19ae366d52988329680b76b15abddda91aa0a8008c899113"
+    },
+    {
+      "slug": "consent",
+      "sha256": "718665952d0702d6649dedf815dd991ce4fa4c1232b09b4d6040a537e4e51b18"
+    },
+    {
+      "slug": "risk",
+      "sha256": "7eb7e4ad5d770915f752b589f3564eb519904da7c1f040efb1f92593f94ae8d1"
+    },
+    {
+      "slug": "reasoner",
+      "sha256": "0dcb133759f2aad2d04b7f30839418cb3db21bd37d9ebb087a10725825ec81ab"
+    },
+    {
+      "slug": "audio",
+      "sha256": "7acfc61b105e0504568bef81634b309af0dfbb4606ca3fa26d38751ecc849f1c"
+    },
+    {
+      "slug": "data",
+      "sha256": "03cd72faf7f5ded0c451ecc56bc80bff752127f138c6ef382e3a471cabf45847"
+    }
+  ]
+}

@@ -1,0 +1,579 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "05 · 后台分析、校验与快照发布",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": ".archify/architecture-modules-20261103-211600/reasoner.html",
+    "repository": {
+      "url": "https://github.com/hhuang999/companion-doll-backend.git",
+      "revision": "d24f38f0c065c2e9412c974afab5221d938b1316",
+      "link_mode": "web"
+    }
+  },
+  "components": [
+    {
+      "id": "triggers",
+      "label": "分析触发",
+      "sublabel": "每 4 轮 / 情绪 / 规则 / watch",
+      "type": "backend",
+      "pos": [
+        40,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 188,
+          "end_line": 209
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 257,
+          "end_line": 258
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 330,
+          "end_line": 331
+        }
+      ]
+    },
+    {
+      "id": "scheduler",
+      "label": "ReasonerScheduler",
+      "sublabel": "同 user_key 串行",
+      "type": "messagebus",
+      "pos": [
+        360,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/reasoner.py",
+          "line": 13,
+          "end_line": 51
+        }
+      ],
+      "tag": "2 个工作线程"
+    },
+    {
+      "id": "task",
+      "label": "核心冻结 ReasonerTask",
+      "sublabel": "来源轮次 / 状态修订 / 版本",
+      "type": "backend",
+      "pos": [
+        680,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 745,
+          "end_line": 767
+        },
+        {
+          "path": "companion/companion/core/models.py",
+          "line": 256,
+          "end_line": 265
+        }
+      ]
+    },
+    {
+      "id": "payload",
+      "label": "构造分析输入",
+      "sublabel": "12 轮历史 · 卡片 · 跟进",
+      "type": "backend",
+      "pos": [
+        1000,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 768,
+          "end_line": 794
+        },
+        {
+          "path": "companion/companion/config/settings.yaml",
+          "line": 19,
+          "end_line": 21
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "label": "结束任务入口",
+      "sublabel": "断线 / 退出 / 重启恢复",
+      "type": "backend",
+      "pos": [
+        40,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 99,
+          "end_line": 106
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 723,
+          "end_line": 743
+        }
+      ]
+    },
+    {
+      "id": "pending",
+      "label": "内存 pending 队列",
+      "sublabel": "合并触发 · end 优先",
+      "type": "messagebus",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/reasoner.py",
+          "line": 22,
+          "end_line": 46
+        }
+      ]
+    },
+    {
+      "id": "schema",
+      "label": "ReasonerOutput",
+      "sublabel": "assessment / cards / memory",
+      "type": "backend",
+      "pos": [
+        680,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/models.py",
+          "line": 62,
+          "end_line": 132
+        },
+        {
+          "path": "companion/companion/llm/client.py",
+          "line": 109,
+          "end_line": 115
+        }
+      ]
+    },
+    {
+      "id": "qwen",
+      "label": "qwen-plus JSON",
+      "sublabel": "20 s 共享预算 · 最多 2 次",
+      "type": "cloud",
+      "pos": [
+        1000,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 768,
+          "end_line": 769
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 795,
+          "end_line": 820
+        }
+      ]
+    },
+    {
+      "id": "endtasks",
+      "label": "end_tasks 持久记录",
+      "sublabel": "pending / done / failed",
+      "type": "database",
+      "pos": [
+        40,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/store/db.py",
+          "line": 443,
+          "end_line": 492
+        },
+        {
+          "path": "companion/companion/store/schema.sql",
+          "line": 15,
+          "end_line": 15
+        }
+      ]
+    },
+    {
+      "id": "stale",
+      "label": "版本与生命周期检查",
+      "sublabel": "turn / state / snapshot",
+      "type": "security",
+      "pos": [
+        360,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 828,
+          "end_line": 846
+        }
+      ]
+    },
+    {
+      "id": "validator",
+      "label": "Validator V1–V8",
+      "sublabel": "来源 / 转移 / 卡片 / 跟进",
+      "type": "security",
+      "pos": [
+        680,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/validator.py",
+          "line": 14,
+          "end_line": 135
+        }
+      ]
+    },
+    {
+      "id": "rejections",
+      "label": "拒绝项与模型原结果",
+      "sublabel": "rejected / result / error",
+      "type": "database",
+      "pos": [
+        1000,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/validator.py",
+          "line": 23,
+          "end_line": 41
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 863,
+          "end_line": 888
+        },
+        {
+          "path": "companion/companion/store/db.py",
+          "line": 303,
+          "end_line": 330
+        }
+      ]
+    },
+    {
+      "id": "superseded",
+      "label": "过期任务处理",
+      "sublabel": "记录 superseded · 再调度",
+      "type": "backend",
+      "pos": [
+        360,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 840,
+          "end_line": 846
+        }
+      ]
+    },
+    {
+      "id": "publish",
+      "label": "Store.publish",
+      "sublabel": "记忆 / 快照 / 日志同一事务",
+      "type": "backend",
+      "pos": [
+        360,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/store/db.py",
+          "line": 333,
+          "end_line": 376
+        }
+      ]
+    },
+    {
+      "id": "snapshot",
+      "label": "新 Snapshot v+1",
+      "sublabel": "普通任务校验通过后发布",
+      "type": "database",
+      "pos": [
+        680,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 847,
+          "end_line": 873
+        }
+      ]
+    },
+    {
+      "id": "nextturn",
+      "label": "后续输入应用建议",
+      "sublabel": "白名单状态转移 / 可用卡",
+      "type": "backend",
+      "pos": [
+        1000,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 185,
+          "end_line": 209
+        },
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 203,
+          "end_line": 225
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "triggers-scheduler",
+      "from": "triggers",
+      "to": "scheduler",
+      "label": "submit",
+      "variant": "dashed"
+    },
+    {
+      "id": "end-scheduler",
+      "from": "end",
+      "to": "scheduler",
+      "label": "kind=end",
+      "variant": "dashed"
+    },
+    {
+      "id": "scheduler-pending",
+      "from": "scheduler",
+      "to": "pending",
+      "label": "合并待运行",
+      "variant": "default"
+    },
+    {
+      "id": "scheduler-task",
+      "from": "scheduler",
+      "to": "task",
+      "label": "调核心回调",
+      "variant": "default"
+    },
+    {
+      "id": "task-payload",
+      "from": "task",
+      "to": "payload",
+      "label": "固定任务边界",
+      "variant": "default"
+    },
+    {
+      "id": "payload-qwen",
+      "from": "payload",
+      "to": "qwen",
+      "label": "完整分析输入",
+      "variant": "default"
+    },
+    {
+      "id": "qwen-schema",
+      "from": "qwen",
+      "to": "schema",
+      "label": "本地 JSON 校验",
+      "variant": "default"
+    },
+    {
+      "id": "schema-validator",
+      "from": "schema",
+      "to": "validator",
+      "label": "结构有效",
+      "variant": "default"
+    },
+    {
+      "id": "validator-rejections",
+      "from": "validator",
+      "to": "rejections",
+      "label": "剔除不合格项",
+      "variant": "default"
+    },
+    {
+      "id": "validator-stale",
+      "from": "validator",
+      "to": "stale",
+      "label": "返回校验结果",
+      "variant": "default"
+    },
+    {
+      "id": "stale-superseded",
+      "from": "stale",
+      "to": "superseded",
+      "label": "普通任务已旧",
+      "variant": "default"
+    },
+    {
+      "id": "superseded-scheduler",
+      "from": "superseded",
+      "to": "scheduler",
+      "label": "仍可分析时",
+      "variant": "default"
+    },
+    {
+      "id": "stale-publish",
+      "from": "stale",
+      "to": "publish",
+      "label": "结果仍有效",
+      "variant": "emphasis"
+    },
+    {
+      "id": "publish-snapshot",
+      "from": "publish",
+      "to": "snapshot",
+      "label": "普通快照发布",
+      "variant": "emphasis"
+    },
+    {
+      "id": "snapshot-nextturn",
+      "from": "snapshot",
+      "to": "nextturn",
+      "label": "下轮读取",
+      "variant": "default"
+    },
+    {
+      "id": "end-endtasks",
+      "from": "end",
+      "to": "endtasks",
+      "label": "核心先落盘",
+      "variant": "default"
+    },
+    {
+      "id": "publish-endtasks",
+      "from": "publish",
+      "to": "endtasks",
+      "label": "end 标记 done",
+      "variant": "default"
+    },
+    {
+      "id": "publish-rejections",
+      "from": "publish",
+      "to": "rejections",
+      "label": "保存运行记录",
+      "variant": "default"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "调度器做什么",
+      "items": [
+        "pending[user_key] 按 (session_id, kind) 合并 trigger 集合；同用户最多一个 _drain。不同用户可在两个工作线程并行。",
+        "end 到来会移除同会话待运行 normal；待运行 end 存在时不再接收该会话 normal，取任务时优先 end。pending 本身是进程内内存。"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "模型建议的内容",
+      "items": [
+        "assessment 包含压力类型及置信度、路径信号、情绪强度、信任、主动性、准备度和倾听/解决偏好。",
+        "还可建议阶段、allowed / preferred 卡片、练习、话题切换，以及 profile / events / followups 更新；结束任务可生成 session_summary。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Validator 的工作",
+      "items": [
+        "阶段转移必须在白名单并带来源；卡片需存在、非 draft、有匹配的证据、符合压力/路径、拒绝记录、次数和情绪限制。",
+        "记忆需来自本次上下文中的用户轮次；事件日期需有效，跟进不得早于今天且按重要性最多保留两项。结束或 crisis 时不发布策略更新。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "防止旧分析覆盖新状态",
+      "items": [
+        "普通任务回到会话锁内，比较 lifecycle、mode、latest_turn_id、state_revision 和 base_snapshot_version。",
+        "不匹配时记 superseded；仍处于可分析状态则重新排队。只有通过检查才创建 version+1 快照并写入 Store。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "结束分析与恢复",
+      "items": [
+        "核心先把会话标为 ending，写入 end_tasks，再提交 end。成功事务同时写记忆、summary、done 和 reasoner_runs。",
+        "失败保留错误并把任务标为 failed，显式工具可重试；启动恢复 pending 的结束任务，不恢复旧会话为活动对话。"
+      ]
+    }
+  ]
+}

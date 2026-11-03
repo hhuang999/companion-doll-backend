@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "856391d3-5c79-4507-88dd-9bddd8560876",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\risk.candidate.json",
+  "output": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\risk.html",
+  "specification": {
+    "sha256": "2f650e361289531788dea4a30c5e131e177d74c8762a5dec40feebf4f048eb78",
+    "bytes": 13426
+  },
+  "artifact": {
+    "sha256": "7eb7e4ad5d770915f752b589f3564eb519904da7c1f040efb1f92593f94ae8d1",
+    "bytes": 871446
+  }
+}

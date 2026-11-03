@@ -4,3 +4,4 @@
 .archify/**/*.html whitespace=cr-at-eol,-blank-at-eol
 # Keep the published copy identical to the validated Archify artifact.
 docs/index.html -text whitespace=cr-at-eol,-blank-at-eol
+docs/diagrams/*.html -text whitespace=cr-at-eol,-blank-at-eol

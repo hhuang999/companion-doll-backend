@@ -1,0 +1,775 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "01 · 后端模块设计总图",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": ".archify/architecture-modules-20261103-211600/overview.html",
+    "repository": {
+      "url": "https://github.com/hhuang999/companion-doll-backend.git",
+      "revision": "d24f38f0c065c2e9412c974afab5221d938b1316",
+      "link_mode": "web"
+    }
+  },
+  "components": [
+    {
+      "id": "device",
+      "label": "玩偶 / 协议客户端",
+      "sublabel": "WebSocket · Opus",
+      "type": "external",
+      "pos": [
+        40.0,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "scripts/probe_xiaozhi.py",
+          "line": 68,
+          "end_line": 121
+        }
+      ],
+      "tag": "ESP32 真机待验收"
+    },
+    {
+      "id": "ingress",
+      "label": "小智音频接入",
+      "sublabel": "VAD / ASR · 原始标签",
+      "type": "backend",
+      "pos": [
+        352.0,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "xiaozhi_patch/companion.patch",
+          "line": 13,
+          "end_line": 86
+        }
+      ]
+    },
+    {
+      "id": "runtime",
+      "label": "连接适配器",
+      "sublabel": "handle_input / bind_output",
+      "type": "backend",
+      "pos": [
+        664.0,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 77,
+          "end_line": 138
+        }
+      ]
+    },
+    {
+      "id": "cli",
+      "label": "文字与剧本入口",
+      "sublabel": "CLI · FakeLLM / 在线模型",
+      "type": "frontend",
+      "pos": [
+        976.0,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/cli.py",
+          "line": 19,
+          "end_line": 86
+        }
+      ]
+    },
+    {
+      "id": "config",
+      "label": "Config 内容与参数",
+      "sublabel": "YAML / Jinja · 启动校验",
+      "type": "external",
+      "pos": [
+        40,
+        1040
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/config.py",
+          "line": 120,
+          "end_line": 190
+        }
+      ]
+    },
+    {
+      "id": "state",
+      "label": "StateMachine",
+      "sublabel": "规则 · 提议 · 明确同意",
+      "type": "backend",
+      "pos": [
+        352.0,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/state_machine.py",
+          "line": 79,
+          "end_line": 228
+        }
+      ]
+    },
+    {
+      "id": "core",
+      "label": "CompanionCore",
+      "sublabel": "轮次注册 · 状态所有权",
+      "type": "backend",
+      "pos": [
+        664.0,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 54,
+          "end_line": 106
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 136,
+          "end_line": 258
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 578,
+          "end_line": 628
+        }
+      ]
+    },
+    {
+      "id": "risk",
+      "label": "RiskDetector",
+      "sublabel": "词表 + 独立风险分类",
+      "type": "backend",
+      "pos": [
+        976.0,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/risk.py",
+          "line": 19,
+          "end_line": 113
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 261,
+          "end_line": 331
+        }
+      ]
+    },
+    {
+      "id": "tts",
+      "label": "Aihubmix 语音接口",
+      "sublabel": "TTSClient · WAV 合成",
+      "type": "cloud",
+      "pos": [
+        40,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/llm/tts.py",
+          "line": 15,
+          "end_line": 63
+        }
+      ]
+    },
+    {
+      "id": "port",
+      "label": "XiaozhiOutputPort",
+      "sublabel": "队列 · 代次检查 · 取消",
+      "type": "backend",
+      "pos": [
+        40,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 90,
+          "end_line": 223
+        }
+      ]
+    },
+    {
+      "id": "gate",
+      "label": "核心回复与输出闸门",
+      "sublabel": "respond / _gate / dispatch",
+      "type": "backend",
+      "pos": [
+        352,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 399,
+          "end_line": 425
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 440,
+          "end_line": 578
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 578,
+          "end_line": 628
+        }
+      ]
+    },
+    {
+      "id": "talker",
+      "label": "Talker",
+      "sublabel": "提示词 · 流式解析 · 分句",
+      "type": "backend",
+      "pos": [
+        352,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/talker.py",
+          "line": 48,
+          "end_line": 170
+        }
+      ]
+    },
+    {
+      "id": "cache",
+      "label": "固定音频缓存",
+      "sublabel": "预生成 WAV · 本地文件",
+      "type": "database",
+      "pos": [
+        40,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/llm/tts.py",
+          "line": 49,
+          "end_line": 63
+        },
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 36,
+          "end_line": 55
+        }
+      ]
+    },
+    {
+      "id": "transport",
+      "label": "XiaozhiTransport",
+      "sublabel": "Opus 编码 · 节流发送",
+      "type": "backend",
+      "pos": [
+        40,
+        840
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 19,
+          "end_line": 87
+        }
+      ]
+    },
+    {
+      "id": "store",
+      "label": "Store 事务边界",
+      "sublabel": "持久化 · 恢复 · 记忆读取",
+      "type": "backend",
+      "pos": [
+        664,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/store/db.py",
+          "line": 27,
+          "end_line": 64
+        },
+        {
+          "path": "companion/companion/store/db.py",
+          "line": 333,
+          "end_line": 426
+        },
+        {
+          "path": "companion/companion/store/db.py",
+          "line": 443,
+          "end_line": 492
+        }
+      ]
+    },
+    {
+      "id": "rail",
+      "label": "OutputRail",
+      "sublabel": "句级限制 · 卡片禁语",
+      "type": "security",
+      "pos": [
+        352,
+        840
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/output_rail.py",
+          "line": 7,
+          "end_line": 25
+        },
+        {
+          "path": "companion/companion/core/talker.py",
+          "line": 129,
+          "end_line": 166
+        }
+      ]
+    },
+    {
+      "id": "dashboard",
+      "label": "Streamlit 观察台",
+      "sublabel": "查询 · 风险已处理标记",
+      "type": "frontend",
+      "pos": [
+        976,
+        840
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/dashboard/app.py",
+          "line": 20,
+          "end_line": 32
+        },
+        {
+          "path": "companion/companion/dashboard/app.py",
+          "line": 44,
+          "end_line": 55
+        },
+        {
+          "path": "companion/companion/dashboard/app.py",
+          "line": 122,
+          "end_line": 175
+        }
+      ]
+    },
+    {
+      "id": "db",
+      "label": "SQLite · 12 张表",
+      "sublabel": "WAL · 线程连接 · 短事务",
+      "type": "database",
+      "pos": [
+        664,
+        840
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/store/schema.sql",
+          "line": 1,
+          "end_line": 15
+        },
+        {
+          "path": "companion/companion/store/db.py",
+          "line": 27,
+          "end_line": 61
+        }
+      ]
+    },
+    {
+      "id": "reasoner",
+      "label": "ReasonerScheduler",
+      "sublabel": "同用户串行 · 结束优先",
+      "type": "backend",
+      "pos": [
+        976,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/reasoner.py",
+          "line": 13,
+          "end_line": 66
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 745,
+          "end_line": 888
+        }
+      ]
+    },
+    {
+      "id": "validator",
+      "label": "Validator",
+      "sublabel": "来源 · 阶段 · 卡片 · 日期",
+      "type": "security",
+      "pos": [
+        976,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/validator.py",
+          "line": 14,
+          "end_line": 135
+        }
+      ]
+    },
+    {
+      "id": "exercise",
+      "label": "ExercisePlayer",
+      "sublabel": "分段计划 · 续播位置",
+      "type": "backend",
+      "pos": [
+        664,
+        1040
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/exercise.py",
+          "line": 5,
+          "end_line": 31
+        },
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 485,
+          "end_line": 497
+        }
+      ]
+    },
+    {
+      "id": "llm",
+      "label": "Aihubmix 文本接口",
+      "sublabel": "AihubmixClient · 三类调用",
+      "type": "cloud",
+      "pos": [
+        664,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/llm/client.py",
+          "line": 36,
+          "end_line": 115
+        },
+        {
+          "path": "companion/companion/config/settings.yaml",
+          "line": 2,
+          "end_line": 14
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "device-ingress",
+      "from": "device",
+      "to": "ingress",
+      "label": "音频 / 控制",
+      "variant": "emphasis"
+    },
+    {
+      "id": "ingress-runtime",
+      "from": "ingress",
+      "to": "runtime",
+      "label": "文字与信号",
+      "variant": "emphasis"
+    },
+    {
+      "id": "runtime-core",
+      "from": "runtime",
+      "to": "core",
+      "label": "注册 / 响应",
+      "variant": "emphasis"
+    },
+    {
+      "id": "cli-core",
+      "from": "cli",
+      "to": "core",
+      "label": "同一核心",
+      "variant": "default"
+    },
+    {
+      "id": "core-state",
+      "from": "core",
+      "to": "state",
+      "label": "规则决策",
+      "variant": "default"
+    },
+    {
+      "id": "core-risk",
+      "from": "core",
+      "to": "risk",
+      "label": "独立分类",
+      "variant": "dashed"
+    },
+    {
+      "id": "core-gate",
+      "from": "core",
+      "to": "gate",
+      "label": "不可变上下文",
+      "variant": "emphasis"
+    },
+    {
+      "id": "gate-talker",
+      "from": "gate",
+      "to": "talker",
+      "label": "生成回复",
+      "variant": "default"
+    },
+    {
+      "id": "talker-rail",
+      "from": "talker",
+      "to": "rail",
+      "label": "逐句检查",
+      "variant": "default"
+    },
+    {
+      "id": "gate-port",
+      "from": "gate",
+      "to": "port",
+      "label": "有效输出",
+      "variant": "emphasis"
+    },
+    {
+      "id": "port-transport",
+      "from": "port",
+      "to": "transport",
+      "label": "编码 / 发送",
+      "variant": "emphasis"
+    },
+    {
+      "id": "port-tts",
+      "from": "port",
+      "to": "tts",
+      "label": "缓存未命中",
+      "variant": "default"
+    },
+    {
+      "id": "port-cache",
+      "from": "port",
+      "to": "cache",
+      "label": "固定音频",
+      "variant": "default"
+    },
+    {
+      "id": "core-store",
+      "from": "core",
+      "to": "store",
+      "label": "登记与状态",
+      "variant": "default"
+    },
+    {
+      "id": "store-db",
+      "from": "store",
+      "to": "db",
+      "label": "SQL 事务",
+      "variant": "default"
+    },
+    {
+      "id": "dashboard-db",
+      "from": "dashboard",
+      "to": "db",
+      "label": "查询 / 标记",
+      "variant": "default"
+    },
+    {
+      "id": "core-reasoner",
+      "from": "core",
+      "to": "reasoner",
+      "label": "触发分析",
+      "variant": "dashed"
+    },
+    {
+      "id": "reasoner-validator",
+      "from": "reasoner",
+      "to": "validator",
+      "label": "核心调用校验",
+      "variant": "default"
+    },
+    {
+      "id": "reasoner-store",
+      "from": "reasoner",
+      "to": "store",
+      "label": "核心提交结果",
+      "variant": "default"
+    },
+    {
+      "id": "reasoner-llm",
+      "from": "reasoner",
+      "to": "llm",
+      "label": "JSON 请求",
+      "variant": "default"
+    },
+    {
+      "id": "talker-llm",
+      "from": "talker",
+      "to": "llm",
+      "label": "流式请求",
+      "variant": "default"
+    },
+    {
+      "id": "risk-llm",
+      "from": "risk",
+      "to": "llm",
+      "label": "风险 JSON",
+      "variant": "default"
+    },
+    {
+      "id": "gate-exercise",
+      "from": "gate",
+      "to": "exercise",
+      "label": "同意后建计划",
+      "variant": "default"
+    },
+    {
+      "id": "config-state",
+      "from": "config",
+      "to": "state",
+      "label": "规则与卡片",
+      "variant": "default"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "模块边界与阅读顺序",
+      "items": [
+        "这张图展示主要调用依赖。小智适配、CompanionCore、风险线程、Reasoner 线程和输出协程属于同一个后端进程；方框代表代码职责。",
+        "01 总图 → 02 实时回复 → 03 状态与许可 → 04 风险接管 → 05 后台分析 → 06 语音输出 → 07 数据与恢复。专题图进一步展开回调、条件和失败路径。"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "三条并行路径",
+      "items": [
+        "Talker 在连接的回复执行器中运行。RiskDetector 使用独立的 4 个工作线程；ReasonerScheduler 使用 2 个线程，同一 user_key 串行。",
+        "ReasonerScheduler 调用核心的 _run_reasoner；图中的校验、Store 提交由该核心回调执行，调度器自身不拥有数据库事务。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "共享数据契约",
+      "items": [
+        "TurnContext 固定本轮 stage、mode、card_id、signals、snapshot、generation。OutputEvent 用 output_id 关联 PlaybackEvent。",
+        "SessionState 可变且受会话锁保护；Snapshot 不可变。stage、mode、lifecycle 分别表达对话阶段、运行模式和会话生命周期。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "外部依赖与配置",
+      "items": [
+        "AihubmixClient 统一承载 Talker / Risk 的 qwen-flash 和 Reasoner 的 qwen-plus；TTSClient 使用 gpt-4o-mini-tts / coral。",
+        "Config 还提供人格、阶段模板、风险词表、行动卡、危机文本和练习。模型、线程数和预算来自 settings.yaml，密钥由 .env 注入环境。"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "输出与数据的所有权",
+      "items": [
+        "Core 决定状态、输出是否合法以及何时取消；OutputPort 负责排队和播放；Transport 负责小智协议与音频发送。",
+        "Store 管理 SQLite 事务；观察台是独立进程，读取状态并允许人工标记风险已处理。音频缓存是文件，不存入 SQLite。"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "当前验收边界",
+      "items": [
+        "图绑定提交 d24f38f，逐组件提供源码行号。既有验证记录为 60 项离线测试与本机真实语音链路检查。",
+        "当前是 development：正式行动卡、危机话术审核、练习审核以及 ESP32 真机验收仍待完成；webhook 默认未启用。"
+      ]
+    }
+  ]
+}

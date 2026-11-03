@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\audio.candidate.json",
+    "sha256": "d091ed3765c3eccf2b7470515f31460b21b842cd6479bdfd7a1add33a3aa9ab3",
+    "bytes": 14412
+  },
+  "artifact": {
+    "path": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\audio.html",
+    "sha256": "7acfc61b105e0504568bef81634b309af0dfbb4606ca3fa26d38751ecc849f1c",
+    "bytes": 875708
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\final\\audio.finalize.json",
+    "summaryReceipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\final\\audio.finalize-summary.json",
+    "browserCheckReceipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\final\\audio.browser-check.json"
+  },
+  "visualReview": "not-requested",
+  "durationMs": 9576,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "resolvedCrossovers": 1,
+      "routesOverSuggestedBends": 3,
+      "routesOverSuggestedStretch": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [
+        {
+          "left": {
+            "id": "wire-device",
+            "from": "wire",
+            "to": "device",
+            "label": "Opus / 控制",
+            "collectionIndex": 12,
+            "artifactIndex": 13
+          },
+          "right": {
+            "id": "device-abort",
+            "from": "device",
+            "to": "abort",
+            "label": "abort 控制",
+            "collectionIndex": 13,
+            "artifactIndex": 14
+          },
+          "point": [
+            137,
+            148
+          ],
+          "sharedNode": "device"
+        }
+      ],
+      "detours": [
+        {
+          "relationship": {
+            "id": "response-queue",
+            "from": "response",
+            "to": "queue",
+            "label": "OutputEvent",
+            "collectionIndex": 3,
+            "artifactIndex": 4
+          },
+          "bends": 3,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "wire-device",
+            "from": "wire",
+            "to": "device",
+            "label": "Opus / 控制",
+            "collectionIndex": 12,
+            "artifactIndex": 13
+          },
+          "bends": 4,
+          "stretch": 1.409,
+          "directCorridorBlockers": [
+            {
+              "id": "abort",
+              "label": "abort 独立钩子",
+              "box": [
+                40,
+                240,
+                208,
+                84
+              ]
+            },
+            {
+              "id": "stop",
+              "label": "Transport.stop",
+              "box": [
+                40,
+                440,
+                208,
+                84
+              ]
+            }
+          ]
+        },
+        {
+          "relationship": {
+            "id": "queue-stop",
+            "from": "queue",
+            "to": "stop",
+            "label": "取消活动任务",
+            "collectionIndex": 16,
+            "artifactIndex": 17
+          },
+          "bends": 4,
+          "stretch": 1
+        }
+      ],
+      "truncated": false
+    },
+    "hints": [
+      "wire → device and device → abort cross next to device: move node wire or abort so the two reach device from different sides (for example one level with it, one directly above or below it).",
+      "response → queue needs 3 bends: move node response or queue so they share a row or column with matching centers, or sit diagonally with a clear corner.",
+      "queue → stop needs 4 bends: move node queue or stop so they share a row or column with matching centers, or sit diagonally with a clear corner."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}

@@ -1,0 +1,610 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "06 · 小智接入、语音播放与独立取消",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": ".archify/architecture-modules-20261103-211600/audio.html",
+    "repository": {
+      "url": "https://github.com/hhuang999/companion-doll-backend.git",
+      "revision": "d24f38f0c065c2e9412c974afab5221d938b1316",
+      "link_mode": "web"
+    }
+  },
+  "components": [
+    {
+      "id": "device",
+      "label": "设备 / WebSocket",
+      "sublabel": "audio · listen · abort",
+      "type": "external",
+      "pos": [
+        40.0,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "scripts/probe_xiaozhi.py",
+          "line": 68,
+          "end_line": 121
+        }
+      ]
+    },
+    {
+      "id": "asr",
+      "label": "小智 VAD / ASR",
+      "sublabel": "保留 raw_emotion / event",
+      "type": "backend",
+      "pos": [
+        352.0,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "xiaozhi_patch/companion.patch",
+          "line": 69,
+          "end_line": 86
+        }
+      ]
+    },
+    {
+      "id": "registration",
+      "label": "handle_input",
+      "sublabel": "绑定连接 · 登记输入",
+      "type": "backend",
+      "pos": [
+        664.0,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 77,
+          "end_line": 129
+        }
+      ]
+    },
+    {
+      "id": "response",
+      "label": "连接回复执行器",
+      "sublabel": "respond → dispatch",
+      "type": "backend",
+      "pos": [
+        976.0,
+        40
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 131,
+          "end_line": 138
+        }
+      ]
+    },
+    {
+      "id": "abort",
+      "label": "abort 独立钩子",
+      "sublabel": "interrupt_connection",
+      "type": "backend",
+      "pos": [
+        40.0,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "xiaozhi_patch/companion.patch",
+          "line": 1,
+          "end_line": 12
+        },
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 70,
+          "end_line": 74
+        }
+      ]
+    },
+    {
+      "id": "generation",
+      "label": "核心取消边界",
+      "sublabel": "generation +1 · cancel_before",
+      "type": "backend",
+      "pos": [
+        352.0,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 700,
+          "end_line": 721
+        }
+      ]
+    },
+    {
+      "id": "queue",
+      "label": "OutputPort 队列",
+      "sublabel": "output_id 去重 · 最低代次",
+      "type": "messagebus",
+      "pos": [
+        664.0,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 90,
+          "end_line": 150
+        }
+      ]
+    },
+    {
+      "id": "worker",
+      "label": "串行播放 Worker",
+      "sublabel": "等待 stop · 选择分段计划",
+      "type": "backend",
+      "pos": [
+        976.0,
+        240
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 164,
+          "end_line": 177
+        },
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 199,
+          "end_line": 223
+        }
+      ]
+    },
+    {
+      "id": "stop",
+      "label": "Transport.stop",
+      "sublabel": "停节流器 · 清队列 · tts stop",
+      "type": "backend",
+      "pos": [
+        40.0,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 66,
+          "end_line": 87
+        }
+      ]
+    },
+    {
+      "id": "encode",
+      "label": "Transport.encode",
+      "sublabel": "临时 WAV → Opus → 删除",
+      "type": "backend",
+      "pos": [
+        352.0,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 23,
+          "end_line": 33
+        }
+      ]
+    },
+    {
+      "id": "resolve",
+      "label": "音频来源选择",
+      "sublabel": "固定读取 / 动态缓存未中合成",
+      "type": "backend",
+      "pos": [
+        664.0,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 152,
+          "end_line": 182
+        }
+      ]
+    },
+    {
+      "id": "cache",
+      "label": "固定 WAV 缓存",
+      "sublabel": "model + voice + text 哈希",
+      "type": "database",
+      "pos": [
+        976.0,
+        440
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/llm/tts.py",
+          "line": 26,
+          "end_line": 28
+        },
+        {
+          "path": "companion/companion/llm/tts.py",
+          "line": 49,
+          "end_line": 63
+        }
+      ]
+    },
+    {
+      "id": "wire",
+      "label": "Transport.start / play",
+      "sublabel": "表情 / sentence_start / 音频",
+      "type": "backend",
+      "pos": [
+        40.0,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 35,
+          "end_line": 64
+        }
+      ]
+    },
+    {
+      "id": "valid",
+      "label": "编码后再次查代次",
+      "sublabel": "valid(event) 才能开始",
+      "type": "security",
+      "pos": [
+        352.0,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 183,
+          "end_line": 197
+        }
+      ]
+    },
+    {
+      "id": "tts",
+      "label": "动态 TTS",
+      "sublabel": "Aihubmix / audio/speech",
+      "type": "cloud",
+      "pos": [
+        664.0,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/llm/tts.py",
+          "line": 30,
+          "end_line": 47
+        }
+      ]
+    },
+    {
+      "id": "prepare",
+      "label": "prepare_audio / 启动检查",
+      "sublabel": "固定缓存缺失则拒绝连接",
+      "type": "backend",
+      "pos": [
+        976.0,
+        640
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 25,
+          "end_line": 55
+        },
+        {
+          "path": "companion/companion/llm/tts.py",
+          "line": 49,
+          "end_line": 63
+        }
+      ]
+    },
+    {
+      "id": "playback",
+      "label": "PlaybackEvent 回调",
+      "sublabel": "started / segment / completed",
+      "type": "backend",
+      "pos": [
+        40.0,
+        840
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 108,
+          "end_line": 117
+        },
+        {
+          "path": "companion/companion/adapters/xiaozhi/output.py",
+          "line": 186,
+          "end_line": 197
+        }
+      ]
+    },
+    {
+      "id": "state",
+      "label": "核心处理播放回执",
+      "sublabel": "提议激活 / 续播索引 / 收尾",
+      "type": "backend",
+      "pos": [
+        352.0,
+        840
+      ],
+      "size": [
+        208,
+        84
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 630,
+          "end_line": 698
+        },
+        {
+          "path": "companion/companion/adapters/xiaozhi/runtime.py",
+          "line": 94,
+          "end_line": 100
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "device-asr",
+      "from": "device",
+      "to": "asr",
+      "label": "语音帧",
+      "variant": "emphasis"
+    },
+    {
+      "id": "asr-registration",
+      "from": "asr",
+      "to": "registration",
+      "label": "文字 + 信号",
+      "variant": "emphasis"
+    },
+    {
+      "id": "registration-response",
+      "from": "registration",
+      "to": "response",
+      "label": "固定 turn_id",
+      "variant": "emphasis"
+    },
+    {
+      "id": "response-queue",
+      "from": "response",
+      "to": "queue",
+      "label": "OutputEvent",
+      "variant": "emphasis"
+    },
+    {
+      "id": "queue-worker",
+      "from": "queue",
+      "to": "worker",
+      "label": "有效事件",
+      "variant": "emphasis"
+    },
+    {
+      "id": "worker-resolve",
+      "from": "worker",
+      "to": "resolve",
+      "label": "按段取音频",
+      "variant": "emphasis"
+    },
+    {
+      "id": "resolve-cache",
+      "from": "resolve",
+      "to": "cache",
+      "label": "固定 / 命中",
+      "variant": "default"
+    },
+    {
+      "id": "resolve-tts",
+      "from": "resolve",
+      "to": "tts",
+      "label": "动态未命中",
+      "variant": "default"
+    },
+    {
+      "id": "prepare-cache",
+      "from": "prepare",
+      "to": "cache",
+      "label": "原子写入",
+      "variant": "default"
+    },
+    {
+      "id": "resolve-encode",
+      "from": "resolve",
+      "to": "encode",
+      "label": "WAV 字节",
+      "variant": "emphasis"
+    },
+    {
+      "id": "encode-valid",
+      "from": "encode",
+      "to": "valid",
+      "label": "编码完成",
+      "variant": "emphasis"
+    },
+    {
+      "id": "valid-wire",
+      "from": "valid",
+      "to": "wire",
+      "label": "代次仍有效",
+      "variant": "emphasis"
+    },
+    {
+      "id": "wire-device",
+      "from": "wire",
+      "to": "device",
+      "label": "Opus / 控制",
+      "variant": "default"
+    },
+    {
+      "id": "device-abort",
+      "from": "device",
+      "to": "abort",
+      "label": "abort 控制",
+      "variant": "default"
+    },
+    {
+      "id": "abort-generation",
+      "from": "abort",
+      "to": "generation",
+      "label": "独立通知",
+      "variant": "default"
+    },
+    {
+      "id": "generation-queue",
+      "from": "generation",
+      "to": "queue",
+      "label": "提高最低代次",
+      "variant": "security"
+    },
+    {
+      "id": "queue-stop",
+      "from": "queue",
+      "to": "stop",
+      "label": "取消活动任务",
+      "variant": "security"
+    },
+    {
+      "id": "wire-playback",
+      "from": "wire",
+      "to": "playback",
+      "label": "服务端回执",
+      "variant": "default"
+    },
+    {
+      "id": "playback-state",
+      "from": "playback",
+      "to": "state",
+      "label": "callback",
+      "variant": "default"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "六处集成补丁",
+      "items": [
+        "LLM provider 取得共享核心；Memory provider 通知结束；ASR 工具保留原始情绪与事件；receiveAudio 登记并绕过旧 chat/TTS。",
+        "abortHandle 独立通知取消；listenMessageHandler 明确标记 wake。idle_end 也显式传入控制类型，避免把控制提示当作用户话语。"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "线程与协程分工",
+      "items": [
+        "handle_input 在连接事件循环运行，用 asyncio.to_thread 调 on_input；回复生成交给 conn.executor。",
+        "OutputPort 在连接的 asyncio loop 维护 Queue / worker / active task；跨线程提交用 call_soon_threadsafe，音频发送和取消都回到该循环。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "缓存与动态合成",
+      "items": [
+        "固定开场、危机和练习音频需提前准备；启动时核对缓存，固定计划不会在危机接管时现场合成。",
+        "cache_key 取模型、声音和文本的 SHA-256；普通文本优先读缓存，未命中才调用 TTS。动态 WAV 仅暂存用于转码，编码后删除。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "练习是播放计划",
+      "items": [
+        "PlaybackPlan 含 script_id、segments、start_index；每段可携带 pause_s、audio_path、audio_duration_s。",
+        "练习按已测 WAV 时长加停顿再次校验不超过 90 s；segment 回执更新续播索引。中断后续播仍需重新同意。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "取消与迟到音频",
+      "items": [
+        "generation 在核心、新事件入队、worker 取队和编码后分别检查；旧 TTS 即使晚返回也不能重新开始播放。",
+        "取消先提高 minimum，撤销 active task，并串行等待 stop_task；Transport 停发送控制器、清队列并发送 tts stop。"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "回执的含义",
+      "items": [
+        "started 激活提议并标记跟进已询问；completed 推进开场、收尾或练习状态；failed / cancelled 做提议与计划清理。",
+        "completed 当前来自服务端节流发送完成估计，尚无设备实际播完 ACK；真机扬声器停声延迟仍需验收。"
+      ]
+    }
+  ]
+}

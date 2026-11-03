@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\consent.candidate.json",
+    "sha256": "e24da234e1f1adae691c47223c06882d92a1d9a918633c9c679a58fa311a52ff",
+    "bytes": 13644
+  },
+  "artifact": {
+    "path": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\consent.html",
+    "sha256": "718665952d0702d6649dedf815dd991ce4fa4c1232b09b4d6040a537e4e51b18",
+    "bytes": 871519
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\review-3\\consent.finalize.json",
+    "summaryReceipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\review-3\\consent.finalize-summary.json",
+    "browserCheckReceipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\review-3\\consent.browser-check.json"
+  },
+  "visualReview": "not-requested",
+  "durationMs": 7986,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "resolvedCrossovers": 2,
+      "routesOverSuggestedBends": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [
+        {
+          "left": {
+            "id": "expiry-exit",
+            "from": "expiry",
+            "to": "exit",
+            "label": "拒绝 / 失效",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "right": {
+            "id": "proposal-rules",
+            "from": "proposal",
+            "to": "rules",
+            "label": "白名单内应用",
+            "collectionIndex": 18,
+            "artifactIndex": 19
+          },
+          "point": [
+            267.6000000000001,
+            289
+          ]
+        },
+        {
+          "left": {
+            "id": "eligible-snapshot",
+            "from": "eligible",
+            "to": "snapshot",
+            "label": "读取可用卡",
+            "collectionIndex": 12,
+            "artifactIndex": 13
+          },
+          "right": {
+            "id": "proposal-rules",
+            "from": "proposal",
+            "to": "rules",
+            "label": "白名单内应用",
+            "collectionIndex": 18,
+            "artifactIndex": 19
+          },
+          "point": [
+            267.6000000000001,
+            482
+          ]
+        }
+      ],
+      "detours": [
+        {
+          "relationship": {
+            "id": "proposal-rules",
+            "from": "proposal",
+            "to": "rules",
+            "label": "白名单内应用",
+            "collectionIndex": 18,
+            "artifactIndex": 19
+          },
+          "bends": 4,
+          "stretch": 1
+        }
+      ],
+      "truncated": false
+    },
+    "hints": [
+      "expiry → exit crosses proposal → rules: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "eligible → snapshot crosses proposal → rules: move the node of whichever is a branch, return, or second entrance to the other side of the main path, so that relationship runs through an empty corridor.",
+      "proposal → rules needs 4 bends: move node proposal or rules so they share a row or column with matching centers, or sit diagonally with a clear corner."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}

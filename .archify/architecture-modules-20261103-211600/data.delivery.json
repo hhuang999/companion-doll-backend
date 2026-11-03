@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "8565443d-0173-4ee3-afeb-b1e9e3eb0b46",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\data.candidate.json",
+  "output": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-modules-20261103-211600\\data.html",
+  "specification": {
+    "sha256": "d23256d54df14f3b28146eeaa42680ad2889e69f9218274c4459f28c0916c3be",
+    "bytes": 15118
+  },
+  "artifact": {
+    "sha256": "03cd72faf7f5ded0c451ecc56bc80bff752127f138c6ef382e3a471cabf45847",
+    "bytes": 876230
+  }
+}
