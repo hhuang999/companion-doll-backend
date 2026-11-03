@@ -1,0 +1,12 @@
+name: 幂等结束与重连
+steps:
+  - kind: wake
+  - user: 今天的考试让我难受
+  - end: true
+  - end: true
+  - wait: true
+    expect: {lifecycle: closed, has_summary: true}
+  - reconnect: true
+    expect: {stage: opening}
+  - kind: wake
+    expect: {last_purpose: opening, stage: explore}

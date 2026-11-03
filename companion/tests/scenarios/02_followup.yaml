@@ -1,0 +1,7 @@
+name: 到期开场跟进只问一次
+fixture: {followup: 明天的考试}
+steps:
+  - kind: wake
+    expect: {followups_asked: 1, last_purpose: opening}
+  - kind: wake
+    expect: {followups_asked: 1}

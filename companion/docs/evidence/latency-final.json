@@ -1,0 +1,588 @@
+{
+  "fake": false,
+  "model": "qwen-flash",
+  "python": "3.10.20",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "context_user_turn_limit": 10,
+  "generation": {
+    "temperature": 0.7,
+    "max_tokens": 160,
+    "enable_thinking": false
+  },
+  "warmth": "SDK initialized before timing; first request cold, later requests reuse client",
+  "network": "Current host network to configured Aihubmix endpoint",
+  "samples": [
+    {
+      "turn_id": 1,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "first_token_ms": 1250.0,
+        "first_sentence_ms": 1453.0000000377186,
+        "gate_pending": true,
+        "gate_release_ms": 1453.0000000377186,
+        "output_submit_ms": 1453.0000000377186,
+        "total_ms": 1717.9999999934807
+      },
+      "violations": [
+        "rail_questions",
+        "rail_questions"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 2,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 860.0000000442378,
+        "risk_status": "ok",
+        "first_token_ms": 969.0000000409782,
+        "first_sentence_ms": 1375.0,
+        "gate_release_ms": 1375.0,
+        "output_submit_ms": 1375.0,
+        "total_ms": 1375.0
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 3,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 16.00000000325963,
+        "risk_l2_ms": 1047.000000020489,
+        "risk_status": "ok",
+        "first_token_ms": 1063.0000000237487,
+        "first_sentence_ms": 1266.0000000032596,
+        "gate_release_ms": 1266.0000000032596,
+        "output_submit_ms": 1266.0000000032596,
+        "total_ms": 1266.0000000032596
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 4,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 1016.0000000032596,
+        "risk_status": "ok",
+        "first_token_ms": 1063.0000000237487,
+        "first_sentence_ms": 1203.0000000377186,
+        "gate_release_ms": 1203.0000000377186,
+        "output_submit_ms": 1203.0000000377186,
+        "total_ms": 1203.0000000377186
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 5,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 952.9999999795109,
+        "risk_status": "ok",
+        "first_token_ms": 1000.0,
+        "first_sentence_ms": 1202.999999979511,
+        "gate_release_ms": 1202.999999979511,
+        "output_submit_ms": 1202.999999979511,
+        "total_ms": 1202.999999979511
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 6,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 968.9999999827705,
+        "risk_status": "ok",
+        "first_token_ms": 984.9999999860302,
+        "first_sentence_ms": 1125.0,
+        "gate_release_ms": 1125.0,
+        "output_submit_ms": 1141.0000000032596,
+        "total_ms": 1141.0000000032596
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 7,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 858.9999999967404,
+        "risk_status": "ok",
+        "first_token_ms": 1483.9999999967404,
+        "first_sentence_ms": 1561.9999999762513,
+        "gate_release_ms": 1561.9999999762513,
+        "output_submit_ms": 1561.9999999762513,
+        "total_ms": 1577.999999979511
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 8,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 922.0000000204891,
+        "risk_status": "ok",
+        "first_token_ms": 1750.0,
+        "first_sentence_ms": 1843.9999999827705,
+        "gate_release_ms": 1843.9999999827705,
+        "output_submit_ms": 1843.9999999827705,
+        "total_ms": 1843.9999999827705
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 9,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 15.000000013969839,
+        "risk_l2_ms": 952.9999999795109,
+        "risk_status": "ok",
+        "first_token_ms": 1172.000000020489,
+        "first_sentence_ms": 1328.0000000377186,
+        "gate_release_ms": 1328.0000000377186,
+        "output_submit_ms": 1328.0000000377186,
+        "total_ms": 1328.0000000377186
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 10,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 1000.0,
+        "risk_status": "ok",
+        "first_token_ms": 1625.0,
+        "first_sentence_ms": 1952.999999979511,
+        "gate_release_ms": 1952.999999979511,
+        "output_submit_ms": 1968.9999999827705,
+        "total_ms": 1968.9999999827705
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 11,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "first_token_ms": 891.0000000032596,
+        "risk_l2_ms": 952.9999999795109,
+        "risk_status": "ok",
+        "first_sentence_ms": 1000.0,
+        "gate_release_ms": 1000.0,
+        "output_submit_ms": 1000.0,
+        "total_ms": 1000.0
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 12,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 1000.0,
+        "risk_status": "ok",
+        "first_token_ms": 1000.0,
+        "first_sentence_ms": 1233.9999999967404,
+        "gate_release_ms": 1233.9999999967404,
+        "output_submit_ms": 1233.9999999967404,
+        "total_ms": 1233.9999999967404
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 13,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 16.00000000325963,
+        "first_token_ms": 907.0000000065193,
+        "risk_l2_ms": 1047.000000020489,
+        "risk_status": "ok",
+        "first_sentence_ms": 1093.9999999827705,
+        "gate_release_ms": 1093.9999999827705,
+        "output_submit_ms": 1093.9999999827705,
+        "total_ms": 1093.9999999827705
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 14,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 16.00000000325963,
+        "risk_l2_ms": 843.9999999827705,
+        "risk_status": "ok",
+        "first_token_ms": 1671.9999999622814,
+        "first_sentence_ms": 1827.999999979511,
+        "gate_release_ms": 1827.999999979511,
+        "output_submit_ms": 1827.999999979511,
+        "total_ms": 1827.999999979511
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 15,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 922.0000000204891,
+        "risk_status": "ok",
+        "first_token_ms": 1234.9999999860302,
+        "first_sentence_ms": 1343.9999999827705,
+        "gate_release_ms": 1343.9999999827705,
+        "output_submit_ms": 1343.9999999827705,
+        "total_ms": 1343.9999999827705
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 16,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 16.00000000325963,
+        "risk_l2_ms": 1219.0000000409782,
+        "risk_status": "ok",
+        "first_token_ms": 1250.0,
+        "first_sentence_ms": 1358.9999999967404,
+        "gate_release_ms": 1358.9999999967404,
+        "output_submit_ms": 1358.9999999967404,
+        "total_ms": 1375.0
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 17,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 1031.0000000172295,
+        "risk_status": "ok",
+        "first_token_ms": 1344.0000000409782,
+        "first_sentence_ms": 1406.0000000172295,
+        "gate_release_ms": 1406.0000000172295,
+        "output_submit_ms": 1406.0000000172295,
+        "total_ms": 1406.0000000172295
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 18,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 15.000000013969839,
+        "risk_l2_ms": 922.0000000204891,
+        "risk_status": "ok",
+        "first_token_ms": 1328.0000000377186,
+        "first_sentence_ms": 1515.0000000139698,
+        "gate_release_ms": 1515.0000000139698,
+        "output_submit_ms": 1515.0000000139698,
+        "total_ms": 1515.0000000139698
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 19,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 968.9999999827705,
+        "risk_status": "ok",
+        "first_token_ms": 984.9999999860302,
+        "first_sentence_ms": 1125.0,
+        "gate_release_ms": 1125.0,
+        "output_submit_ms": 1141.0000000032596,
+        "total_ms": 1141.0000000032596
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 20,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 936.9999999762513,
+        "risk_status": "ok",
+        "first_token_ms": 1077.999999979511,
+        "first_sentence_ms": 1156.0000000172295,
+        "gate_release_ms": 1156.0000000172295,
+        "output_submit_ms": 1156.0000000172295,
+        "total_ms": 1156.0000000172295
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 21,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 16.00000000325963,
+        "first_token_ms": 1077.999999979511,
+        "risk_l2_ms": 1311.9999999762513,
+        "risk_status": "ok",
+        "first_sentence_ms": 1391.0000000032596,
+        "gate_release_ms": 1391.0000000032596,
+        "output_submit_ms": 1391.0000000032596,
+        "total_ms": 1391.0000000032596
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 22,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 968.9999999827705,
+        "risk_status": "ok",
+        "first_token_ms": 1327.999999979511,
+        "first_sentence_ms": 1422.000000020489,
+        "gate_release_ms": 1422.000000020489,
+        "output_submit_ms": 1422.000000020489,
+        "total_ms": 1422.000000020489
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 23,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 1171.9999999622814,
+        "risk_status": "ok",
+        "first_token_ms": 1250.0,
+        "first_sentence_ms": 1452.999999979511,
+        "gate_release_ms": 1452.999999979511,
+        "output_submit_ms": 1452.999999979511,
+        "total_ms": 1452.999999979511
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 24,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 16.00000000325963,
+        "risk_l2_ms": 938.0000000237487,
+        "risk_status": "ok",
+        "first_token_ms": 1250.0,
+        "first_sentence_ms": 1438.0000000237487,
+        "gate_release_ms": 1438.0000000237487,
+        "output_submit_ms": 1438.0000000237487,
+        "total_ms": 1438.0000000237487
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 25,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 907.0000000065193,
+        "risk_status": "ok",
+        "first_token_ms": 1485.0000000442378,
+        "first_sentence_ms": 1563.0000000237487,
+        "gate_release_ms": 1563.0000000237487,
+        "output_submit_ms": 1563.0000000237487,
+        "total_ms": 1563.0000000237487
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 26,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 983.9999999967404,
+        "risk_status": "ok",
+        "first_token_ms": 1733.9999999967404,
+        "first_sentence_ms": 1858.9999999967404,
+        "gate_release_ms": 1858.9999999967404,
+        "output_submit_ms": 1858.9999999967404,
+        "total_ms": 1875.0
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 27,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 953.0000000377186,
+        "risk_status": "ok",
+        "first_token_ms": 1233.9999999967404,
+        "first_sentence_ms": 1422.000000020489,
+        "gate_release_ms": 1422.000000020489,
+        "output_submit_ms": 1422.000000020489,
+        "total_ms": 1422.000000020489
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 28,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 891.0000000032596,
+        "risk_status": "ok",
+        "first_token_ms": 1186.9999999762513,
+        "first_sentence_ms": 1327.999999979511,
+        "gate_release_ms": 1327.999999979511,
+        "output_submit_ms": 1343.9999999827705,
+        "total_ms": 1343.9999999827705
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 29,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 1156.0000000172295,
+        "risk_status": "ok",
+        "first_token_ms": 1483.9999999967404,
+        "first_sentence_ms": 1625.0,
+        "gate_release_ms": 1625.0,
+        "output_submit_ms": 1640.0000000139698,
+        "total_ms": 1640.0000000139698
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    },
+    {
+      "turn_id": 30,
+      "model_reply": true,
+      "metrics": {
+        "signal_to_respond_ms": 0.0,
+        "risk_l2_ms": 1172.000000020489,
+        "risk_status": "ok",
+        "first_token_ms": 1500.0,
+        "first_sentence_ms": 1641.0000000032596,
+        "gate_release_ms": 1641.0000000032596,
+        "output_submit_ms": 1641.0000000032596,
+        "total_ms": 1641.0000000032596
+      },
+      "violations": [
+        "missing_tag"
+      ],
+      "outputs": 1
+    }
+  ],
+  "model_reply_count": 30,
+  "total_turns": 30,
+  "errors": 0,
+  "metrics": {
+    "first_token_ms": {
+      "n": 30,
+      "median": 1242.5,
+      "p90": 1625.0
+    },
+    "first_sentence_ms": {
+      "n": 30,
+      "median": 1398.5,
+      "p90": 1828.0
+    },
+    "gate_release_ms": {
+      "n": 30,
+      "median": 1398.5,
+      "p90": 1828.0
+    },
+    "output_submit_ms": {
+      "n": 30,
+      "median": 1398.5,
+      "p90": 1828.0
+    },
+    "total_ms": {
+      "n": 30,
+      "median": 1398.5,
+      "p90": 1828.0
+    }
+  },
+  "scope": "text core with risk and reasoner enabled; output_submit is a recording port, not TTS or device first audio",
+  "core_900ms_target_met": false
+}

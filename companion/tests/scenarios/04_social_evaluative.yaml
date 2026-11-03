@@ -1,0 +1,12 @@
+name: social_evaluative 压力夹具流程
+fixture: {pressure: social_evaluative}
+steps:
+  - kind: wake
+  - user: 同学笑我演讲时结巴，我一直在回想
+    expect: {stage: explore}
+  - user: 我该怎么办
+    expect: {stage: permission, offer: action}
+  - wait: true
+    user: 好，你说
+    expect: {stage: action, card: S16}
+forbid: [你应该, 别想太多]

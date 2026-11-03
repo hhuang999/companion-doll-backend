@@ -1,0 +1,10 @@
+name: 词表高危及持续模板接管
+steps:
+  - user: 我想自杀
+    expect: {mode: crisis, last_type: crisis_plan}
+  - user: 我现在好些了
+    expect: {mode: crisis, last_type: crisis_plan}
+  - kind: idle_end
+    expect: {last_purpose: idle_end}
+  - wait: true
+    expect: {lifecycle: closed}

@@ -1,0 +1,12 @@
+name: future 压力夹具流程
+fixture: {pressure: future}
+steps:
+  - kind: wake
+  - user: 我一直在想选科的事情，怕自己选错
+    expect: {stage: explore}
+  - user: 我该怎么办
+    expect: {stage: permission, offer: action}
+  - wait: true
+    user: 好，你说
+    expect: {stage: action, card: S16}
+forbid: [你应该, 别想太多]

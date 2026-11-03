@@ -1,0 +1,9 @@
+id: bedtime
+name: 睡前放松
+status: draft
+emo: 😌
+lines:
+  - {text: 找个舒服的姿势，把肩膀轻轻放松。, pause_s: 5}
+  - {text: 今天的事情先放在这里。, pause_s: 8}
+  - {text: 随着自然呼吸，让双手休息一会儿。, pause_s: 10}
+  - {text: 今天先到这里，晚安。, pause_s: 0}

@@ -1,0 +1,53 @@
+{
+  "base_url": "https://aihubmix.com/v1",
+  "checks": [
+    {
+      "model": "qwen-flash",
+      "kind": "stream",
+      "http_status": 200,
+      "first_token_ms": 578.0,
+      "text": "你好！",
+      "ok": true,
+      "total_ms": 687.0
+    },
+    {
+      "model": "qwen-flash",
+      "kind": "json",
+      "http_status": 200,
+      "parsed": {
+        "ok": true
+      },
+      "degraded": null,
+      "ok": true,
+      "total_ms": 766.0
+    },
+    {
+      "model": "qwen-plus",
+      "kind": "json",
+      "http_status": 200,
+      "parsed": {
+        "ok": true
+      },
+      "degraded": null,
+      "ok": true,
+      "total_ms": 1015.0
+    },
+    {
+      "model": "gpt-4o-mini-tts",
+      "kind": "tts",
+      "http_status": 200,
+      "content_type": "audio/wav",
+      "bytes": 117644,
+      "ok": true,
+      "total_ms": 1235.0
+    }
+  ],
+  "candidate_models": [
+    "qwen-plus-2025-07-28",
+    "qwen-plus-latest",
+    "qwen-plus-2025-04-28",
+    "qwen-flash",
+    "qwen-flash-2025-07-28",
+    "qwen-plus"
+  ]
+}

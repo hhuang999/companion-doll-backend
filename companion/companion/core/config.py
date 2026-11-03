@@ -1,0 +1,190 @@
+"""Configuration is validated once at startup, including referenced content."""
+
+import re
+from pathlib import Path
+from typing import Literal
+
+import yaml
+from pydantic import BaseModel, ConfigDict, Field
+
+from .models import PlaybackSegment, Stage
+
+
+class SettingsModel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class RuntimeSettings(SettingsModel):
+    mode: Literal["development", "demo"] = "development"
+    timezone: str = "Asia/Shanghai"
+
+
+class LLMSettings(SettingsModel):
+    base_url: str = "https://aihubmix.com/v1"
+    api_key_env: str = "AIHUBMIXKEY"
+    talker_model: str = "qwen-flash"
+    risk_model: str = "qwen-flash"
+    reasoner_model: str = "qwen-plus"
+    enable_thinking: bool = False
+
+
+class Timing(SettingsModel):
+    gate_timeout_ms: int = Field(default=600, ge=0)
+    risk_total_timeout_ms: int = Field(default=2500, gt=0)
+    talker_first_token_timeout_ms: int = Field(default=2500, gt=0)
+    talker_total_timeout_s: float = Field(default=10, gt=0)
+    reasoner_timeout_s: float = Field(default=20, gt=0)
+    rest_reminder_s: float = Field(default=7200, gt=0)
+    exercise_max_s: float = Field(default=90, gt=0, le=90)
+    shutdown_grace_s: float = Field(default=25, gt=0)
+
+
+class DialogueSettings(SettingsModel):
+    history_turns: int = Field(default=10, gt=0)
+    reasoner_context_turns: int = Field(default=12, gt=0)
+    reasoner_every_n_turns: int = Field(default=4, gt=0)
+    max_sentences: int = Field(default=3, gt=0, le=3)
+    max_action_turns: int = Field(default=4, gt=0, le=4)
+    offer_valid_turns: int = Field(default=2, gt=0)
+    accepted_wait_turns: int = Field(default=2, gt=0)
+    accepted_wait_s: float = Field(default=30, gt=0)
+
+
+class PoolSettings(SettingsModel):
+    risk_workers: int = Field(default=4, gt=0)
+    reasoner_workers: int = Field(default=2, gt=0)
+
+
+class StorageSettings(SettingsModel):
+    db_path: str = "data/companion.db"
+    busy_timeout_ms: int = Field(default=5000, gt=0)
+
+
+class TTSSettings(SettingsModel):
+    model: str = "gpt-4o-mini-tts"
+    voice: str = "coral"
+    response_format: Literal["wav"] = "wav"
+
+
+class Settings(SettingsModel):
+    runtime: RuntimeSettings = Field(default_factory=RuntimeSettings)
+    llm: LLMSettings = Field(default_factory=LLMSettings)
+    timing: Timing = Field(default_factory=Timing)
+    dialogue: DialogueSettings = Field(default_factory=DialogueSettings)
+    pools: PoolSettings = Field(default_factory=PoolSettings)
+    storage: StorageSettings = Field(default_factory=StorageSettings)
+    tts: TTSSettings = Field(default_factory=TTSSettings)
+    alert_webhook: str | None = None
+
+
+class Targets(SettingsModel):
+    pressure_types: list[str] = Field(default_factory=list)
+    pathways: list[str] = Field(default_factory=list)
+
+
+class CardReasoner(SettingsModel):
+    when_any: list[str]
+    not_when: list[str]
+    success: str
+    exit: str
+
+
+class CardTalker(SettingsModel):
+    steps: list[str] = Field(min_length=1)
+    examples: list[str]
+    never_say: list[str]
+
+
+class Card(SettingsModel):
+    id: str = Field(pattern=r"^S(0[3-9]|1[0-9])$")
+    name: str
+    status: Literal["fixture", "draft", "approved"]
+    requires_permission: Literal[True] = True
+    targets: Targets
+    constraints: dict[str, list[str]]
+    reasoner: CardReasoner
+    talker: CardTalker
+    limits: dict[str, int]
+    emo: str
+    source: dict[str, str]
+
+
+class Exercise(SettingsModel):
+    id: str
+    name: str
+    status: Literal["draft", "approved"]
+    emo: str
+    lines: list[PlaybackSegment] = Field(min_length=1)
+
+
+class Config:
+    def __init__(self, directory: Path | None = None, *, mode: str | None = None) -> None:
+        self.directory = (directory or Path(__file__).parents[1] / "config").resolve()
+        self.settings = Settings.model_validate(self.read("settings.yaml"))
+        if mode:
+            self.settings.runtime = RuntimeSettings(mode=mode)
+        self.persona = self.read("persona.yaml")
+        self.rules = self.read("rules.yaml")
+        self.stages = self.read("stages.yaml")
+        self.crisis = self.read("crisis.yaml")
+        self.lexicon = self.read("risk_lexicon.yaml")
+        self.cards = {}
+        for path in sorted((self.directory / "cards").glob("*.yaml")):
+            card = Card.model_validate(self.read(str(path.relative_to(self.directory))))
+            if card.id in self.cards or path.stem != card.id:
+                raise ValueError(f"Duplicate or mismatched card: {path.name}")
+            if card.limits.get("per_session", 0) < 1:
+                raise ValueError(f"Invalid card limit: {card.id}")
+            self.cards[card.id] = card
+        self.exercises = {}
+        for path in sorted((self.directory / "exercises").glob("*.yaml")):
+            exercise = Exercise.model_validate(self.read(str(path.relative_to(self.directory))))
+            if exercise.id in self.exercises:
+                raise ValueError(f"Duplicate exercise: {exercise.id}")
+            total = sum(s.pause_s + (s.audio_duration_s or 0) for s in exercise.lines)
+            if total > self.settings.timing.exercise_max_s:
+                raise ValueError(f"Exercise exceeds time limit: {exercise.id}")
+            self.exercises[exercise.id] = exercise
+        for stage in Stage:
+            if not self.stages.get(stage.value, {}).get("fallback"):
+                raise ValueError(f"Missing stage: {stage.value}")
+        for group in (self.rules["transitions"], self.rules["output_rail"]):
+            for patterns in group.values():
+                for pattern in patterns:
+                    re.compile(pattern)
+        for level in ("high", "watch"):
+            for item in self.lexicon[level]:
+                re.compile(item["pattern"])
+        for key in ("opening", "responses", "resources", "closing", "version"):
+            if not self.crisis.get(key):
+                raise ValueError(f"Missing crisis field: {key}")
+        from .output_rail import OutputRail
+
+        rail = OutputRail(self)
+        for stage in Stage:
+            if rail.check(self.stages[stage.value]["fallback"], stage):
+                raise ValueError(f"Fallback violates output rules: {stage.value}")
+        if self.settings.runtime.mode == "demo":
+            self.validate_demo()
+
+    def read(self, name: str) -> dict:
+        value = yaml.safe_load((self.directory / name).read_text(encoding="utf-8"))
+        if not isinstance(value, dict):
+            raise TypeError(f"Expected mapping: {name}")
+        return value
+
+    def validate_demo(self) -> None:
+        expected = {f"S{i:02}" for i in range(3, 20)}
+        approved = {c.id for c in self.cards.values() if c.status == "approved"}
+        if approved != expected:
+            raise ValueError("Demo requires approved cards S03-S19")
+        if not all(self.crisis.get(k) for k in ("approved", "reviewer", "reviewed_at")):
+            raise ValueError("Demo requires reviewed crisis templates")
+        for exercise in self.exercises.values():
+            if exercise.status != "approved":
+                raise ValueError(f"Exercise not approved: {exercise.id}")
+            for segment in exercise.lines:
+                if not segment.audio_path or segment.audio_duration_s is None:
+                    raise ValueError(f"Exercise audio not measured: {exercise.id}")
+                if not (self.directory / segment.audio_path).is_file():
+                    raise ValueError(f"Exercise audio missing: {segment.audio_path}")

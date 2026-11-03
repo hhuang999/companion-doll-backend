@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-03",
+  "python": "3.10.20",
+  "config_sha256": {
+    "bench.yaml": "12e6e2f66862bac13b787e3e74f3aecc72c4cb80e10135d70721630c9ffd6475",
+    "cards/S16.yaml": "b8c33817afb394d9173b7925af6d8418a05ebba29a7254f3f1ff34093e30722b",
+    "crisis.yaml": "52f799ab04ffdad6a5efe2ecfa5bc0546ba49cc616a3ee0a9f215f95f662051e",
+    "exercises/bedtime.yaml": "5f2c8dff326d5d4f3227deacb3165aa7d6b0041ceb98d0e897d44c14b179d2a7",
+    "exercises/breathing_60s.yaml": "1223f2300a4829eb7bfb5e7a2ea829a65e050e8c90bb69acfabc0645c8a344e7",
+    "exercises/grounding.yaml": "16cc1e166d5ca01166c2f7e95ccd8c895004c9bfd828d135041797f0d26c96d8",
+    "fake.yaml": "26b0d5135e7077274eeab1753babe096a5c05f4c072fe1ccc97cb51bf4619bee",
+    "persona.yaml": "9f6aff256d1f486a7c27ea3a22ae67fd797561a7fc963977d338bd717d246ebd",
+    "prompts/reasoner.j2": "e4685910c8f733474aebb906d2188722db7ed62e5b8d46fe92ad96d131ed0fc0",
+    "prompts/risk.j2": "3094eac85a2d8823e9fe44158753f4336cb7a725db44349856418cc246383591",
+    "prompts/talker.j2": "ad41440691024d45e104c2ef93f1634b139c78cf3ca050496f783571c55b3219",
+    "risk_lexicon.yaml": "e47081d1530ba3bcc424d9d612ca372e17986fb718cd6662866ab682762f6514",
+    "rules.yaml": "d191e303d020fa770941834cd96c044f34d3173cac88364b821c118bfe9f39a9",
+    "settings.yaml": "93cb8ea2e199e3af8adc03cb307abc7900c554e85b588225b8d611cfec0afe3f",
+    "stages.yaml": "02524f9f766a2db1d6749fc3b40422f52508ba429f6209ed16ffc0e6b345441d"
+  },
+  "risk_corpus_sha256": "f3a4bf4ea59c2b47bb8657c8e1c4790688ec6dde693d3bf4971a0d41a8d1796f",
+  "risk_degraded_turns_in_latency_run": 1,
+  "reasoner_in_latency_run": {
+    "n": 9,
+    "median_ms": 10016.0,
+    "max_ms": 11968.0
+  },
+  "offline_tests": 58,
+  "online_tests": 3,
+  "hardware_tested": false,
+  "latency_measurement_note": "Early samples overlapped a separate risk evaluation; recording output only, no TTS/device timing."
+}

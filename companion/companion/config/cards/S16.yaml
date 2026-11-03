@@ -1,0 +1,17 @@
+id: S16
+name: 从为什么到具体经过（开发夹具）
+status: fixture
+targets: {pressure_types: [], pathways: [rumination]}
+constraints: {excluded_emotion_intensities: [high]}
+reasoner:
+  when_any: [学生反复思考同一件事]
+  not_when: [学生还没觉得被听见, 情绪强度为高]
+  success: 学生说出一个具体经过或下一步
+  exit: 学生表示没用或情绪上升
+talker:
+  steps: [温和指出反复思考, 询问具体经过, 讨论一个小的下一步]
+  examples: [那天具体是怎么发生的？]
+  never_say: [你又在钻牛角尖]
+limits: {per_session: 1}
+emo: 🤔
+source: {document: 研究链 v3, verification: pending}

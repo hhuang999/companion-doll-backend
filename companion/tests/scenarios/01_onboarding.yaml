@@ -1,0 +1,7 @@
+name: 初次使用以完成播放为准
+auto_complete: false
+steps:
+  - kind: wake
+    expect: {onboarding: false, last_purpose: onboarding}
+  - playback: completed
+    expect: {onboarding: true, stage: explore}

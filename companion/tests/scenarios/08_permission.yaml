@@ -1,0 +1,7 @@
+name: 主动要办法仍需同意
+steps:
+  - user: 我该怎么办
+    expect: {stage: permission, offer: action, card: null}
+  - wait: true
+    user: 好，你说
+    expect: {stage: action, card: S16, offer: null}

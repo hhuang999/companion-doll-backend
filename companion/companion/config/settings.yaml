@@ -1,0 +1,30 @@
+runtime: {mode: development, timezone: Asia/Shanghai}
+llm:
+  base_url: https://aihubmix.com/v1
+  api_key_env: AIHUBMIXKEY
+  talker_model: qwen-flash
+  risk_model: qwen-flash
+  reasoner_model: qwen-plus
+  enable_thinking: false
+timing:
+  gate_timeout_ms: 600
+  risk_total_timeout_ms: 2500
+  talker_first_token_timeout_ms: 2500
+  talker_total_timeout_s: 10
+  reasoner_timeout_s: 20
+  rest_reminder_s: 7200
+  exercise_max_s: 90
+  shutdown_grace_s: 25
+dialogue:
+  history_turns: 10
+  reasoner_context_turns: 12
+  reasoner_every_n_turns: 4
+  max_sentences: 3
+  max_action_turns: 4
+  offer_valid_turns: 2
+  accepted_wait_turns: 2
+  accepted_wait_s: 30
+pools: {risk_workers: 4, reasoner_workers: 2}
+storage: {db_path: data/companion.db, busy_timeout_ms: 5000}
+tts: {model: gpt-4o-mini-tts, voice: coral, response_format: wav}
+alert_webhook: null

@@ -1,0 +1,11 @@
+version: fixture-v1
+approved: false
+reviewer: null
+reviewed_at: null
+emoji: 😶
+opening: '[测试占位：危机开场话术待人工审核]'
+responses:
+  - '[测试占位：倾听回应一待人工审核]'
+  - '[测试占位：倾听回应二待人工审核]'
+resources: '[测试占位：援助信息待人工审核]'
+closing: '[测试占位：危机会话结束话术待人工审核]'

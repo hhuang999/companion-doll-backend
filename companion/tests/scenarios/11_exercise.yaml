@@ -1,0 +1,16 @@
+name: 哭声练习与打断恢复
+auto_complete: false
+steps:
+  - user: 我很难过
+    signals: {events: [Cry], emotion: SAD}
+    expect: {offer: exercise}
+  - user: 好
+    expect: {mode: exercise, last_type: exercise_plan}
+  - interrupt: true
+    expect: {mode: normal}
+  - user: 刚才有声音
+    expect: {offer: resume_exercise}
+  - user: 好
+    expect: {mode: exercise}
+  - playback: completed
+    expect: {mode: normal, stage: comfort}

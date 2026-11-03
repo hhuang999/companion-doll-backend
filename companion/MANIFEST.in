@@ -1,0 +1,3 @@
+include README.md requirements.lock
+recursive-include tests *.py *.yaml *.jsonl
+recursive-include docs *.md *.json

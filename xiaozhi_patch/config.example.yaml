@@ -1,0 +1,17 @@
+# Merge these entries into xiaozhi-server/data/.config.yaml.
+# Set the same absolute project_root on both providers.
+selected_module:
+  LLM: CompanionLLM
+  Memory: CompanionMemory
+  Intent: intent_nointent
+LLM:
+  CompanionLLM:
+    type: companion_llm
+    project_root: D:/HHB/HKUST(GZ)_Library_code/AIAA3800_HCI/3800_final_project
+Memory:
+  CompanionMemory:
+    type: companion_memory
+    project_root: D:/HHB/HKUST(GZ)_Library_code/AIAA3800_HCI/3800_final_project
+enable_stop_tts_notify: false
+enable_greeting: true
+close_connection_no_voice_time: 120

@@ -1,0 +1,13 @@
+id: breathing_60s
+name: 呼吸练习
+status: draft
+emo: 😌
+lines:
+  - {text: 找个舒服的姿势，我们慢慢来。, pause_s: 2}
+  - {text: 轻轻吸气。, pause_s: 4}
+  - {text: 慢慢呼气。, pause_s: 6}
+  - {text: 轻轻吸气。, pause_s: 4}
+  - {text: 慢慢呼气。, pause_s: 6}
+  - {text: 再轻轻吸气。, pause_s: 4}
+  - {text: 慢慢呼气，让呼吸恢复自然。, pause_s: 6}
+  - {text: 我们先停在这里。, pause_s: 0}

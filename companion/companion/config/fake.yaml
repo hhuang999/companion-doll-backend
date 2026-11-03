@@ -1,0 +1,9 @@
+replies:
+  opening: 我在呢，今天想聊什么？
+  explore: 听起来这件事让你很在意。后来发生了什么？
+  comfort: 这样的时候觉得难受，是可以理解的。我在听。
+  permission: 我们可以慢慢来。
+  action: 那天具体是怎么发生的？
+  closing: 今天先聊到这里，好好休息。
+  quiet: 好，我在这里陪着你。
+summary: '[开发夹具摘要：此会话已结束，真实内容由在线 Reasoner 提取。]'

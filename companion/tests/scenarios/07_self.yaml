@@ -1,0 +1,12 @@
+name: self 压力夹具流程
+fixture: {pressure: self}
+steps:
+  - kind: wake
+  - user: 我老是在想自己说错的那句话，觉得自己很笨
+    expect: {stage: explore}
+  - user: 我该怎么办
+    expect: {stage: permission, offer: action}
+  - wait: true
+    user: 好，你说
+    expect: {stage: action, card: S16}
+forbid: [你应该, 别想太多]

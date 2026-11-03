@@ -1,0 +1,14 @@
+opening: {instruction: 简单打招呼，最多一个问题。, fallback: 我在呢，今天想聊什么？}
+explore: {instruction: 用复述和一个开放问题了解经历和感受，不给办法。, fallback: 嗯，我在听，你慢慢说。}
+comfort: {instruction: 认可感受，简短陪伴，不给办法。, fallback: 听起来这件事让你很难受，我在这里听你说。}
+permission: {instruction: 按后端的具体请求回应，不擅自执行行动。, fallback: 我们可以慢慢来。}
+action: {instruction: 只执行当前行动卡的一小步，最多一个问题。, fallback: 我们先停一下，听听你现在的感受。}
+closing: {instruction: 简短回顾，不挽留；只确认已经提出的小行动。, fallback: 今天先聊到这里，好好休息。}
+quiet: {instruction: 安静陪伴，不提问，不给建议。, fallback: 好，我在这里陪着你。}
+templates:
+  action_offer: 愿意和我一起试一个小办法吗？
+  clarify_offer: 你想试试这个办法，还是先接着说？
+  waiting_card: 我在想一个适合你的办法，你最想先处理哪件事？
+  exercise_offer: 愿意和我一起做一小段放松练习吗？
+  resume_offer: 要继续刚才的练习吗？
+  offer_expired: 没关系，我们先接着聊你的感受。

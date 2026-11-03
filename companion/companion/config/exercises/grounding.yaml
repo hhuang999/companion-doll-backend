@@ -1,0 +1,9 @@
+id: grounding
+name: 双脚落地
+status: draft
+emo: 😌
+lines:
+  - {text: 把双脚轻轻放在地上。, pause_s: 5}
+  - {text: 感受脚底和地面接触的地方。, pause_s: 8}
+  - {text: 看看周围，留意眼前的颜色。, pause_s: 8}
+  - {text: 让呼吸保持自然，我们慢慢停下来。, pause_s: 3}

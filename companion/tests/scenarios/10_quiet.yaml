@@ -1,0 +1,8 @@
+name: 只陪伴与恢复探索
+steps:
+  - user: 不想说了
+    expect: {stage: quiet, last_purpose: quiet}
+  - user: 嗯
+    expect: {stage: quiet}
+  - user: 我今天在学校遇到了很难过的事情，我想和你说说
+    expect: {stage: explore}

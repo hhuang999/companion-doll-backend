@@ -1,0 +1,110 @@
+--- a/main/xiaozhi-server/core/handle/abortHandle.py
++++ b/main/xiaozhi-server/core/handle/abortHandle.py
+@@ -8,6 +8,9 @@
+ 
+ async def handleAbortMessage(conn: "ConnectionHandler"):
+     conn.logger.bind(tag=TAG).info("Abort message received")
++    if hasattr(conn, "_companion_core"):
++        from companion.adapters.xiaozhi.runtime import interrupt_connection
++        interrupt_connection(conn, "device_abort")
+     # 设置成打断状态，会自动打断llm、tts任务
+     conn.close_after_chat = False
+     conn.client_abort = True
+--- a/main/xiaozhi-server/core/handle/receiveAudioHandle.py
++++ b/main/xiaozhi-server/core/handle/receiveAudioHandle.py
+@@ -40,15 +40,19 @@
+     conn.just_woken_up = False
+ 
+ 
+-async def startToChat(conn: "ConnectionHandler", text):
++async def startToChat(conn: "ConnectionHandler", text, *, companion_kind="user"):
+     # 检查输入是否是JSON格式（包含说话人信息）
+     speaker_name = None
+     actual_text = text
++    companion_text = text
++    companion_signals = {}
+ 
+     try:
+         # 尝试解析JSON格式的输入
+         if text.strip().startswith("{") and text.strip().endswith("}"):
+             data = json.loads(text)
++            companion_text = data.get("content", text)
++            companion_signals = {"emotion": data.get("raw_emotion"), "events": [data["event"]] if data.get("event") else []}
+             if "speaker" in data and "content" in data:
+                 speaker_name = data["speaker"]
+                 actual_content = data["content"]
+@@ -91,6 +95,12 @@
+     if conn.client_is_speaking and conn.client_listen_mode != "manual":
+         await handleAbortMessage(conn)
+ 
++    # Companion owns its dialogue and playback; bypass the legacy chat/TTS queues.
++    if hasattr(conn.llm, "companion_core"):
++        from companion.adapters.xiaozhi.runtime import handle_input
++        await handle_input(conn, companion_text, companion_signals, companion_kind)
++        return
++
+     # 首先进行意图分析，使用实际文本内容
+     intent_handled = await handle_user_intent(conn, actual_text)
+ 
+@@ -131,7 +141,7 @@
+             prompt = end_prompt.get("prompt")
+             if not prompt:
+                 prompt = "请你以```时间过得真快```未来头，用富有感情、依依不舍的话来结束这场对话吧。！"
+-            await startToChat(conn, prompt)
++            await startToChat(conn, prompt, companion_kind="idle_end")
+ 
+ 
+ async def max_out_size(conn: "ConnectionHandler"):
+--- a/main/xiaozhi-server/core/handle/textHandler/listenMessageHandler.py
++++ b/main/xiaozhi-server/core/handle/textHandler/listenMessageHandler.py
+@@ -107,7 +107,7 @@
+                     conn.just_woken_up = True
+                     # 上报纯文字数据（复用ASR上报功能，但不提供音频数据）
+                     enqueue_asr_report(conn, "嘿，你好呀", [])
+-                    await startToChat(conn, "嘿，你好呀")
++                    await startToChat(conn, "嘿，你好呀", companion_kind="wake")
+                 else:
+                     conn.just_woken_up = True
+                     # 上报纯文字数据（复用ASR上报功能，但不提供音频数据）
+--- a/main/xiaozhi-server/core/providers/asr/utils.py
++++ b/main/xiaozhi-server/core/providers/asr/utils.py
+@@ -72,6 +72,8 @@
+     result = {
+         "content": clean_text,
+         "language": language,
++        "raw_emotion": emotion,
++        "event": all_tags[2] if len(all_tags) > 2 else "Speech",
+         "emotion": emotion,
+         # "event": event,
+     }
+--- /dev/null
++++ b/main/xiaozhi-server/core/providers/llm/companion_llm/companion_llm.py
+@@ -0,0 +1,10 @@
++from companion.adapters.xiaozhi.runtime import get_core
++from core.providers.llm.base import LLMProviderBase
++
++
++class LLMProvider(LLMProviderBase):
++    def __init__(self, config):
++        self.companion_core = get_core(config)
++
++    def response(self, session_id, dialogue, **kwargs):
++        raise RuntimeError("Companion requires the receiveAudioHandle registration patch")
+--- /dev/null
++++ b/main/xiaozhi-server/core/providers/memory/companion_memory/companion_memory.py
+@@ -0,0 +1,15 @@
++from companion.adapters.xiaozhi.runtime import get_core
++from core.providers.memory.base import MemoryProviderBase
++
++
++class MemoryProvider(MemoryProviderBase):
++    def __init__(self, config, summary_memory=None):
++        super().__init__(config)
++        self.companion_core = get_core(config)
++
++    async def query_memory(self, query):
++        return ""
++
++    async def save_memory(self, msgs, session_id=None):
++        if session_id:
++            self.companion_core.on_session_end(session_id, "disconnect")

@@ -1,0 +1,12 @@
+{
+  "mode": "development",
+  "model": "gpt-4o-mini-tts",
+  "voice": "coral",
+  "exercise_duration_s": {
+    "bedtime": 42.05,
+    "breathing_60s": 53.55,
+    "grounding": 41.3
+  },
+  "within_90s": true,
+  "audio_count": 21
+}

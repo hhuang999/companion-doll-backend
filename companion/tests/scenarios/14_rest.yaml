@@ -1,0 +1,8 @@
+name: 满两小时提醒一次
+fixture: {elapsed_s: 7201}
+steps:
+  - kind: wake
+  - user: 今天有些累
+    expect: {rest_reminded: true, last_purpose: rest}
+  - user: 谢谢你陪我说话
+    expect: {rest_reminded: true, last_purpose: reply}
