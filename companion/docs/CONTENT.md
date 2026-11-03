@@ -11,3 +11,8 @@
 正式卡片的基本字段见 `config/cards/S16.yaml`。`requires_permission` 只接受 true；所有行动都经过明确同意。`targets.pressure_types` 与 `targets.pathways` 为 OR 匹配，空的一侧不会自动匹配所有用户。情绪排除条件和每会话次数在验证与进入行动时复核。
 
 当前自动检查能核验格式、ID、审批字段、来源轮次、状态约束和音频文件。它不能判断研究内容是否忠实、话术是否适合真实学生，也不会自动生成审核人的签名。
+
+
+## v2 接入状态
+
+v2 Planner / Critic 可读取卡片适用条件和排除项；最终行动仍由 Validator 和明确许可决定。三角色不得自行把 draft 改为 approved。当前仍仅有 S16 开发夹具，正式 S03–S19、审核危机文本和练习需要负责人提供。质量回放使用 `config/v2_scenarios.yaml` 的预固定合成文本；它们是工程验收输入，不是新的研究材料或内容审批。

@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "v2 · 关系记忆、范围与恢复",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "docs/architecture-v2/memory.html",
+    "repository": {
+      "url": "https://github.com/hhuang999/companion-doll-backend.git",
+      "revision": "e3ef674820ee25c4873b4a9658a2a980060aa922",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "control",
+      "label": "当前用户明确表达",
+      "sublabel": "纠正 / 边界 / 可归因反馈",
+      "type": "backend",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/interaction.py",
+          "line": 56,
+          "end_line": 193
+        }
+      ]
+    },
+    {
+      "id": "candidate",
+      "label": "四类 MemoryCandidate",
+      "sublabel": "事实偏好 / 事件 / 边界 / 经验",
+      "type": "backend",
+      "pos": [
+        350,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/memory/models.py",
+          "line": 14,
+          "end_line": 46
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "label": "来源与版本校验",
+      "sublabel": "同用户 · 原文 · allowed refs",
+      "type": "backend",
+      "pos": [
+        660,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/store/cognition.py",
+          "line": 25,
+          "end_line": 50
+        }
+      ]
+    },
+    {
+      "id": "commit",
+      "label": "MemoryService.commit",
+      "sublabel": "迟到更正屏障 · supersedes",
+      "type": "backend",
+      "pos": [
+        660,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/memory/service.py",
+          "line": 61,
+          "end_line": 201
+        }
+      ]
+    },
+    {
+      "id": "items",
+      "label": "memory_items / sources",
+      "sublabel": "范围 / 到期 / 来源 / 历史",
+      "type": "database",
+      "pos": [
+        350,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/store/migrations/002.sql",
+          "line": 1,
+          "end_line": 53
+        }
+      ]
+    },
+    {
+      "id": "retrieve",
+      "label": "中文相关性检索",
+      "sublabel": "字符二元组 · 近期重复惩罚",
+      "type": "backend",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/memory/service.py",
+          "line": 203,
+          "end_line": 251
+        }
+      ]
+    },
+    {
+      "id": "projection",
+      "label": "TurnPolicyFrame",
+      "sublabel": "完整 JSON · 强制保留边界",
+      "type": "backend",
+      "pos": [
+        40,
+        400
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/policy.py",
+          "line": 1,
+          "end_line": 135
+        }
+      ]
+    },
+    {
+      "id": "migration",
+      "label": "v1 → v2 迁移",
+      "sublabel": "backup API · 原子升级",
+      "type": "database",
+      "pos": [
+        350,
+        400
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/store/migrate.py",
+          "line": 1,
+          "end_line": 99
+        }
+      ]
+    },
+    {
+      "id": "ends",
+      "label": "durable end_tasks",
+      "sublabel": "固定结束游标 · 显式重试",
+      "type": "backend",
+      "pos": [
+        660,
+        400
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 458,
+          "end_line": 692
+        },
+        {
+          "path": "companion/companion/tools/retry_end.py",
+          "line": 1,
+          "end_line": 54
+        }
+      ]
+    },
+    {
+      "id": "purge",
+      "label": "在途清除屏障",
+      "sublabel": "purging + epoch + 有界等待",
+      "type": "security",
+      "pos": [
+        660,
+        580
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "companion/companion/core/api.py",
+          "line": 974,
+          "end_line": 990
+        },
+        {
+          "path": "companion/companion/cognition/orchestrator.py",
+          "line": 458,
+          "end_line": 692
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "control-candidate",
+      "from": "control",
+      "to": "candidate",
+      "label": "明确来源"
+    },
+    {
+      "id": "candidate-source",
+      "from": "candidate",
+      "to": "source",
+      "label": "验证"
+    },
+    {
+      "id": "source-commit",
+      "from": "source",
+      "to": "commit",
+      "label": "有效候选"
+    },
+    {
+      "id": "commit-items",
+      "from": "commit",
+      "to": "items",
+      "label": "事务更新"
+    },
+    {
+      "id": "items-retrieve",
+      "from": "items",
+      "to": "retrieve",
+      "label": "有效范围"
+    },
+    {
+      "id": "retrieve-projection",
+      "from": "retrieve",
+      "to": "projection",
+      "label": "相关投影"
+    },
+    {
+      "id": "migration-items",
+      "from": "migration",
+      "to": "items",
+      "label": "稳定 ID 导入"
+    },
+    {
+      "id": "ends-commit",
+      "from": "ends",
+      "to": "commit",
+      "label": "独立整理"
+    },
+    {
+      "id": "purge-ends",
+      "from": "purge",
+      "to": "ends",
+      "label": "取消并等待",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "范围与纠正",
+      "items": [
+        "turn / topic / session / until_time / persistent 分别解析；“今天”按配置时区次日零点到期。",
+        "局部 allow/revoke 记录独立保存，范围结束后长期限制仍在。",
+        "新来源更正生成 supersedes 链；旧来源、伪造来源和过期依赖不能覆盖当前事实。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "主动提及与反馈",
+      "items": [
+        "敏感记忆及 only_when_raised / avoid_proactive 受原话相关性与当前边界约束。",
+        "server completed 只是执行证据，不能形成“有帮助”；模糊“挺好”不自动绑定方法偏好。",
+        "同一可归因策略/提议在四轮内两次明确失败才标 repeated_failure。"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "持久化边界",
+      "items": [
+        "迁移未知高版本 fail fast；v1 未核验来源标 legacy_unverified，不作为确认记忆。",
+        "重启打断普通协作，结束业务从 end_tasks 恢复；失败显式 retry，新记录关联 retry_of。",
+        "清除等待失败保留屏障，不假报删除；备份与外部 API 数据生命周期另行管理。"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1350 @@
+{
+  "implementation_commit": "e3ef674820ee25c4873b4a9658a2a980060aa922",
+  "data": "synthetic only; no speaker/device measurement",
+  "percentile": "nearest rank ceil(0.90*n); median for P50",
+  "phases": {
+    "live-probe1": {
+      "jobs": {
+        "failed": 4,
+        "completed": 1,
+        "cancelled": 1,
+        "partial": 2,
+        "rejected": 1
+      },
+      "roles": {
+        "analysis": 6,
+        "planner": 4,
+        "end": 2,
+        "brief": 6,
+        "memory": 1
+      },
+      "role_status": {
+        "analysis:completed": 4,
+        "planner:failed": 4,
+        "end:completed": 2,
+        "brief:completed": 4,
+        "brief:schema_error": 2,
+        "memory:failed": 1,
+        "analysis:schema_error": 1,
+        "analysis:failed": 1
+      },
+      "usage": {
+        "source_counts": {
+          "provider": 13,
+          "estimated": 6
+        },
+        "provider_tokens": {
+          "input": 34947,
+          "output": 4514
+        }
+      },
+      "duration_by_kind": {
+        "deliberation": {
+          "n": 5,
+          "p50_ms": 6327.6,
+          "p90_ms": 9842.3
+        },
+        "end_consolidation": {
+          "n": 2,
+          "p50_ms": 8695.0,
+          "p90_ms": 9205.6
+        },
+        "memory": {
+          "n": 1,
+          "p50_ms": 20035.4,
+          "p90_ms": 20035.4
+        },
+        "routine": {
+          "n": 1,
+          "p50_ms": 7418.6,
+          "p90_ms": 7418.6
+        }
+      },
+      "role_duration": {
+        "analysis": {
+          "n": 6,
+          "p50_ms": 3430.0,
+          "p90_ms": 8391.0
+        },
+        "brief": {
+          "n": 6,
+          "p50_ms": 2625.0,
+          "p90_ms": 4047.0
+        },
+        "end": {
+          "n": 2,
+          "p50_ms": 8679.5,
+          "p90_ms": 9187.0
+        },
+        "memory": {
+          "n": 1,
+          "p50_ms": 20016.0,
+          "p90_ms": 20016.0
+        },
+        "planner": {
+          "n": 4,
+          "p50_ms": 3468.5,
+          "p90_ms": 3703.0
+        }
+      },
+      "turns": 6,
+      "scenarios": [
+        "Q01",
+        "Q02"
+      ],
+      "violations": {
+        "rail_questions": 4,
+        "missing_tag": 4
+      },
+      "talker_status": {
+        "generated": 6
+      },
+      "end_status": {
+        "done": 2
+      },
+      "text_first_sentence": {
+        "n": 6,
+        "p50_ms": 1484.5,
+        "p90_ms": 2000.0
+      },
+      "turn_model_usage": {
+        "talker_usage": {
+          "source_counts": {},
+          "provider_tokens": {}
+        },
+        "risk_usage": {
+          "source_counts": {},
+          "provider_tokens": {}
+        }
+      }
+    },
+    "live-probe2": {
+      "jobs": {
+        "completed": 5,
+        "superseded": 1,
+        "rejected": 1,
+        "partial": 1
+      },
+      "roles": {
+        "analysis": 5,
+        "planner": 4,
+        "end": 2,
+        "brief": 6,
+        "critic": 3,
+        "memory": 1
+      },
+      "role_status": {
+        "analysis:completed": 5,
+        "planner:completed": 4,
+        "end:completed": 2,
+        "brief:completed": 3,
+        "critic:completed": 3,
+        "brief:schema_error": 3,
+        "memory:completed": 1
+      },
+      "usage": {
+        "source_counts": {
+          "provider": 21
+        },
+        "provider_tokens": {
+          "input": 63783,
+          "output": 5589
+        }
+      },
+      "duration_by_kind": {
+        "deliberation": {
+          "n": 4,
+          "p50_ms": 9044.0,
+          "p90_ms": 18543.7
+        },
+        "end_consolidation": {
+          "n": 2,
+          "p50_ms": 7815.7,
+          "p90_ms": 9116.4
+        },
+        "memory": {
+          "n": 1,
+          "p50_ms": 7611.0,
+          "p90_ms": 7611.0
+        },
+        "routine": {
+          "n": 1,
+          "p50_ms": 9937.2,
+          "p90_ms": 9937.2
+        }
+      },
+      "role_duration": {
+        "analysis": {
+          "n": 5,
+          "p50_ms": 4266.0,
+          "p90_ms": 8375.0
+        },
+        "brief": {
+          "n": 6,
+          "p50_ms": 3031.0,
+          "p90_ms": 4110.0
+        },
+        "critic": {
+          "n": 3,
+          "p50_ms": 1360.0,
+          "p90_ms": 1672.0
+        },
+        "end": {
+          "n": 2,
+          "p50_ms": 7804.5,
+          "p90_ms": 9109.0
+        },
+        "memory": {
+          "n": 1,
+          "p50_ms": 7609.0,
+          "p90_ms": 7609.0
+        },
+        "planner": {
+          "n": 4,
+          "p50_ms": 5382.5,
+          "p90_ms": 8484.0
+        }
+      },
+      "turns": 6,
+      "scenarios": [
+        "Q01",
+        "Q02"
+      ],
+      "violations": {
+        "rail_questions": 3,
+        "missing_tag": 3,
+        "llm_error": 1
+      },
+      "talker_status": {
+        "generated": 5,
+        "error": 1
+      },
+      "end_status": {
+        "done": 2
+      },
+      "text_first_sentence": {
+        "n": 5,
+        "p50_ms": 1407.0,
+        "p90_ms": 1890.0
+      },
+      "turn_model_usage": {
+        "talker_usage": {
+          "source_counts": {},
+          "provider_tokens": {}
+        },
+        "risk_usage": {
+          "source_counts": {},
+          "provider_tokens": {}
+        }
+      }
+    },
+    "quality1": {
+      "jobs": {
+        "completed": 31,
+        "superseded": 6,
+        "partial": 10,
+        "rejected": 8,
+        "failed": 1,
+        "cancelled": 2
+      },
+      "roles": {
+        "analysis": 34,
+        "planner": 33,
+        "end": 12,
+        "brief": 39,
+        "critic": 26,
+        "memory": 8
+      },
+      "role_status": {
+        "analysis:completed": 33,
+        "planner:completed": 27,
+        "end:completed": 12,
+        "brief:completed": 29,
+        "critic:completed": 25,
+        "memory:completed": 8,
+        "brief:schema_error": 9,
+        "brief:failed": 1,
+        "analysis:schema_error": 1,
+        "planner:schema_error": 3,
+        "planner:failed": 3,
+        "critic:cancelled": 1
+      },
+      "usage": {
+        "source_counts": {
+          "provider": 148,
+          "estimated": 4
+        },
+        "provider_tokens": {
+          "input": 434722,
+          "output": 33184
+        }
+      },
+      "duration_by_kind": {
+        "deliberation": {
+          "n": 31,
+          "p50_ms": 10493.4,
+          "p90_ms": 13322.7
+        },
+        "end_consolidation": {
+          "n": 12,
+          "p50_ms": 11867.9,
+          "p90_ms": 13413.6
+        },
+        "memory": {
+          "n": 8,
+          "p50_ms": 7283.2,
+          "p90_ms": 12735.4
+        },
+        "routine": {
+          "n": 2,
+          "p50_ms": 11115.5,
+          "p90_ms": 13421.2
+        }
+      },
+      "role_duration": {
+        "analysis": {
+          "n": 34,
+          "p50_ms": 4117.0,
+          "p90_ms": 6578.0
+        },
+        "brief": {
+          "n": 39,
+          "p50_ms": 2984.0,
+          "p90_ms": 4922.0
+        },
+        "critic": {
+          "n": 26,
+          "p50_ms": 1461.0,
+          "p90_ms": 1922.0
+        },
+        "end": {
+          "n": 12,
+          "p50_ms": 11859.5,
+          "p90_ms": 13406.0
+        },
+        "memory": {
+          "n": 8,
+          "p50_ms": 7274.0,
+          "p90_ms": 12735.0
+        },
+        "planner": {
+          "n": 33,
+          "p50_ms": 4516.0,
+          "p90_ms": 5531.0
+        }
+      },
+      "turns": 36,
+      "scenarios": [
+        "Q01",
+        "Q02",
+        "Q03",
+        "Q04",
+        "Q05",
+        "Q06",
+        "Q07",
+        "Q08",
+        "Q09",
+        "Q10",
+        "Q11",
+        "Q12"
+      ],
+      "violations": {
+        "rail_questions": 10,
+        "llm_error": 9,
+        "missing_tag": 13
+      },
+      "talker_status": {
+        "generated": 25,
+        "error": 9,
+        "null": 2
+      },
+      "end_status": {
+        "done": 12
+      },
+      "text_first_sentence": {
+        "n": 18,
+        "p50_ms": 1820.0,
+        "p90_ms": 2563.0
+      },
+      "turn_model_usage": {
+        "talker_usage": {
+          "source_counts": {},
+          "provider_tokens": {}
+        },
+        "risk_usage": {
+          "source_counts": {},
+          "provider_tokens": {}
+        }
+      }
+    },
+    "quality2": {
+      "jobs": {
+        "completed": 28,
+        "timed_out": 2,
+        "rejected": 14,
+        "partial": 8,
+        "superseded": 3
+      },
+      "roles": {
+        "analysis": 40,
+        "planner": 26,
+        "end": 17,
+        "brief": 43,
+        "critic": 18,
+        "memory": 10
+      },
+      "role_status": {
+        "analysis:completed": 25,
+        "planner:completed": 20,
+        "end:schema_error": 5,
+        "end:timed_out": 2,
+        "brief:completed": 25,
+        "planner:schema_error": 5,
+        "critic:completed": 18,
+        "memory:completed": 8,
+        "end:completed": 9,
+        "analysis:schema_error": 12,
+        "brief:schema_error": 17,
+        "analysis:failed": 3,
+        "planner:failed": 1,
+        "memory:schema_error": 1,
+        "memory:failed": 1,
+        "end:failed": 1,
+        "brief:failed": 1
+      },
+      "usage": {
+        "source_counts": {
+          "provider": 145,
+          "estimated": 9
+        },
+        "provider_tokens": {
+          "input": 187806,
+          "output": 31710
+        }
+      },
+      "duration_by_kind": {
+        "deliberation": {
+          "n": 29,
+          "p50_ms": 8309.0,
+          "p90_ms": 12186.7
+        },
+        "end_consolidation": {
+          "n": 12,
+          "p50_ms": 13106.4,
+          "p90_ms": 20036.5
+        },
+        "memory": {
+          "n": 9,
+          "p50_ms": 6742.5,
+          "p90_ms": 13234.2
+        },
+        "routine": {
+          "n": 2,
+          "p50_ms": 9647.8,
+          "p90_ms": 10164.8
+        }
+      },
+      "role_duration": {
+        "analysis": {
+          "n": 40,
+          "p50_ms": 3531.0,
+          "p90_ms": 6219.0
+        },
+        "brief": {
+          "n": 43,
+          "p50_ms": 2250.0,
+          "p90_ms": 3313.0
+        },
+        "critic": {
+          "n": 18,
+          "p50_ms": 1203.0,
+          "p90_ms": 1344.0
+        },
+        "end": {
+          "n": 17,
+          "p50_ms": 7704.0,
+          "p90_ms": 13219.0
+        },
+        "memory": {
+          "n": 10,
+          "p50_ms": 6711.0,
+          "p90_ms": 12032.0
+        },
+        "planner": {
+          "n": 26,
+          "p50_ms": 3351.0,
+          "p90_ms": 4766.0
+        }
+      },
+      "turns": 36,
+      "scenarios": [
+        "Q01",
+        "Q02",
+        "Q03",
+        "Q04",
+        "Q05",
+        "Q06",
+        "Q07",
+        "Q08",
+        "Q09",
+        "Q10",
+        "Q11",
+        "Q12"
+      ],
+      "violations": {
+        "rail_questions": 11,
+        "llm_error": 3
+      },
+      "talker_status": {
+        "generated": 31,
+        "error": 3,
+        "null": 2
+      },
+      "end_status": {
+        "failed": 3,
+        "done": 9
+      },
+      "text_first_sentence": {
+        "n": 26,
+        "p50_ms": 1867.0,
+        "p90_ms": 2593.0
+      },
+      "turn_model_usage": {
+        "talker_usage": {
+          "source_counts": {
+            "provider": 26,
+            "estimated": 3
+          },
+          "provider_tokens": {
+            "input": 13494,
+            "output": 872
+          }
+        },
+        "risk_usage": {
+          "source_counts": {
+            "provider": 34
+          },
+          "provider_tokens": {
+            "input": 5386,
+            "output": 1104
+          }
+        }
+      }
+    },
+    "quality3-targeted": {
+      "jobs": {
+        "completed": 16,
+        "rejected": 5
+      },
+      "roles": {
+        "brief": 13,
+        "analysis": 13,
+        "planner": 26,
+        "critic": 13,
+        "memory": 5,
+        "end": 4
+      },
+      "role_status": {
+        "brief:completed": 13,
+        "analysis:completed": 13,
+        "planner:schema_error": 13,
+        "planner:completed": 13,
+        "critic:completed": 13,
+        "memory:schema_error": 1,
+        "memory:failed": 1,
+        "end:completed": 4,
+        "memory:completed": 3
+      },
+      "usage": {
+        "source_counts": {
+          "provider": 73,
+          "estimated": 1
+        },
+        "provider_tokens": {
+          "input": 111854,
+          "output": 11072
+        }
+      },
+      "duration_by_kind": {
+        "deliberation": {
+          "n": 13,
+          "p50_ms": 12882.0,
+          "p90_ms": 14883.8
+        },
+        "end_consolidation": {
+          "n": 4,
+          "p50_ms": 7698.3,
+          "p90_ms": 12513.9
+        },
+        "memory": {
+          "n": 4,
+          "p50_ms": 6252.4,
+          "p90_ms": 11100.7
+        }
+      },
+      "role_duration": {
+        "analysis": {
+          "n": 13,
+          "p50_ms": 3093.0,
+          "p90_ms": 5079.0
+        },
+        "brief": {
+          "n": 13,
+          "p50_ms": 2515.0,
+          "p90_ms": 3156.0
+        },
+        "critic": {
+          "n": 13,
+          "p50_ms": 1313.0,
+          "p90_ms": 1578.0
+        },
+        "end": {
+          "n": 4,
+          "p50_ms": 7687.5,
+          "p90_ms": 12500.0
+        },
+        "memory": {
+          "n": 5,
+          "p50_ms": 5937.0,
+          "p90_ms": 11094.0
+        },
+        "planner": {
+          "n": 26,
+          "p50_ms": 3976.5,
+          "p90_ms": 5313.0
+        }
+      },
+      "turns": 12,
+      "scenarios": [
+        "Q03",
+        "Q05",
+        "Q06",
+        "Q12"
+      ],
+      "violations": {
+        "llm_error": 3,
+        "rail_questions": 1
+      },
+      "talker_status": {
+        "error": 3,
+        "generated": 9
+      },
+      "end_status": {
+        "done": 4
+      },
+      "text_first_sentence": {
+        "n": 6,
+        "p50_ms": 1945.5,
+        "p90_ms": 2656.0
+      },
+      "turn_model_usage": {
+        "talker_usage": {
+          "source_counts": {
+            "estimated": 3,
+            "provider": 6
+          },
+          "provider_tokens": {
+            "input": 3616,
+            "output": 164
+          }
+        },
+        "risk_usage": {
+          "source_counts": {
+            "provider": 12
+          },
+          "provider_tokens": {
+            "input": 1901,
+            "output": 412
+          }
+        }
+      }
+    },
+    "quality4-persona": {
+      "jobs": {
+        "completed": 4
+      },
+      "roles": {
+        "brief": 3,
+        "analysis": 3,
+        "planner": 5,
+        "critic": 3,
+        "end": 1
+      },
+      "role_status": {
+        "brief:completed": 3,
+        "analysis:completed": 3,
+        "planner:completed": 3,
+        "critic:completed": 3,
+        "planner:schema_error": 2,
+        "end:completed": 1
+      },
+      "usage": {
+        "source_counts": {
+          "provider": 15
+        },
+        "provider_tokens": {
+          "input": 17734,
+          "output": 1972
+        }
+      },
+      "duration_by_kind": {
+        "deliberation": {
+          "n": 3,
+          "p50_ms": 11157.1,
+          "p90_ms": 13804.6
+        },
+        "end_consolidation": {
+          "n": 1,
+          "p50_ms": 9368.5,
+          "p90_ms": 9368.5
+        }
+      },
+      "role_duration": {
+        "analysis": {
+          "n": 3,
+          "p50_ms": 3281.0,
+          "p90_ms": 3281.0
+        },
+        "brief": {
+          "n": 3,
+          "p50_ms": 1328.0,
+          "p90_ms": 2625.0
+        },
+        "critic": {
+          "n": 3,
+          "p50_ms": 1547.0,
+          "p90_ms": 1640.0
+        },
+        "end": {
+          "n": 1,
+          "p50_ms": 9344.0,
+          "p90_ms": 9344.0
+        },
+        "planner": {
+          "n": 5,
+          "p50_ms": 3969.0,
+          "p90_ms": 4656.0
+        }
+      },
+      "turns": 3,
+      "scenarios": [
+        "Q11"
+      ],
+      "violations": {},
+      "talker_status": {
+        "generated": 3
+      },
+      "end_status": {
+        "done": 1
+      },
+      "text_first_sentence": {
+        "n": 3,
+        "p50_ms": 2250.0,
+        "p90_ms": 2813.0
+      },
+      "turn_model_usage": {
+        "talker_usage": {
+          "source_counts": {
+            "provider": 3
+          },
+          "provider_tokens": {
+            "input": 1849,
+            "output": 129
+          }
+        },
+        "risk_usage": {
+          "source_counts": {
+            "provider": 3
+          },
+          "provider_tokens": {
+            "input": 468,
+            "output": 104
+          }
+        }
+      }
+    },
+    "live-final": {
+      "jobs": {
+        "completed": 8,
+        "rejected": 2,
+        "partial": 1
+      },
+      "roles": {
+        "brief": 7,
+        "analysis": 8,
+        "planner": 8,
+        "critic": 7,
+        "end": 2,
+        "memory": 1
+      },
+      "role_status": {
+        "brief:completed": 7,
+        "analysis:completed": 8,
+        "planner:completed": 8,
+        "critic:completed": 7,
+        "end:completed": 2,
+        "memory:completed": 1
+      },
+      "usage": {
+        "source_counts": {
+          "provider": 33
+        },
+        "provider_tokens": {
+          "input": 48483,
+          "output": 5876
+        }
+      },
+      "duration_by_kind": {
+        "deliberation": {
+          "n": 7,
+          "p50_ms": 10119.6,
+          "p90_ms": 13854.2
+        },
+        "end_consolidation": {
+          "n": 2,
+          "p50_ms": 10962.1,
+          "p90_ms": 11532.1
+        },
+        "memory": {
+          "n": 1,
+          "p50_ms": 7279.7,
+          "p90_ms": 7279.7
+        },
+        "routine": {
+          "n": 1,
+          "p50_ms": 7162.3,
+          "p90_ms": 7162.3
+        }
+      },
+      "role_duration": {
+        "analysis": {
+          "n": 8,
+          "p50_ms": 4702.5,
+          "p90_ms": 5266.0
+        },
+        "brief": {
+          "n": 7,
+          "p50_ms": 1593.0,
+          "p90_ms": 3140.0
+        },
+        "critic": {
+          "n": 7,
+          "p50_ms": 1422.0,
+          "p90_ms": 1563.0
+        },
+        "end": {
+          "n": 2,
+          "p50_ms": 10953.0,
+          "p90_ms": 11531.0
+        },
+        "memory": {
+          "n": 1,
+          "p50_ms": 7265.0,
+          "p90_ms": 7265.0
+        },
+        "planner": {
+          "n": 8,
+          "p50_ms": 4163.5,
+          "p90_ms": 7656.0
+        }
+      },
+      "turns": 6,
+      "scenarios": [
+        "Q01",
+        "Q02"
+      ],
+      "violations": {
+        "rail_questions": 2,
+        "missing_tag": 1
+      },
+      "talker_status": {
+        "generated": 6
+      },
+      "end_status": {
+        "done": 2
+      },
+      "text_first_sentence": {
+        "n": 6,
+        "p50_ms": 2305.0,
+        "p90_ms": 3531.0
+      },
+      "turn_model_usage": {
+        "talker_usage": {
+          "source_counts": {
+            "provider": 6
+          },
+          "provider_tokens": {
+            "input": 3677,
+            "output": 186
+          }
+        },
+        "risk_usage": {
+          "source_counts": {
+            "provider": 6
+          },
+          "provider_tokens": {
+            "input": 986,
+            "output": 189
+          }
+        }
+      }
+    },
+    "fake-final": {
+      "jobs": {
+        "completed": 35,
+        "rejected": 10
+      },
+      "roles": {
+        "analysis": 24,
+        "planner": 24,
+        "end": 12,
+        "brief": 22,
+        "critic": 22,
+        "memory": 9
+      },
+      "role_status": {
+        "analysis:completed": 24,
+        "planner:completed": 24,
+        "end:completed": 12,
+        "brief:completed": 22,
+        "critic:completed": 22,
+        "memory:completed": 9
+      },
+      "usage": {
+        "source_counts": {
+          "estimated": 113
+        },
+        "provider_tokens": {}
+      },
+      "duration_by_kind": {
+        "deliberation": {
+          "n": 22,
+          "p50_ms": 23.8,
+          "p90_ms": 30.2
+        },
+        "end_consolidation": {
+          "n": 12,
+          "p50_ms": 7.2,
+          "p90_ms": 7.9
+        },
+        "memory": {
+          "n": 9,
+          "p50_ms": 9.0,
+          "p90_ms": 9.5
+        },
+        "routine": {
+          "n": 2,
+          "p50_ms": 16.3,
+          "p90_ms": 16.7
+        }
+      },
+      "role_duration": {
+        "analysis": {
+          "n": 24,
+          "p50_ms": 0.0,
+          "p90_ms": 0.0
+        },
+        "brief": {
+          "n": 22,
+          "p50_ms": 0.0,
+          "p90_ms": 0.0
+        },
+        "critic": {
+          "n": 22,
+          "p50_ms": 0.0,
+          "p90_ms": 0.0
+        },
+        "end": {
+          "n": 12,
+          "p50_ms": 0.0,
+          "p90_ms": 0.0
+        },
+        "memory": {
+          "n": 9,
+          "p50_ms": 0.0,
+          "p90_ms": 0.0
+        },
+        "planner": {
+          "n": 24,
+          "p50_ms": 0.0,
+          "p90_ms": 0.0
+        }
+      },
+      "turns": 36,
+      "scenarios": [
+        "Q01",
+        "Q02",
+        "Q03",
+        "Q04",
+        "Q05",
+        "Q06",
+        "Q07",
+        "Q08",
+        "Q09",
+        "Q10",
+        "Q11",
+        "Q12"
+      ],
+      "violations": {},
+      "talker_status": {
+        "generated": 34,
+        "null": 2
+      },
+      "end_status": {
+        "done": 12
+      },
+      "text_first_sentence": {
+        "n": 31,
+        "p50_ms": 15.0,
+        "p90_ms": 16.0
+      },
+      "turn_model_usage": {
+        "talker_usage": {
+          "source_counts": {
+            "estimated": 31
+          },
+          "provider_tokens": {}
+        },
+        "risk_usage": {
+          "source_counts": {},
+          "provider_tokens": {}
+        }
+      }
+    },
+    "voice1": {
+      "jobs": {
+        "rejected": 6,
+        "partial": 5,
+        "completed": 5,
+        "cancelled": 1,
+        "running": 1
+      },
+      "roles": {
+        "analysis": 21,
+        "brief": 17,
+        "planner": 14,
+        "critic": 10,
+        "delta": 11
+      },
+      "role_status": {
+        "analysis:completed": 14,
+        "brief:completed": 12,
+        "planner:completed": 14,
+        "critic:completed": 10,
+        "delta:completed": 11,
+        "analysis:schema_error": 6,
+        "brief:schema_error": 5,
+        "analysis:failed": 1
+      },
+      "usage": {
+        "source_counts": {
+          "provider": 72,
+          "estimated": 1
+        },
+        "provider_tokens": {
+          "input": 113774,
+          "output": 17716
+        }
+      },
+      "duration_by_kind": {
+        "deliberation": {
+          "n": 13,
+          "p50_ms": 12782.6,
+          "p90_ms": 16327.5
+        },
+        "end_consolidation": {
+          "n": 0
+        },
+        "routine": {
+          "n": 4,
+          "p50_ms": 11795.7,
+          "p90_ms": 17278.1
+        }
+      },
+      "role_duration": {
+        "analysis": {
+          "n": 21,
+          "p50_ms": 5562.0,
+          "p90_ms": 7281.0
+        },
+        "brief": {
+          "n": 17,
+          "p50_ms": 2750.0,
+          "p90_ms": 4266.0
+        },
+        "critic": {
+          "n": 10,
+          "p50_ms": 1359.0,
+          "p90_ms": 1453.0
+        },
+        "delta": {
+          "n": 11,
+          "p50_ms": 1703.0,
+          "p90_ms": 2094.0
+        },
+        "planner": {
+          "n": 14,
+          "p50_ms": 4797.5,
+          "p90_ms": 7312.0
+        }
+      },
+      "attempts": 30,
+      "success": 25,
+      "failures": 5,
+      "client_first_packet": {
+        "n": 30,
+        "p50_ms": 5641.0,
+        "p90_ms": 7297.0
+      },
+      "first_sentence": {
+        "n": 25,
+        "p50_ms": 2187.0,
+        "p90_ms": 2672.0
+      },
+      "server_first_packet_sent": {
+        "n": 1,
+        "p50_ms": 5641.0,
+        "p90_ms": 5641.0
+      }
+    },
+    "voice2": {
+      "jobs": {
+        "rejected": 2,
+        "partial": 2,
+        "cancelled": 2
+      },
+      "roles": {
+        "brief": 5,
+        "analysis": 6,
+        "planner": 5,
+        "critic": 2,
+        "delta": 2,
+        "end": 2
+      },
+      "role_status": {
+        "brief:schema_error": 2,
+        "brief:completed": 3,
+        "analysis:completed": 4,
+        "planner:completed": 2,
+        "critic:completed": 2,
+        "delta:completed": 2,
+        "analysis:schema_error": 2,
+        "planner:schema_error": 1,
+        "planner:failed": 1,
+        "planner:cancelled": 1,
+        "end:schema_error": 1,
+        "end:failed": 1
+      },
+      "usage": {
+        "source_counts": {
+          "provider": 20,
+          "estimated": 2
+        },
+        "provider_tokens": {
+          "input": 28155,
+          "output": 6372
+        }
+      },
+      "duration_by_kind": {
+        "deliberation": {
+          "n": 3,
+          "p50_ms": 13804.3,
+          "p90_ms": 19935.5
+        },
+        "end_consolidation": {
+          "n": 1,
+          "p50_ms": 18310.1,
+          "p90_ms": 18310.1
+        },
+        "routine": {
+          "n": 1,
+          "p50_ms": 16825.3,
+          "p90_ms": 16825.3
+        }
+      },
+      "role_duration": {
+        "analysis": {
+          "n": 6,
+          "p50_ms": 6015.5,
+          "p90_ms": 7610.0
+        },
+        "brief": {
+          "n": 5,
+          "p50_ms": 2156.0,
+          "p90_ms": 2859.0
+        },
+        "critic": {
+          "n": 2,
+          "p50_ms": 1320.5,
+          "p90_ms": 1391.0
+        },
+        "delta": {
+          "n": 2,
+          "p50_ms": 1680.0,
+          "p90_ms": 1922.0
+        },
+        "end": {
+          "n": 2,
+          "p50_ms": 9148.5,
+          "p90_ms": 18297.0
+        },
+        "planner": {
+          "n": 5,
+          "p50_ms": 4750.0,
+          "p90_ms": 6766.0
+        }
+      },
+      "attempts": 10,
+      "success": 9,
+      "failures": 1,
+      "client_first_packet": {
+        "n": 10,
+        "p50_ms": 5054.5,
+        "p90_ms": 6188.0
+      },
+      "first_sentence": {
+        "n": 9,
+        "p50_ms": 1875.0,
+        "p90_ms": 2579.0
+      },
+      "server_first_packet_sent": {
+        "n": 10,
+        "p50_ms": 5039.0,
+        "p90_ms": 6156.0
+      }
+    }
+  },
+  "voice_combined": {
+    "attempts": 40,
+    "dynamic_success": 34,
+    "failures": 6,
+    "failed_indices": {
+      "voice1": [
+        1,
+        2,
+        3,
+        16,
+        18
+      ],
+      "voice2": [
+        10
+      ]
+    },
+    "all_first_packet": {
+      "n": 40,
+      "p50_ms": 5578.5,
+      "p90_ms": 7297.0
+    },
+    "dynamic_first_packet": {
+      "n": 34,
+      "p50_ms": 5492.5,
+      "p90_ms": 7297.0
+    },
+    "dynamic_first_sentence": {
+      "n": 34,
+      "p50_ms": 2023.5,
+      "p90_ms": 2579.0
+    },
+    "first_sentence_to_packet": {
+      "n": 34,
+      "p50_ms": 3289.0,
+      "p90_ms": 4984.0
+    },
+    "tts_duration": {
+      "n": 40,
+      "p50_ms": 3187.0,
+      "p90_ms": 4875.0
+    },
+    "encode_duration": {
+      "n": 40,
+      "p50_ms": 47.0,
+      "p90_ms": 63.0
+    }
+  },
+  "all_recorded_real_role_usage": {
+    "source_counts": {
+      "provider": 540,
+      "estimated": 23
+    },
+    "provider_tokens": {
+      "input": 1041258,
+      "output": 118005
+    }
+  },
+  "real_role_counts": {
+    "analysis": 136,
+    "planner": 125,
+    "end": 42,
+    "brief": 139,
+    "memory": 26,
+    "critic": 82,
+    "delta": 13
+  },
+  "risk": {
+    "model": "qwen-flash",
+    "label_status": "developer-authored; pending independent review",
+    "counts": {
+      "none": 40,
+      "watch": 40,
+      "high": 40
+    },
+    "combined_matrix": {
+      "none": {
+        "none": 27,
+        "watch": 13,
+        "high": 0,
+        "failure": 0
+      },
+      "watch": {
+        "none": 0,
+        "watch": 37,
+        "high": 3,
+        "failure": 0
+      },
+      "high": {
+        "none": 0,
+        "watch": 0,
+        "high": 40,
+        "failure": 0
+      }
+    },
+    "classifier_matrix": {
+      "none": {
+        "none": 38,
+        "watch": 0,
+        "high": 0,
+        "failure": 2
+      },
+      "watch": {
+        "none": 0,
+        "watch": 37,
+        "high": 3,
+        "failure": 0
+      },
+      "high": {
+        "none": 0,
+        "watch": 0,
+        "high": 40,
+        "failure": 0
+      }
+    },
+    "classifier_failures": 2,
+    "classifier_high_recall": 1.0,
+    "classifier_watch_recall": 1.0,
+    "high_recall": 1.0,
+    "watch_recall": 1.0,
+    "false_high_rate": 0.0,
+    "timely_high_recall": 1.0,
+    "passed": true
+  },
+  "verification": {
+    "offline": "96 passed; 3 online deselected; Ruff and format passed",
+    "online_initial": "2 passed; conversation failed on Talker timeout",
+    "online_recheck": "conversation failed on old 25s queue observation timeout",
+    "online_final": "conversation passed after 50s queue observation; individual 20s job deadline unchanged",
+    "wheel": "site-packages package, config/prompts, empty DB, v1 backup/migration, idempotency, CLI and fake protocol passed",
+    "hardware": "not tested",
+    "quality_raw": "artifacts/v2/quality*/report.json",
+    "voice_raw": "artifacts/v2/voice*/voice.json"
+  }
+}

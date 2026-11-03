@@ -1,28 +1,18 @@
 # 情感陪伴玩偶后端
 
-依据《情感陪伴玩偶 · 后端技术设计文档 v1.1》实现的 Python 3.10 后端。独立文字入口、Talker / Reasoner、状态与许可管理、风险接管、练习播放计划、SQLite 记忆、观察看板和小智接入包均已实现。
+依据 [v2 主规格](companion/docs/ARCHITECTURE_V2.md) 升级的 Python 3.10 模块化后端。默认 development 已接入实时 Talker、后台 Analysis / Planner / 独立 Critic、版本化策略、四类关系记忆、独立风险接管与小智语音流水。
 
 当前默认运行 `development`：S16 是开发夹具，危机文本是明确标注的测试占位内容，三段练习是待审核草稿。正式 17 张行动卡、审核话术和真机验收仍待补齐；`demo` 模式会检查这些条件。最新证据与未达项见 [验证报告](companion/docs/VALIDATION.md)。
 
-## 交互式后端架构
+## v2 架构与工程状态
 
-[![情感陪伴玩偶后端模块架构图](docs/assets/backend-architecture.png)](https://hhuang999.github.io/companion-doll-backend/)
+[![v2 模块总图](docs/architecture-v2/preview.png)](docs/architecture-v2/index.html)
 
-**[打开完整架构图集 →](https://hhuang999.github.io/companion-doll-backend/)**
+[打开本地 v2 架构图集](docs/architecture-v2/index.html) · [逐项验收状态](companion/docs/V2_IMPLEMENTATION_STATUS.md) · [运行与迁移手册](companion/docs/V2_OPERATIONS.md)
 
-总图展开 22 个模块，另有六张专题图解释内部设计。每张图均支持缩放、关系追踪、主题切换和导出，节点附有固定到源码提交的行号依据，图下说明数据契约、并发、失败与恢复机制。
+图集分为实时与安全通路、有限协作与版本发布、记忆与语音模块四个视图，附本地实现提交的源码依据。HTML 下载后可以独立打开；本次升级未推送远端或更新公共站点。
 
-| 专题 | 主要内容 |
-| --- | --- |
-| [01 模块总图](https://hhuang999.github.io/companion-doll-backend/#overview) | 入口、核心、风险、分析、输出、存储与外部模型接口 |
-| [02 实时回复](https://hhuang999.github.io/companion-doll-backend/#turn) | 输入去重、TurnContext、提示词、分句、OutputRail 与输出闸门 |
-| [03 状态与许可](https://hhuang999.github.io/companion-doll-backend/#consent) | 提议激活、明确同意、等待卡片、退出行动与练习续播 |
-| [04 风险接管](https://hhuang999.github.io/companion-doll-backend/#risk) | L1/L2 检测、600 ms 闸门、2.5 s 预算、迟到 high 与取消 |
-| [05 后台分析](https://hhuang999.github.io/companion-doll-backend/#reasoner) | 串行调度、Validator、过期检查、事务提交与快照发布 |
-| [06 语音链路](https://hhuang999.github.io/companion-doll-backend/#audio) | 六处补丁、缓存、动态 TTS、Opus、代次隔离与播放回执 |
-| [07 数据与恢复](https://hhuang999.github.io/companion-doll-backend/#data) | 12 张表、结构化记忆、跟进预留、结束任务与启动恢复 |
-
-GitHub README 显示静态预览；交互图集通过 GitHub Pages 发布。图集绑定源码提交 `d24f38f`，当前验收状态见上方验证报告。
+旧的 [GitHub Pages v1 图集](https://hhuang999.github.io/companion-doll-backend/) 固定于历史提交 `d24f38f`，只解释 v1，不代表本次 v2。
 
 ## 立即运行
 
@@ -39,7 +29,7 @@ GitHub README 显示静态预览；交互图集通过 GitHub Pages 发布。图�
 ./scripts/run.ps1 dashboard
 ```
 
-命令行支持 `/state` 查看状态、`/wait` 等待后台分析、`/cry 今天很难过` 模拟哭声、`/emotion SAD 今天很累` 传递情绪、`/end` 模拟无语音结束、`/quit` 退出。输入“怎么办”会先请求许可；明确同意且有合格卡片后才进入行动。异步分析尚未完成时保留同意并等待卡片。
+命令行支持 `/policy` 查看当前与当轮策略、`/memory` 查询范围记忆、`/jobs` 查看任务及评审、`/state` 查看状态、`/wait` 等待后台分析、`/cry 今天很难过` 模拟哭声、`/emotion SAD 今天很累` 传递情绪、`/end` 模拟无语音结束、`/quit` 退出。输入“怎么办”会先请求许可；明确同意且有合格卡片后才进入行动。异步分析尚未完成时保留同意并等待卡片。
 
 文字入口中的练习默认按虚拟时间输出，使用 `--realtime` 观察停顿；音频播放由小智适配器负责。
 
@@ -98,11 +88,11 @@ Windows 上解释器路径为 `.venv/Scripts/python.exe`。锁文件对应此次
 | `cards/*.yaml` | 行动卡及来源、约束、状态 |
 | `crisis.yaml` | 固定危机话术和审核信息 |
 | `exercises/*.yaml` | 练习文本、句后停顿及可选已测量音频 |
-| `prompts/*.j2` | Talker、Reasoner、风险模型提示词 |
+| `prompts/*.j2` | Talker、风险及 Analysis / Brief / Planner / Critic / Delta / Memory / End 提示词 |
 
 默认数据库为工作目录下的 `data/companion.db`。CLI 可用 `--db` 指定路径；小智适配器按 `project_root` 解析。固定音频位于 `data/fixed_audio/`；动态语音只在内存和短暂 WAV 文件中处理，转换后删除。数据库、运行音频、`.env`、测试产物和本地解释器均已忽略提交。
 
-启动时会恢复未完成会话，将其转为结束分析任务；旧会话不恢复为活动对话。`failed` 的结束分析保留错误记录，检查原因并停服后可显式重试：`python -m companion.tools.retry_end <session_id> --env-file .env --db data/companion.db`。一个数据库由一个后端进程持有；看板通过独立连接读取。
+v1 数据库会通过一致备份和事务迁移到 v2，重复启动不重复导入；详见 [迁移与回退步骤](companion/docs/V2_OPERATIONS.md)。启动时会恢复未完成会话，将其转为结束分析任务；旧会话不恢复为活动对话。`failed` 的结束分析保留错误记录，检查原因并停服后可显式重试：`python -m companion.tools.retry_end <session_id> --env-file .env --db data/companion.db`。一个数据库由一个后端进程持有；看板通过独立连接读取。
 
 清除一个用户的数据前停止该用户的对话：
 
@@ -133,7 +123,8 @@ Windows 上解释器路径为 `.venv/Scripts/python.exe`。锁文件对应此次
 
 - `companion/companion/core/api.py`：输入、风险回调、输出、播放回执和会话结束。
 - `companion/companion/core/state_machine.py`：阶段、同意对象与行动次数。
-- `companion/companion/core/reasoner.py` / `validator.py`：后台任务合并、发布前验证。
+- `companion/companion/cognition/`：公平调度、共享预算、独立评议、DeltaGuard 与最终 CAS；`core/validator.py` 保留行动校验。
+- `companion/companion/memory/`：四类记忆、来源、范围、中文相关性与更正。
 - `companion/companion/store/`：SQLite 事务、快照、记忆、跟进与恢复。
 - `companion/companion/adapters/`：文字、剧本与小智适配器。
 - `companion/companion/dashboard/`：本地观察看板。

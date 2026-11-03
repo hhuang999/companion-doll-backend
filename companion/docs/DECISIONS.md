@@ -1,16 +1,31 @@
 # 实现决定
 
-## v2 实施决定（进行中）
+## v2 实施决定（实现提交 e3ef674）
 
 默认 development 已切到 `Cognition`；旧 Reasoner 不再作为发布执行器。`reasoner_runs` 保留历史，新的角色调用和最终事务结果写入 `agent_runs` / `cognitive_jobs`。Snapshot 是经代码卡片检查后的 SupportPlan 兼容投影；`active_support_plan_id` 与旧播放 `active_plan_id` 分开。
 
 数据库采用事务化 v1→v2 迁移和 SQLite backup API；OS 文件锁覆盖迁移/活动 Core，进程退出自动释放，观察台仍只读直连。短事务支持 SAVEPOINT，使输入、明确控制、边界和状态可一起提交。后端锁序统一为用户锁→会话锁→Store。
 
-后台编排与模型执行槽位分开；独立 Brief 使用专用有限执行器，后台 HTTP 客户端独立于实时客户端。无法中止的同步请求保留实际槽位，取消不伪造线程已退出。Token 预留采用可解释的保守估算（非 ASCII 字符按 2、ASCII 按 1/2，加消息开销），标 estimated；返回 provider usage 后结算，缺失不写零。模型初值保持 qwen-flash/qwen-plus，真实验收后记录调整。
+后台编排与模型执行槽位分开；独立 Brief 使用专用有限执行器，后台 HTTP 客户端独立于实时客户端。无法中止的同步请求保留实际槽位，取消不伪造线程已退出。Token 预留采用可解释的保守估算（非 ASCII 字符按 2、ASCII 按 1/2，加消息开销），标 estimated；返回 provider usage 后结算，缺失不写零。实际保留 qwen-flash / qwen-plus，TTS 保留 gpt-4o-mini-tts / coral；没有开展新模型排名。
 
 接口核查：[Aihubmix 结构化输出](https://docs.aihubmix.com/cn/api/Structured-Output) 说明存在自动降级，继续执行本地 Pydantic 和来源校验；[TTS](https://docs.aihubmix.com/cn/api/TTS) 的接口描述不作为增量音频实测证据，本次采用完整 WAV 合成加下一句有界预取；[Python SQLite backup](https://docs.python.org/3.10/library/sqlite3.html#sqlite3.Connection.backup) 用于 WAL 一致备份。
 
 原测试 `test_old_reasoner_is_rejected_and_end_task_survives` 改查 v2 任务 cancelled：明确静默/会话结束主动取消旧协作，结束任务仍须 done，新会话不能被覆盖。没有取消原有许可、风险或恢复断言。
+
+### 真实验收后的修正
+
+- 原始 Planner 系统提示缺少 JSON 字样，Aihubmix 对 `json_object` 返回 400；补充明确输出格式，继续执行本地 schema 校验。Brief 的 evidence 和 Planner 的 response_guidance 单项也须使用数组，提示补充具体结构，未采用放宽 Pydantic 的隐式纠错。
+- 历史 assistant 消息重新保留合法协议标签，避免模型模仿无标签正文；新增不从文字声称视觉观察、姓名仅简短确认、休息时收尾和明确 AI 关系边界。真实模型仍可能超时、过问或漏标签，输出护栏及失败状态保留。
+- 后台压缩为有限历史、非播放反馈、必要记忆字段和卡片适用条件；去除 schema 的 title/description/default 描述，保留结构约束。一次 schema 修复共享预算，不能因为解析困难追加无限调用。
+- 等待队列的在线测试由 25 秒改为 50 秒：v2 可串行执行策略和独立 memory 两个任务；单任务 20 秒硬 deadline 未改变。初轮 Talker 超时和旧观察窗口失败均保留，最终在线对话检查通过。
+- 任务在实际执行开始捕获前驱提交后的版本，保留原排队年龄；普通输入不一律丢弃产物。发布前检查记忆更新后的依赖版本；输入/发布事务失败进入可诊断的受控状态。
+- 反馈优先绑定已开始输出、该输出的策略和 offer；同一目标四轮两次明确失败触发 repeated_failure。server completed 与用户收益分开。策略 avoid 和 open_question 真正投影到 Talker，no_advice / no_repeat_offer 同时限制候选行动。
+- 音频预取上限为下一句，TTS 两个真实占用槽；固定音频绕过动态合成。上游每句重置 packet_count，首包计时改为同一计数生命周期比较，补测 10 次均记录 sent；前 30 次缺测仍原样保留。
+- 结束执行记录关联 retry_of / attempt；关闭超时停止新调度并保留已占用请求，durable end_tasks 由下次启动恢复。schema 诊断记录具体字段错误，角色运行记录实际提示 hash。
+
+详细真实结果见 VALIDATION；没有将结构校验通过、服务端完成或单次性能改善等同于对话质量、设备播放或稳定达标。
+
+## v1 历史决定（以下机制由 v2 保留或替代）
 
 ## 运行边界
 

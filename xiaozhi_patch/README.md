@@ -41,6 +41,8 @@ ASR 使用 [FunAudioLLM/SenseVoiceSmall](https://huggingface.co/FunAudioLLM/Sens
 
 核心配置独立复制到 `data/xiaozhi-config`，数据库为 `data/xiaozhi.db`，与文字入口分开。安装器保留已有配置；修改卡片、模板或模型时应同步此目录，再重新生成固定音频。LLM 与 Memory 的 project_root、config_dir 必须一致。
 
+v2 升级仍使用这六处接入：Core 默认启用后台角色协作、范围记忆和有界下一句音频预取。已有配置需同步新增角色提示词、Talker / stages 与 `settings.cognition`，保留独立数据库路径和自定义内容；具体命令、迁移和测量语义见 [v2 运行手册](../companion/docs/V2_OPERATIONS.md)。40 个本机语音样本及未达项见 [v2 验证报告](../companion/docs/VALIDATION.md)，不将服务端 completed 当作设备 ACK。
+
 `Intent: nointent` 避免旧工具路由介入。开启 greeting、关闭唤醒缓存，使真实唤醒进入 Companion；关闭停止提示音，保留练习静音。空闲结束时间为 120 秒。上游 prompt 使用仅含 base_prompt 的模板，避免额外位置 / 天气查询；实际模型提示由 Companion 管理。
 
 SenseVoice 原始情绪和 Cry 事件进入 TurnSignals；缺失标签保留未知。只有 Cry 没有文字时，使用 `[检测到哭声，无可识别文字]` 作为事件说明通过上游空文本门槛，不将它视为识别出的用户原话。动态语音由 Aihubmix TTS 合成，固定介绍、问候、收尾、危机与练习音频从缓存读取，统一交给小智 Opus 编码和节奏发送器。
