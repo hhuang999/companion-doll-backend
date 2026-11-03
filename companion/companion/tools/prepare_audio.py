@@ -19,6 +19,7 @@ def main() -> None:
     config = Config(args.config_dir)
     client = TTSClient(config)
     texts = {line.text for script in config.exercises.values() for line in script.lines}
+    texts.update(config.persona[key] for key in ("onboarding", "greeting", "rest", "idle_end"))
     crisis = config.crisis
     texts.update([crisis["opening"], crisis["resources"], crisis["closing"], *crisis["responses"]])
     # Composite crisis responses are fixed too; preload all possible rotations.

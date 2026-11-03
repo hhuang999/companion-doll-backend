@@ -94,7 +94,18 @@ Windows 上解释器路径为 `.venv/Scripts/python.exe`。锁文件对应此次
 
 ## 接入小智
 
-接入包在 [xiaozhi_patch](xiaozhi_patch/README.md)，锁定上游提交 `92337881a7b6553614b47e137a774d02bf40512f`。补丁检查通过，两个新增钩子的范围确认仍待回复；当前没有修改上游工作副本。
+接入包在 [xiaozhi_patch](xiaozhi_patch/README.md)，锁定上游提交 `92337881a7b6553614b47e137a774d02bf40512f`。六处补丁已批准并应用，独立环境、SenseVoice 权重、Opus 编解码和实际 WebSocket 对话链路已完成联调。
+
+```powershell
+# 当前工作区直接启动
+./scripts/run_xiaozhi.ps1
+# 观察小智服务的独立数据库
+./scripts/run.ps1 dashboard --db data/xiaozhi.db
+# 新机器首次安装（需先安装根目录环境、uv 与 FFmpeg）
+./scripts/setup_xiaozhi.ps1
+```
+
+默认 WebSocket 地址为 `ws://127.0.0.1:8000/xiaozhi/v1/`。设备接入配置、在线探针和重建补丁说明见接入包文档。
 
 小智适配器通过统一 OutputPort 发送普通语音、固定危机音频与练习计划，具有独立取消入口。服务端的队列排空估计与设备实际播放完成分开记录，设备首响及停止时刻仍须真机采集。
 

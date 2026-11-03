@@ -6,6 +6,10 @@ from companion.core.models import OutputEvent, PlaybackPlan, PlaybackSegment
 
 
 class FakeSpeech:
+    @staticmethod
+    def cache_key(text):
+        return text
+
     def __init__(self):
         self.blocked = threading.Event()
         self.release = threading.Event()
@@ -67,6 +71,29 @@ def test_cancel_during_blocked_tts_never_plays_old_audio(tmp_path):
             ]
         finally:
             speech.release.set()
+            await port.close()
+
+    asyncio.run(run())
+
+
+def test_prepared_greeting_avoids_network_synthesis(tmp_path):
+    class OfflineSpeech(FakeSpeech):
+        def synthesize(self, text):
+            raise AssertionError("Prepared speech must not call TTS")
+
+    (tmp_path / "greeting.wav").write_bytes(b"cached greeting")
+
+    async def run():
+        transport, callbacks = FakeTransport(), []
+        port = XiaozhiOutputPort(
+            asyncio.get_running_loop(), callbacks.append, OfflineSpeech(), transport, tmp_path
+        )
+        try:
+            port.submit(event("greeting", 1, "greeting"))
+            await asyncio.wait_for(port.queue.join(), 2)
+            assert transport.played == ["greeting"]
+            assert callbacks[-1].status == "completed"
+        finally:
             await port.close()
 
     asyncio.run(run())

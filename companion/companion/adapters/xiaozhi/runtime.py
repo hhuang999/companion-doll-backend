@@ -35,6 +35,9 @@ def get_core(options):
             core.audio_cache_dir = root / "data/fixed_audio"
             # Check fixed audio before accepting connections.
             texts = {line.text for script in config.exercises.values() for line in script.lines}
+            texts.update(
+                config.persona[name] for name in ("onboarding", "greeting", "rest", "idle_end")
+            )
             crisis = config.crisis
             texts.update([crisis["opening"], crisis["closing"], *crisis["responses"]])
             texts.update(text + crisis["resources"] for text in crisis["responses"])

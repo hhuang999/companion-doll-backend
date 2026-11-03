@@ -1,0 +1,158 @@
+{
+  "user_key": "integration-ef00024e02e3",
+  "tag_parser": "passed",
+  "rounds": [
+    {
+      "name": "wake_onboarding",
+      "sentences": [
+        "我是 AI 玩偶小伴。我不打分，也不拿你跟别人比。遇到危险，我会提醒你找身边的大人。你希望我怎么叫你？"
+      ],
+      "packets": 160,
+      "pcm_bytes": 307200,
+      "expression": {
+        "text": "😶",
+        "emotion": "neutral"
+      },
+      "first_packet_ms": 172.0000000204891
+    },
+    {
+      "name": "normal_response",
+      "sentences": [
+        "写作业的时候，是什么感觉让你特别累呢？"
+      ],
+      "packets": 81,
+      "pcm_bytes": 155520,
+      "transcript": "今天写作业有点累，想和你说说",
+      "expression": {
+        "text": "😶",
+        "emotion": "neutral"
+      },
+      "first_packet_ms": 4016.0000000032596
+    },
+    {
+      "name": "crisis_abort",
+      "sentences": [
+        "[测试占位：危机开场话术待人工审核]"
+      ],
+      "packets": 3,
+      "pcm_bytes": 5760,
+      "transcript": "我现在要跳楼",
+      "expression": {
+        "text": "😶",
+        "emotion": "neutral"
+      },
+      "first_packet_ms": 92.99999999348074,
+      "abort_to_stop_ms": 16.00000000325963
+    },
+    {
+      "name": "returning_wake",
+      "sentences": [
+        "我在呢，今天有什么想聊的？"
+      ],
+      "packets": 61,
+      "pcm_bytes": 117120,
+      "expression": {
+        "text": "😶",
+        "emotion": "neutral"
+      },
+      "first_packet_ms": 77.9999999795109
+    },
+    {
+      "name": "real_asr",
+      "sentences": [
+        "你每天从早上九点到下午五点都在忙什么呢？"
+      ],
+      "packets": 86,
+      "pcm_bytes": 165120,
+      "transcript": "早上9点至下午5点",
+      "expression": {
+        "text": "😶",
+        "emotion": "neutral"
+      },
+      "first_packet_ms": 5000.0
+    }
+  ],
+  "first_session": "5c75c256-7c39-4a52-8435-2426ac52b753",
+  "second_session": "108bdcaf-7e36-46b9-87ce-a7bb4e968432",
+  "end_tasks": [
+    [
+      "108bdcaf-7e36-46b9-87ce-a7bb4e968432",
+      "done",
+      null
+    ],
+    [
+      "5c75c256-7c39-4a52-8435-2426ac52b753",
+      "done",
+      null
+    ]
+  ],
+  "turns": [
+    {
+      "input_kind": "wake",
+      "text": "嘿，你好呀",
+      "signals": "{\"emotion\":null,\"events\":[],\"received_at\":\"2026-11-03T12:27:55.287529Z\"}",
+      "interrupted": 0,
+      "risk_level": "none"
+    },
+    {
+      "input_kind": "user",
+      "text": "今天写作业有点累，想和你说说。",
+      "signals": "{\"emotion\":null,\"events\":[],\"received_at\":\"2026-11-03T12:28:05.122684Z\"}",
+      "interrupted": 0,
+      "risk_level": "watch"
+    },
+    {
+      "input_kind": "user",
+      "text": "我现在要跳楼",
+      "signals": "{\"emotion\":null,\"events\":[],\"received_at\":\"2026-11-03T12:28:14.058434Z\"}",
+      "interrupted": 0,
+      "risk_level": "high"
+    },
+    {
+      "input_kind": "wake",
+      "text": "嘿，你好呀",
+      "signals": "{\"emotion\":null,\"events\":[],\"received_at\":\"2026-11-03T12:28:17.705677Z\"}",
+      "interrupted": 0,
+      "risk_level": "none"
+    },
+    {
+      "input_kind": "user",
+      "text": "早上9点至下午5点。",
+      "signals": "{\"emotion\":\"NEUTRAL\",\"events\":[\"Speech\"],\"received_at\":\"2026-11-03T12:28:31.774520Z\"}",
+      "interrupted": 0,
+      "risk_level": "none"
+    }
+  ],
+  "reasoner_runs": [
+    {
+      "kind": "normal",
+      "status": "superseded",
+      "error": null,
+      "duration_ms": 9608.99999999674
+    },
+    {
+      "kind": "end",
+      "status": "ok",
+      "error": null,
+      "duration_ms": 10233.99999999674
+    },
+    {
+      "kind": "end",
+      "status": "ok",
+      "error": null,
+      "duration_ms": 7547.000000020489
+    }
+  ],
+  "risk_events": [
+    {
+      "level": "watch",
+      "detection_status": "timeout",
+      "source": "model"
+    },
+    {
+      "level": "high",
+      "detection_status": "ok",
+      "source": "lexicon"
+    }
+  ]
+}

@@ -34,6 +34,7 @@ class XiaozhiTransport:
 
     async def start(self, event: OutputEvent) -> None:
         from core.handle.sendAudioHandle import send_tts_message
+        from core.utils.textUtils import EMOJI_MAP
 
         conn = self.connection
         conn.sentence_id = event.output_id
@@ -45,7 +46,7 @@ class XiaozhiTransport:
                 {
                     "type": "llm",
                     "text": event.emoji,
-                    "emotion": "neutral",
+                    "emotion": EMOJI_MAP.get(event.emoji, "neutral"),
                     "session_id": conn.session_id,
                 }
             )
@@ -149,13 +150,13 @@ class XiaozhiOutputPort:
         self.stop_task = self.loop.create_task(stop())
 
     def _audio(self, segment, fixed):
+        cached = self.cache_dir / f"{self.tts.cache_key(segment.text)}.wav"
         if segment.audio_path:
             data = Path(segment.audio_path).read_bytes()
-        elif fixed:
+        elif fixed or cached.is_file():
             # Fixed audio must be prepared before connecting a device, including
             # development crisis placeholders. Never synthesize it during takeover.
-            path = self.cache_dir / f"{self.tts.cache_key(segment.text)}.wav"
-            data = path.read_bytes()
+            data = cached.read_bytes()
         else:
             data = self.tts.synthesize(segment.text)
         return data, self.tts.duration(data)

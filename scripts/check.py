@@ -12,7 +12,7 @@ temporary.mkdir(parents=True, exist_ok=True)
 environment = dict(
     os.environ, PYTEST_DISABLE_PLUGIN_AUTOLOAD="1", TEMP=str(temporary), TMP=str(temporary)
 )
-targets = ["companion", "xiaozhi_patch/files", "xiaozhi_patch/apply.py", "scripts"]
+targets = ["companion", "xiaozhi_patch", "scripts"]
 subprocess.run(
     [sys.executable, "-m", "ruff", "check", "--config", "companion/pyproject.toml", *targets],
     cwd=root,

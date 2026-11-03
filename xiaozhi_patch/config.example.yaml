@@ -3,7 +3,7 @@
 selected_module:
   LLM: CompanionLLM
   Memory: CompanionMemory
-  Intent: intent_nointent
+  Intent: nointent
 LLM:
   CompanionLLM:
     type: companion_llm
@@ -14,4 +14,8 @@ Memory:
     project_root: D:/HHB/HKUST(GZ)_Library_code/AIAA3800_HCI/3800_final_project
 enable_stop_tts_notify: false
 enable_greeting: true
+enable_wakeup_words_response_cache: false
 close_connection_no_voice_time: 120
+prompt: 你是 AI 陪伴玩偶小伴；具体对话由 Companion 核心处理。
+# configure.py sets the absolute path to companion-prompt.txt.
+prompt_template: companion-prompt.txt

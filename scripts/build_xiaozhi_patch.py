@@ -1,17 +1,27 @@
-"""Rebuild the reviewable patch using previously downloaded pinned sources."""
+"""Rebuild the six-point patch from the pinned local checkout and provider sources."""
 
 import difflib
+import subprocess
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-review = root / "artifacts/xiaozhi-review"
+repository = root / "vendor/xiaozhi-esp32-server"
+pin = "92337881a7b6553614b47e137a774d02bf40512f"
 parts = []
-for original in sorted((review / "original").rglob("*.py")):
-    relative = original.relative_to(review / "original").as_posix()
-    proposed = review / "proposed" / relative
+for path in (
+    "core/handle/abortHandle.py",
+    "core/handle/receiveAudioHandle.py",
+    "core/handle/textHandler/listenMessageHandler.py",
+    "core/providers/asr/utils.py",
+):
+    relative = "main/xiaozhi-server/" + path
+    original = subprocess.check_output(["git", "show", f"{pin}:{relative}"], cwd=repository).decode(
+        "utf-8"
+    )
+    proposed = repository / relative
     parts.extend(
         difflib.unified_diff(
-            original.read_text(encoding="utf-8").splitlines(True),
+            original.splitlines(True),
             proposed.read_text(encoding="utf-8").splitlines(True),
             fromfile="a/" + relative,
             tofile="b/" + relative,

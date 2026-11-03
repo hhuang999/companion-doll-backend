@@ -17,6 +17,15 @@ def main():
     if revision != PIN:
         raise SystemExit(f"Expected upstream {PIN}, found {revision}")
     patch = Path(__file__).with_name("companion.patch").resolve()
+    applied = subprocess.run(
+        ["git", "apply", "--reverse", "--check", str(patch)],
+        cwd=root,
+        capture_output=True,
+        check=False,
+    )
+    if applied.returncode == 0:
+        print("All six integration points are already applied.")
+        return
     subprocess.run(["git", "apply", "--check", str(patch)], cwd=root, check=True)
     if args.apply:
         subprocess.run(["git", "apply", str(patch)], cwd=root, check=True)
