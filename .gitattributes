@@ -1,1 +1,4 @@
 *.patch text eol=lf whitespace=-blank-at-eol
+# Preserve generated artifact bytes so their verification hashes survive checkout.
+.archify/** -text whitespace=cr-at-eol
+.archify/**/*.html whitespace=cr-at-eol,-blank-at-eol

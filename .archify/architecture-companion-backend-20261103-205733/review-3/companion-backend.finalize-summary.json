@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-companion-backend-20261103-205733\\candidate.json",
+    "sha256": "085fab1cd2e1a7a7801e04727361f3f24d7449c85010761ac62e39a5e46e97b8",
+    "bytes": 12925
+  },
+  "artifact": {
+    "path": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-companion-backend-20261103-205733\\companion-backend.html",
+    "sha256": "3544307ff52dbe39eaec4b205861af75c0c14ccfee1f6bda0471ebdb1f550cec",
+    "bytes": 860725
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-companion-backend-20261103-205733\\review-3\\companion-backend.finalize.json",
+    "summaryReceipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-companion-backend-20261103-205733\\review-3\\companion-backend.finalize-summary.json",
+    "browserCheckReceipt": "D:\\HHB\\HKUST(GZ)_Library_code\\AIAA3800_HCI\\3800_final_project\\.archify\\architecture-companion-backend-20261103-205733\\review-3\\companion-backend.browser-check.json"
+  },
+  "visualReview": "not-requested",
+  "durationMs": 8162,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}
