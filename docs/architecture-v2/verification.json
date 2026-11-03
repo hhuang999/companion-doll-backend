@@ -8,8 +8,8 @@
         "check": "pass",
         "browser-check": "pass"
       },
-      "html_sha256": "d81faf2c7c31a5b57cddf8afc6a0911f5f9a63790395063c10c3d374cc396cd6",
-      "source_sha256": "d16e0d74b0f3dc07ba8fec321d6a8e990ce937fb0447d2072485caffeead1b05",
+      "html_sha256": "df12f17165d435ebc3d0a57e2038b301963ab0bdf059413655e43e7308e234ec",
+      "source_sha256": "666dc11b8e77eda02b0d65d8a593af9dee6d9593dadcf1466bb2d044aa1bcbdc",
       "visual_review": "Layout unchanged from prior inspected light/dark overview; public source links revalidated by browser-check"
     },
     "collaboration": {
