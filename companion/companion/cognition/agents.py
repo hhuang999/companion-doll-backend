@@ -86,7 +86,7 @@ class Agents:
                 budget.check()
                 status = "completed"
             except (ValidationError, json.JSONDecodeError) as exc:
-                error = type(exc).__name__
+                error = type(exc).__name__ + ":" + str(exc)[:600]
                 status = "schema_error"
                 if attempt == 2:
                     raise
