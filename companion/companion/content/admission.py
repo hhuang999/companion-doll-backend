@@ -107,6 +107,22 @@ def validate_course_content(config) -> None:
                 measured = audio.getnframes() / audio.getframerate()
             if measured <= 0 or abs(measured - segment.audio_duration_s) > 0.02:
                 raise ValueError(f"Exercise audio duration mismatch: {exercise.id}")
+    from .audio import cache_key, validate_audio_manifest
+
+    audio_manifest = validate_audio_manifest(config, config.directory / "audio_manifest.json")
+    for exercise in config.exercises.values():
+        if exercise.protocol is None:
+            raise ValueError(f"Exercise protocol missing: {exercise.id}")
+        review = next(r for r in manifest.reviews if r.item == f"exercises/{exercise.id}.yaml")
+        if set(review.evidence_ids) != set(exercise.protocol.evidence_ids):
+            raise ValueError(f"Exercise/source review mismatch: {exercise.id}")
+        for segment in exercise.lines:
+            key = cache_key(config.settings.tts.model, config.settings.tts.voice, segment.text)
+            entry = audio_manifest["entries"][key]
+            if (config.directory / segment.audio_path).resolve() != (
+                config.directory / entry["path"]
+            ).resolve():
+                raise ValueError("Exercise audio does not match its spoken script")
     receipt = manifest.acceptance
     if receipt is None or receipt.package_digest != package_digest(config):
         raise ValueError("Course acceptance receipt missing or stale")

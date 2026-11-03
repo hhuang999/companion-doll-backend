@@ -36,6 +36,7 @@ class FakeLLM:
         self.calls: list[str] = []
         self.lock = threading.Lock()
         self.pressure = "academic"
+        self.exercise_id: str | None = None
         self.risk_release: threading.Event | None = None
         self.reasoner_release: threading.Event | None = None
         self.roles = {name: deque(values) for name, values in (roles or {}).items()}
@@ -60,16 +61,14 @@ class FakeLLM:
         if isinstance(value, Exception):
             raise value
         if value is None:
-            label = re.search(r"<<state=([^;]+);card=([^;]+);", messages[0]["content"])
+            label = re.search(r"state=([^;]+);card=([^;。]+)", messages[0]["content"])
             stage, card = label.groups() if label else ("explore", "-")
-            value = (
-                f"<<state={stage};card={card};emo=😶;offer=->>\n{self.content['replies'][stage]}"
-            )
+            value = self.content["replies"][stage]
             if stage == "action" and card in self.content.get("strategy_replies", {}):
                 step = re.search(r"只做第 (\d+) 步", messages[0]["content"])
                 index = int(step.group(1)) - 1 if step else 0
                 replies = self.content["strategy_replies"][card]
-                value = f"<<state={stage};card={card};emo=😶;offer=->>\n{replies[min(index, len(replies) - 1)]}"
+                value = replies[min(index, len(replies) - 1)]
         for index in range(0, len(value), 3):
             if cancel.is_set():
                 return
@@ -193,12 +192,13 @@ class FakeLLM:
                     if ref
                     else [],
                     "expressed_need": "solve"
-                    if any("怎么办" in t["text"] for t in turns)
+                    if self.exercise_id or any("怎么办" in t["text"] for t in turns)
                     else "listen",
                     "topic_summary": latest["text"][:240] if latest else "",
                     "pressure_types": [self.pressure],
                     "pathway_signals": ["rumination"],
                     "readiness": "medium",
+                    "support_constraints": ["bedtime"] if self.exercise_id == "bedtime" else [],
                 }
             elif role == "brief":
                 value = {
@@ -207,23 +207,35 @@ class FakeLLM:
                     else []
                 }
             elif role == "planner":
+                exercise = next(
+                    (
+                        item
+                        for item in payload.get("exercises", [])
+                        if item["id"] == self.exercise_id
+                    ),
+                    None,
+                )
                 wants_help = payload["analysis"]["expressed_need"] == "solve"
                 boundary = any(m["kind"] == "interaction_boundary" for m in payload["memory"])
                 action = (
                     payload["kind"] == "deliberation"
                     and wants_help
                     and not boundary
-                    and bool(payload.get("cards"))
+                    and (bool(payload.get("cards")) or exercise is not None)
                 )
                 value = {
-                    "objective": "invite_action" if action else "listen",
+                    "objective": "invite_exercise"
+                    if action and exercise
+                    else "invite_action"
+                    if action
+                    else "listen",
                     "understanding": "先理解当前感受，尊重边界。",
                     "evidence": [ref],
                     "response_guidance": ["承接当前感受，不重复被拒绝的建议。"],
                     "candidate_actions": [
                         {
-                            "action_id": payload["cards"][0]["id"],
-                            "kind": "card",
+                            "action_id": exercise["id"] if exercise else payload["cards"][0]["id"],
+                            "kind": "exercise" if exercise else "card",
                             "evidence": [ref],
                             "requires_permission": True,
                             "when_met": True,

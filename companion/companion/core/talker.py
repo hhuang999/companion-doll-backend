@@ -1,4 +1,4 @@
-"""Streaming tag parsing and sentence filtering; no session mutation."""
+"""Stream plain speech immediately; parse legacy tags without trusting them."""
 
 import re
 import threading
@@ -61,6 +61,19 @@ class Talker:
         config = self.config
         sentence_limit = sentence_limit or config.settings.dialogue.max_sentences
         card = config.cards.get(context.card_id)
+        previous_reply = next(
+            (row["text"] for row in reversed(history) if row["role"] == "assistant"), ""
+        )
+        question_budget = int(
+            not any(mark in previous_reply for mark in ("?", "？"))
+            or card is not None
+            or any(mark in context.text for mark in ("?", "？"))
+        )
+        if any(
+            a.kind == "no_topic_probe" and a.target in (None, "current_topic")
+            for a in context.policy_frame.avoid
+        ):
+            question_budget = 0
         prompt = self.env.get_template("talker.j2").render(
             persona=config.persona,
             rules=config.rules,
@@ -73,6 +86,7 @@ class Talker:
                 context.policy_frame, config.settings.cognition.context_tokens
             ),
             signals=context.signals.model_dump_json(),
+            question_budget=question_budget,
         )
         messages = [{"role": "system", "content": prompt}]
         messages.append(
@@ -83,24 +97,8 @@ class Talker:
                 + "</policy_data>",
             }
         )
-        previous_stage, previous_card = "explore", "-"
         for row in history:
-            if row["role"] == "user":
-                previous_stage, previous_card = (
-                    row.get("stage") or "explore",
-                    row.get("card") or "-",
-                )
-                messages.append({"role": "user", "content": row["text"]})
-            else:
-                # Preserve the protocol in examples; untagged assistant history caused
-                # the live model to imitate untagged replies after the first turn.
-                messages.append(
-                    {
-                        "role": "assistant",
-                        "content": f"<<state={previous_stage};card={previous_card};emo=😶;offer=->>\n"
-                        + row["text"],
-                    }
-                )
+            messages.append({"role": row["role"], "content": row["text"]})
         if not history or history[-1].get("id") != context.turn_id:
             messages.append({"role": "user", "content": context.text})
         metrics["talker_usage"] = Usage(
@@ -140,7 +138,9 @@ class Talker:
                     discard_header = False
                 if not parsed:
                     header += token
-                    if "\n" in header:
+                    if header.lstrip() and not header.lstrip().startswith("<"):
+                        buffer, parsed = header, True
+                    elif "\n" in header:
                         line, buffer = header.split("\n", 1)
                         emoji = self.parse_tag(line, context, violations)
                         if not line.startswith("<<"):
@@ -170,7 +170,7 @@ class Talker:
                         sentence, context.stage, tuple(card.talker.never_say) if card else ()
                     )
                     question_count = sum(sentence.count(mark) for mark in ("?", "？"))
-                    if questions + question_count > 1:
+                    if questions + question_count > question_budget:
                         rejected += ("rail_questions",)
                     if rejected:
                         violations.extend(rejected)
@@ -186,13 +186,14 @@ class Talker:
                             violations.append("too_many_sentences")
                         return
             if not parsed:
-                violations.append("missing_tag")
+                if header.startswith("<<"):
+                    violations.append("malformed_tag")
                 buffer = "" if header.startswith("<<") else header
             if buffer.strip() and count < sentence_limit and not cancel.is_set():
                 rejected = self.rail.check(
                     buffer.strip(), context.stage, tuple(card.talker.never_say) if card else ()
                 )
-                if questions + buffer.count("?") + buffer.count("？") > 1:
+                if questions + buffer.count("?") + buffer.count("？") > question_budget:
                     rejected += ("rail_questions",)
                 if rejected:
                     violations.extend(rejected)

@@ -28,7 +28,7 @@ companion-purge = "companion.tools.purge:main"
 include = ["companion*"]
 
 [tool.setuptools.package-data]
-companion = ["config/*.yaml", "config/cards/*.yaml", "config/exercises/*.yaml", "config/prompts/*.j2", "store/*.sql", "store/migrations/*.sql"]
+companion = ["config/*.yaml", "config/cards/*.yaml", "config/exercises/*.yaml", "config/prompts/*.j2", "store/*.sql", "store/migrations/*.sql", "tools/resources/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

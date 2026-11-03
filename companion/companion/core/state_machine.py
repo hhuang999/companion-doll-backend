@@ -146,6 +146,8 @@ class StateMachine:
             if refusal or expired:
                 if refusal and offer.target_id and offer.kind == "action":
                     state.cards_refused.add(offer.target_id)
+                if refusal and offer.target_id and offer.kind in ("exercise", "resume_exercise"):
+                    state.exercises_refused.add(offer.target_id)
                 state.pending_offer = None
                 self.move(state, Stage.explore)
                 return RuleResult(
@@ -163,6 +165,15 @@ class StateMachine:
                 offer.accepted_user_index = state.user_turns
                 offer.status = "accepted_waiting_card"
             if offer.status == "accepted_waiting_card":
+                exercise_id = snapshot.preferred_exercise
+                if (
+                    snapshot.offer_exercise
+                    and exercise_id in self.config.exercises
+                    and exercise_id not in state.exercises_refused
+                ):
+                    # A generic request for help is not consent to a particular exercise.
+                    self.offer(state, "exercise", exercise_id)
+                    return RuleResult(directive="exercise_offer")
                 cards = self.eligible(state, snapshot)
                 if cards:
                     selected = (
@@ -190,7 +201,7 @@ class StateMachine:
             self.move(state, Stage.quiet)
             return RuleResult(fired_rules=("closing_limit",), directive="quiet")
         if (
-            self.matches("ask", text)
+            (self.matches("ask", text) or re.search(r"(?:想|要|可以).*(?:做|试).{0,8}练习", text))
             and not refusal
             and state.stage in (Stage.explore, Stage.comfort, Stage.quiet, Stage.opening)
         ):
@@ -202,8 +213,9 @@ class StateMachine:
                 directive="action_offer",
             )
         if crying and not refusal:
-            self.offer(state, "exercise", "breathing_60s")
-            return RuleResult(trigger_reasons=tuple(triggers), directive="exercise_offer")
+            # Crying requests reassessment; it does not establish that body focus is suitable.
+            self.move(state, Stage.comfort)
+            return RuleResult(trigger_reasons=tuple(triggers))
         if state.resume_script_id and not refusal and not correction:
             self.offer(state, "resume_exercise", state.resume_script_id)
             state.resume_script_id = None

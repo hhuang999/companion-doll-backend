@@ -4,6 +4,7 @@ from typing import Literal
 from pydantic import Field, model_validator
 
 from companion.cognition.base import Contract, EvidenceRef, utcnow
+from companion.content.models import SupportReference
 
 MemoryKind = Literal[
     "fact_preference", "episodic_event", "interaction_boundary", "support_experience"
@@ -31,6 +32,8 @@ class MemoryCandidate(Contract):
         Literal["no_advice", "no_topic_probe", "no_memory_mention", "allow", "revoke"] | None
     ) = None
     target: str | None = Field(default=None, max_length=100)
+    support: SupportReference | None = None
+    feedback_valence: Literal["positive", "negative", "unknown"] = "unknown"
 
     @model_validator(mode="after")
     def validate_times(self):

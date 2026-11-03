@@ -269,35 +269,33 @@ reviews:
   reviewed_on: '2026-11-04'
   rationale: 依据EVIDENCE_REVIEW核查来源与外推限制；短步骤明确适用、排除、许可、退出和反馈边界；工程与真实回放准入仍单列待完成。
 - item: exercises/breathing_60s.yaml
-  sha256: baab4f684313e2ee186bbdb70aa55a540a870a33b39fd4d88b6e6f014f24c2de
+  sha256: 94a0c4ca613a8c49afc660a4aec7a20446260e0e72580fadb743f3de187b3963
   evidence_ids:
-  - E08
   - E16
   source_check: passed
   automatic_review: passed
   reviewer: codex_automated
   reviewed_on: '2026-11-04'
-  rationale: 短时自愿、自然呼吸、不屏气、不强迫闭眼；不适立即停止；不继承完整课程效果。音频与真实回放待验收。
+  rationale: 自动核查：自然呼吸/外部注意/睡前暂停为课程短步骤，不宣称完整干预疗效；有适用与排除、许可、中止和反馈限制。
 - item: exercises/grounding.yaml
-  sha256: bb4a15656311e5f63c229f0b56cfd3e1ca3999a63b683f743a5bf9209a82e03d
+  sha256: e07345dcd483953cb83e6edebb792971413441cb1dfe4b2f298f8b7523379b0e
   evidence_ids:
-  - E08
-  - E16
+  - E13
   source_check: passed
   automatic_review: passed
   reviewer: codex_automated
   reviewed_on: '2026-11-04'
-  rationale: 短时自愿、自然呼吸、不屏气、不强迫闭眼；不适立即停止；不继承完整课程效果。音频与真实回放待验收。
+  rationale: 自动核查：自然呼吸/外部注意/睡前暂停为课程短步骤，不宣称完整干预疗效；有适用与排除、许可、中止和反馈限制。
 - item: exercises/bedtime.yaml
-  sha256: a8c28668c6fa295887b77d93ffb5246c4d93beae75196bf0686f689b6ba9d2ed
+  sha256: 93025ef765ab5e221beba0697bc685d6a7fa7505215a49542783dc13ac464763
   evidence_ids:
-  - E08
-  - E16
+  - E02
+  - E12
   source_check: passed
   automatic_review: passed
   reviewer: codex_automated
   reviewed_on: '2026-11-04'
-  rationale: 短时自愿、自然呼吸、不屏气、不强迫闭眼；不适立即停止；不继承完整课程效果。音频与真实回放待验收。
+  rationale: 自动核查：自然呼吸/外部注意/睡前暂停为课程短步骤，不宣称完整干预疗效；有适用与排除、许可、中止和反馈限制。
 - item: crisis.yaml
   sha256: ea0cb5f04936f0c86a663456f268b3f3137ff95f220ccca90be6800984bfbcd6
   evidence_ids:

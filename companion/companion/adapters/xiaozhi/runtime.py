@@ -11,6 +11,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from companion.adapters.cli import build_core
+from companion.content.audio import validate_audio_manifest
 from companion.core.config import Config
 from companion.core.models import TurnSignals
 from companion.llm.tts import TTSClient
@@ -33,26 +34,14 @@ def get_core(options):
             core = build_core(config, root / config.settings.storage.db_path)
             core.device_tts = TTSClient(config)
             core.audio_cache_dir = root / "data/fixed_audio"
-            # Check fixed audio before accepting connections.
-            texts = {line.text for script in config.exercises.values() for line in script.lines}
-            texts.update(
-                config.persona[name] for name in ("onboarding", "greeting", "rest", "idle_end")
-            )
-            crisis = config.crisis
-            texts.update([crisis["opening"], crisis["closing"], *crisis["responses"]])
-            texts.update(text + crisis["resources"] for text in crisis["responses"])
-            missing = [
-                text
-                for text in texts
-                if not (core.audio_cache_dir / f"{core.device_tts.cache_key(text)}.wav").is_file()
-            ]
-            if missing:
+            # Check actual bytes, text/voice binding and pauses before accepting connections.
+            try:
+                validate_audio_manifest(config, core.audio_cache_dir / "manifest.json")
+            except (ValueError, OSError):
                 core.close()
                 core.store.close()
                 core.device_tts.close()
-                raise ValueError(
-                    "Fixed audio cache is incomplete; run companion.tools.prepare_audio"
-                )
+                raise
             _instances[key] = core
         return _instances[key]
 
@@ -107,7 +96,11 @@ async def handle_input(conn, text, raw_signals, kind="user"):
             core.audio_cache_dir,
             metric,
         )
-        core.bind_output(conn.session_id, conn.device_id, port)
+        principal = getattr(conn.websocket, "companion_user_key", None)
+        if not principal:
+            await port.close()
+            raise PermissionError("Companion requires authenticated server-owned identity")
+        core.bind_output(conn.session_id, principal, port)
         conn._companion_port = port
 
         async def disconnected():

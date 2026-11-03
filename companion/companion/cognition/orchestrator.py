@@ -268,13 +268,21 @@ class Cognition:
                         ),
                     )
                     strategy_cards = self.catalog.project(selection)
+                    exercises = self.catalog.exercises(
+                        analysis,
+                        state,
+                        " ".join(
+                            row["text"] for row in payload["history"][-6:] if row["role"] == "user"
+                        ),
+                    )
+                    exercise_ids = {item["id"] for item in exercises}
                     self.store.record_strategy_selection(job.job_id, selection)
                     planner_input = {
                         **payload,
                         "analysis": analysis.model_dump(mode="json"),
                         "cards": strategy_cards,
                         "catalog_version": selection.catalog_version,
-                        "exercises": list(self.config.exercises),
+                        "exercises": exercises,
                     }
                     candidate_id = uuid.uuid4().hex
                     review_id = None
@@ -290,11 +298,30 @@ class Cognition:
                         )
                         self._validate(job, candidate, allowed)
                         if any(
-                            action.kind == "card" and action.action_id not in selection.selected_ids
+                            action.kind == "card"
+                            and action.action_id not in selection.selected_ids
+                            or action.kind == "exercise"
+                            and action.action_id not in exercise_ids
                             for action in candidate.candidate_actions
                         ):
                             raise ValueError("Candidate action was excluded by strategy retrieval")
+                        if any(
+                            not action.when_met or action.exclusions_present
+                            for action in candidate.candidate_actions
+                        ):
+                            raise ValueError("Candidate action did not meet its prerequisites")
+                        local_issues = []
+                        if candidate.open_question and any(
+                            avoid.kind == "no_topic_probe"
+                            and avoid.target in (None, "current_topic")
+                            for avoid in candidate.avoid
+                        ):
+                            local_issues.append(
+                                "open_question与当前no_topic_probe冲突；删除问题，或仅在用户没有该边界时删除无依据的avoid项。"
+                            )
                         if job.kind == "routine":
+                            if local_issues:
+                                raise ValueError("Routine candidate contradicts its constraints")
                             if candidate.objective not in NON_ACTION or candidate.candidate_actions:
                                 raise ValueError("Routine cannot propose action/information")
                             break
@@ -306,7 +333,8 @@ class Cognition:
                             "candidate_version": version,
                             "candidate": candidate.model_dump(mode="json"),
                             "cards": strategy_cards,
-                            "exercises": list(self.config.exercises),
+                            "exercises": exercises,
+                            "server_checks": local_issues,
                         }
                         review, review_id = self.agents.call(
                             job,
@@ -322,6 +350,15 @@ class Cognition:
                             or review.candidate_version != version
                         ):
                             raise ValueError("Review candidate/version mismatch")
+                        if local_issues:
+                            if version == 1 and review.verdict in ("approve", "revise"):
+                                planner_input = {
+                                    **planner_input,
+                                    "previous_candidate": candidate.model_dump(mode="json"),
+                                    "required_changes": (*review.required_changes, *local_issues),
+                                }
+                                continue
+                            raise ValueError("Final candidate contradicts its constraints")
                         if review.verdict == "approve" and not any(
                             i.severity == "blocking" for i in review.issues
                         ):
@@ -605,6 +642,14 @@ class Cognition:
                             allowed_cards=validated.cards.allowed,
                             preferred_card=validated.cards.preferred,
                             offer_exercise=validated.offer_exercise,
+                            preferred_exercise=next(
+                                (
+                                    a.action_id
+                                    for a in plan.candidate_actions
+                                    if a.kind == "exercise"
+                                ),
+                                None,
+                            ),
                             support_plan_id=plan.plan_id,
                             support_plan_version=plan.version,
                         )

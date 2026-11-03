@@ -6,7 +6,6 @@ import json
 import sqlite3
 import statistics
 import time
-import uuid
 from pathlib import Path
 
 from run_xiaozhi import ROOT, prepare_runtime
@@ -31,12 +30,18 @@ def distribution(values):
 
 async def run(args):
     import opuslib_next
+    from companion.adapters.xiaozhi.auth import client_headers
     from companion.core.config import Config
+    from companion.tools.provision_device import simulation_credentials
     from websockets.asyncio.client import connect
 
     config = Config()
     prompts = config.read("bench.yaml")["prompts"]
-    user = "synthetic-v2-voice-" + uuid.uuid4().hex[:12]
+    if args.credentials:
+        user = json.loads(args.credentials.read_text(encoding="utf-8"))["user_key"]
+        headers = client_headers(args.credentials)
+    else:
+        user, headers = simulation_credentials(ROOT, "voice")
     args.output.mkdir(parents=True, exist_ok=True)
     report = {
         "user": user,
@@ -46,7 +51,7 @@ async def run(args):
         "conditions": "one sequential client; background cognition enabled; first request cold, later client reused; same host/Aihubmix network",
     }
     decoder = opuslib_next.Decoder(16000, 1)
-    async with connect(args.url, additional_headers={"device-id": user}) as ws:
+    async with connect(args.url, additional_headers=headers) as ws:
         await ws.send(
             json.dumps(
                 {
@@ -156,11 +161,11 @@ async def run(args):
             break
         await asyncio.sleep(0.2)
     report["end_tasks"] = ends
-    report["jobs"] = rows(args.db, "SELECT * FROM cognitive_jobs WHERE user_key=?", (user,))
+    report["jobs"] = rows(args.db, "SELECT * FROM cognitive_jobs WHERE session_id=?", (session,))
     report["agent_runs"] = rows(
         args.db,
-        "SELECT a.* FROM agent_runs a JOIN cognitive_jobs j USING(job_id) WHERE j.user_key=?",
-        (user,),
+        "SELECT a.* FROM agent_runs a JOIN cognitive_jobs j USING(job_id) WHERE j.session_id=?",
+        (session,),
     )
     report["summary"] = {
         key: distribution([s.get("metrics", {}).get(key) for s in report["samples"]])
@@ -191,7 +196,14 @@ if __name__ == "__main__":
     parser.add_argument("--url", default="ws://127.0.0.1:8000/xiaozhi/v1/")
     parser.add_argument("--db", type=Path, default=ROOT / "data/xiaozhi.db")
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/v2/voice1")
+    parser.add_argument(
+        "--credentials",
+        type=Path,
+        help="Private client credentials; omitted means provision a local synthetic identity",
+    )
     args = parser.parse_args()
     args.output, args.db = args.output.resolve(), args.db.resolve()
+    if args.credentials:
+        args.credentials = args.credentials.resolve()
     prepare_runtime()
     asyncio.run(run(args))

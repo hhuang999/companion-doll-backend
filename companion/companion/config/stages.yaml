@@ -8,7 +8,7 @@ quiet: {instruction: 安静陪伴，不提问，不给建议。, fallback: 好�
 templates:
   action_offer: 愿意和我一起试一个小办法吗？
   clarify_offer: 你想试试这个办法，还是先接着说？
-  waiting_card: 我在想一个适合你的办法，你最想先处理哪件事？
+  waiting_card: 我还在判断哪一步适合你，先不急着开始。
   exercise_offer: 愿意和我一起做一小段放松练习吗？
   resume_offer: 要继续刚才的练习吗？
   offer_expired: 没关系，我们先接着聊你的感受。

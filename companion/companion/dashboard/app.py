@@ -175,6 +175,12 @@ def dashboard() -> None:
             )
             job_id = st.selectbox("协作任务", [j["job_id"] for j in jobs])
             job = next(j for j in jobs if j["job_id"] == job_id)
+            selection = json.loads(job["data"]).get("strategy_selection")
+            if selection:
+                st.caption(
+                    f"内容目录 {selection['catalog_version']} · 候选 {', '.join(selection['selected_ids']) or '无匹配'}"
+                )
+                st.dataframe(pd.DataFrame(selection["decisions"]), hide_index=True, width="stretch")
             st.json(
                 {"job": json.loads(job["data"]), "publication": json.loads(job["result"] or "null")}
             )

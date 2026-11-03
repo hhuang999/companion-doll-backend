@@ -33,6 +33,9 @@ class Interactions:
             )
             if policies:
                 support_plan_id = json.loads(policies[0]["data"]).get("effective_support_plan_id")
+        payload = payload or EventPayload()
+        if output and output.support:
+            payload = payload.model_copy(update={"support": output.support})
         event = InteractionEvent(
             event_id=uuid.uuid4().hex,
             idempotency_key=f"{state.session_id}:{turn_id}:{output.output_id if output else ''}:{event_type}:{suffix}",
@@ -48,10 +51,17 @@ class Interactions:
             support_plan_id=support_plan_id,
             event_type=event_type,
             origin=origin,
-            payload=payload or EventPayload(),
+            payload=payload,
             evidence=evidence,
         )
-        return self.store.record_interaction(event)
+        if self.store.record_interaction(event):
+            return event
+        return InteractionEvent.model_validate_json(
+            self.store.query(
+                "SELECT data FROM interaction_events WHERE idempotency_key=?",
+                (event.idempotency_key,),
+            )[0]["data"]
+        )
 
     def input(self, state, text, turn_id):
         triggers = []
@@ -108,6 +118,8 @@ class Interactions:
             )
             if refused_card in self.core.config.cards:
                 state.cards_refused.add(refused_card)
+            if refused_card in self.core.config.exercises:
+                state.exercises_refused.add(refused_card)
             self.record(
                 state,
                 "support_refused",
@@ -134,7 +146,7 @@ class Interactions:
                 attribution="explicit" if output else "unattributed",
                 valence="negative" if negative else "positive",
             )
-            self.record(
+            event = self.record(
                 state,
                 "explicit_feedback",
                 "user_explicit",
@@ -144,13 +156,27 @@ class Interactions:
                 evidence=evidence,
             )
             if output:
+                if negative and output.support:
+                    if output.support.kind == "card":
+                        state.cards_refused.add(output.support.identifier)
+                    else:
+                        state.exercises_refused.add(output.support.identifier)
                 candidate = MemoryCandidate(
                     kind="support_experience",
                     key="feedback:" + output.output_id,
                     value=text[:500],
-                    source_refs=evidence,
+                    source_refs=(
+                        *evidence,
+                        EvidenceRef(
+                            kind="interaction_event",
+                            id=event.event_id,
+                            claim="明确反馈与原输出关联",
+                        ),
+                    ),
                     scope="persistent",
                     mention_policy="only_when_raised",
+                    support=output.support,
+                    feedback_valence=payload.valence,
                 )
                 self.memory.commit((candidate,), state, turn_id)
                 triggers.append("feedback")

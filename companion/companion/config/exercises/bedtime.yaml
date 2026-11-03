@@ -11,3 +11,27 @@ lines:
   pause_s: 3
 - text: 我们就聊到这里，接下来留给你休息。
   pause_s: 0
+protocol:
+  version: course-1.0
+  goal: 睡前暂时停下继续处理问题，允许休息
+  evidence_ids:
+  - E02
+  - E12
+  prerequisites:
+  - 用户明确处于睡前，想暂停思考
+  - 可以安静休息
+  required_contexts:
+  - bedtime
+  excluded_contexts:
+  - unsafe_relationship
+  - body_focus_distress
+  pathways:
+  - sleep
+  - rumination
+  invitation: 愿意做一小段睡前暂停吗？不要求睡着，随时可以停。
+  stop: 拒绝、中止、新输入或风险接管立即取消；不自动恢复。
+  feedback_limits: 完成播放只说明执行，主观帮助需要用户明确反馈；一次无效不推断长期偏好。
+  request_phrases:
+  - 睡前暂停
+  - 睡前练习
+  - 睡前短暂停

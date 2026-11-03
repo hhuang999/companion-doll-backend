@@ -28,6 +28,29 @@ class StrategyProtocol(ContentModel):
     legacy_ids: tuple[str, ...] = ()
 
 
+class ExerciseProtocol(ContentModel):
+    version: str = Field(min_length=1)
+    goal: str = Field(min_length=1)
+    evidence_ids: tuple[str, ...] = Field(min_length=1)
+    prerequisites: tuple[str, ...] = Field(min_length=1)
+    required_contexts: tuple[str, ...] = ()
+    excluded_contexts: tuple[str, ...] = ()
+    pathways: tuple[str, ...] = ()
+    request_phrases: tuple[str, ...] = ()
+    invitation: str = Field(min_length=1)
+    stop: str = Field(min_length=1)
+    feedback_limits: str = Field(min_length=1)
+
+
+class SupportReference(ContentModel):
+    """Server-owned provenance of an actual execution, never a benefit claim."""
+
+    identifier: str
+    version: str
+    kind: Literal["card", "exercise"]
+    step: int = Field(ge=1)
+
+
 class SourceRecord(ContentModel):
     id: str
     citation: str

@@ -87,7 +87,13 @@ def test_late_high_risk_takes_over_without_next_turn(config, store):
 
 def test_exercise_checks_high_risk_and_ignores_old_completion(core):
     port = bind(core, auto=False)
+    core.llm.exercise_id = "breathing_60s"
     turn(core, "我好难受", signals=TurnSignals(events=("Cry",)))
+    assert core.sessions["s"].state.pending_offer is None
+    turn(core, "我想做一个练习")
+    assert core.wait_idle()
+    turn(core, "好")
+    assert port.events[-1].purpose == "exercise_offer"
     turn(core, "好")
     exercise = port.events[-1]
     assert exercise.type == "exercise_plan"

@@ -119,6 +119,9 @@ def test_each_strategy_runs_roles_permission_step_feedback_and_exit(
         _turn, events = say("好，你说")
         assert core.sessions["s"].state.card_in_use == identifier
         assert events and events[0].text == fake.content["strategy_replies"][identifier][0]
+        assert events[0].support.identifier == identifier
+        assert events[0].support.version == config.cards[identifier].protocol.version
+        assert events[0].support.step == 1
         assert store.query("SELECT * FROM card_usage WHERE card_id=?", (identifier,))
         say("刚才这个办法没帮助，停一下")
         state = core.sessions["s"].state
@@ -131,7 +134,20 @@ def test_each_strategy_runs_roles_permission_step_feedback_and_exit(
         ]
         assert feedback[-1]["payload"]["valence"] == "negative"
         assert feedback[-1]["payload"]["attribution"] == "explicit"
-        assert any(m.kind == "support_experience" for m in store.memory_items("u"))
+        assert feedback[-1]["payload"]["support"]["identifier"] == identifier
+        memories = [m for m in store.memory_items("u") if m.kind == "support_experience"]
+        assert memories and memories[0].support.identifier == identifier
+        assert memories[0].feedback_valence == "negative"
+        forged = memories[0].model_copy(
+            update={"support": memories[0].support.model_copy(update={"version": "invented"})}
+        )
+        from companion.memory.models import MemoryCandidate
+
+        candidate = MemoryCandidate.model_validate(
+            forged.model_dump(include=set(MemoryCandidate.model_fields))
+        )
+        result = core.cognition.memory.commit((candidate,), state, state.latest_turn_id)
+        assert result[0].startswith("rejected:Support attribution")
         assert core.wait_idle()
         assert state.card_in_use is None
     finally:

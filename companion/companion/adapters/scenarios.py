@@ -22,6 +22,8 @@ def replay(core: CompanionCore, path: Path, user_key: str = "scenario") -> dict:
         raise ValueError("Scenario fixtures require --fake")
     if "pressure" in fixture:
         core.llm.pressure = fixture["pressure"]
+    if "exercise" in fixture:
+        core.llm.exercise_id = fixture["exercise"]
     session_id = uuid.uuid4().hex
     output = RecordingOutputPort(core.on_playback_event, scenario.get("auto_complete", True))
     core.bind_output(session_id, user_key, output)

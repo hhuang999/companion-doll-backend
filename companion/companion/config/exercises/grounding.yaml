@@ -11,3 +11,20 @@ lines:
   pause_s: 4
 - text: 不需要让自己马上平静，我们先停一下。
   pause_s: 0
+protocol:
+  version: course-1.0
+  goal: 把注意力暂时放在身边普通物件上
+  evidence_ids:
+  - E13
+  prerequisites:
+  - 当前环境安全，可以自由看周围
+  - 愿意尝试短暂外部注意练习
+  excluded_contexts:
+  - unsafe_relationship
+  invitation: 愿意花一小会儿看看身边一个普通物件吗？不舒服就停。
+  stop: 拒绝、中止、新输入或风险接管立即取消；不自动恢复。
+  feedback_limits: 完成播放只说明执行，主观帮助需要用户明确反馈；一次无效不推断长期偏好。
+  request_phrases:
+  - 看看周围
+  - 外部注意练习
+  - 定位练习

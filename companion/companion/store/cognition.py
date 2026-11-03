@@ -99,6 +99,13 @@ class CognitionStore:
         ):
             raise ValueError("Event plan identity mismatch")
         self.validate_refs(event.user_key, event.evidence, db=db)
+        if event.payload.support:
+            row = db.execute(
+                "SELECT data FROM outputs WHERE output_id=? AND session_id=?",
+                (event.output_id, event.session_id),
+            ).fetchone()
+            if not row or json.loads(row[0]).get("support") != event.payload.support.model_dump():
+                raise ValueError("Support provenance does not match the output")
         old = db.execute(
             "SELECT data FROM interaction_events WHERE idempotency_key=?", (event.idempotency_key,)
         ).fetchone()

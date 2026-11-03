@@ -1,3 +1,4 @@
+import hashlib
 import json
 import shutil
 import wave
@@ -8,6 +9,7 @@ import yaml
 from companion.adapters.output import RecordingOutputPort
 from companion.cognition.models import SituationAssessment
 from companion.content.admission import item_digest, package_digest
+from companion.content.audio import cache_key, fixed_texts
 from companion.content.catalog import StrategyCatalog
 from companion.content.models import StrategyProtocol
 from companion.core.api import CompanionCore
@@ -193,6 +195,8 @@ def synthetic_admitted_config(config, tmp_path):
             }
         for line in data.get("lines", []):
             line.update(audio_path="unit.wav", audio_duration_s=0.1)
+        if relative.startswith("exercises/"):
+            data["protocol"]["evidence_ids"] = ["UNIT"]
         path.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
     manifest = {
         "version": "unit-only",
@@ -226,6 +230,26 @@ def synthetic_admitted_config(config, tmp_path):
     }
     target = directory / "content_manifest.yaml"
     target.write_text(yaml.safe_dump(manifest, allow_unicode=True), encoding="utf-8")
+    content = Config(directory)
+    tts = content.settings.tts
+    audio = {
+        "schema_version": 1,
+        "model": tts.model,
+        "voice": tts.voice,
+        "exercise_pauses": {
+            item.id: [line.pause_s for line in item.lines] for item in content.exercises.values()
+        },
+        "entries": {
+            cache_key(tts.model, tts.voice, text): {
+                "path": "unit.wav",
+                "duration_s": 0.1,
+                "text_sha256": hashlib.sha256(text.encode()).hexdigest(),
+                "sha256": hashlib.sha256((directory / "unit.wav").read_bytes()).hexdigest(),
+            }
+            for text in fixed_texts(content)
+        },
+    }
+    (directory / "audio_manifest.json").write_text(json.dumps(audio), encoding="utf-8")
     manifest["acceptance"] = {
         "package_digest": package_digest(Config(directory)),
         "check_version": "unit",
@@ -259,6 +283,27 @@ def test_demo_admits_complete_course_package_without_seventeen_cards(synthetic_a
     value = Config(directory, mode="demo")
     assert value.settings.runtime.mode == "demo"
     assert len(value.cards) == 1
+
+
+@pytest.mark.parametrize("mutation", ["voice", "hash", "text", "pauses", "path"])
+def test_audio_provenance_rejects_changed_assets(synthetic_admitted_config, mutation):
+    directory, _ = synthetic_admitted_config
+    path = directory / "audio_manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    entry = next(iter(manifest["entries"].values()))
+    if mutation == "voice":
+        manifest["voice"] = "changed"
+    elif mutation == "hash":
+        entry["sha256"] = "0" * 64
+    elif mutation == "text":
+        entry["text_sha256"] = "0" * 64
+    elif mutation == "pauses":
+        manifest["exercise_pauses"]["bedtime"] = []
+    else:
+        entry["path"] = "missing.wav"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="audio"):
+        Config(directory, mode="demo")
 
 
 @pytest.mark.parametrize("failure", ["source", "review", "live", "coverage", "stale", "audio"])

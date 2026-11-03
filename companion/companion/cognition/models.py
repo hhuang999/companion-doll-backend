@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import Field
 
-from companion.content.models import StrategySelection
+from companion.content.models import StrategySelection, SupportReference
 from companion.memory.models import MemoryBundle, MemoryCandidate
 
 from .base import Contract, EvidenceRef, utcnow
@@ -194,6 +194,7 @@ class EventPayload(Contract):
     action_id: str | None = None
     scope: str | None = None
     detail: str | None = Field(default=None, max_length=300)
+    support: SupportReference | None = None
 
 
 class InteractionEvent(Contract):
@@ -244,6 +245,7 @@ class TurnPolicyFrame(Contract):
     memory_projection: MemoryBundle = Field(default_factory=MemoryBundle)
     selection_reason: str = "safe_default"
     checked_through_user_index: int = 0
+    support: SupportReference | None = None
 
 
 class CognitiveJob(Contract):

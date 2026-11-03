@@ -4,13 +4,13 @@ import asyncio
 import json
 import sqlite3
 import time
-import uuid
 
 from run_xiaozhi import ROOT, SERVER, prepare_runtime
 
 
 async def main():
     import opuslib_next
+    from companion.tools.provision_device import simulation_credentials
     from core.providers.asr.utils import lang_tag_filter
     from core.utils.textUtils import EMOJI_MAP
     from core.utils.util import audio_to_data
@@ -21,7 +21,7 @@ async def main():
     assert lang_tag_filter("<|zh|>你好")["raw_emotion"] is None
     crying = lang_tag_filter("<|zh|><|SAD|><|Cry|><|withitn|>")
     assert crying["event"] == "Cry" and crying["content"] == "[检测到哭声，无可识别文字]"
-    user = "integration-" + uuid.uuid4().hex[:12]
+    user, headers = simulation_credentials(ROOT, "integration")
     report = {"user_key": user, "tag_parser": "passed", "rounds": []}
     decoder = opuslib_next.Decoder(16000, 1)
 
@@ -68,9 +68,7 @@ async def main():
         await ws.send(json.dumps({"type": "listen", "state": "detect", "text": text}))
 
     async def open_connection():
-        ws = await connect(
-            "ws://127.0.0.1:8000/xiaozhi/v1/", additional_headers={"device-id": user}
-        )
+        ws = await connect("ws://127.0.0.1:8000/xiaozhi/v1/", additional_headers=headers)
         await ws.send(
             json.dumps(
                 {

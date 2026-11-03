@@ -1,6 +1,5 @@
 """Aihubmix WAV synthesis. Dynamic speech is not persisted by this client."""
 
-import hashlib
 import io
 import os
 import tempfile
@@ -9,6 +8,7 @@ from pathlib import Path
 
 import httpx
 
+from companion.content.audio import cache_key
 from companion.core.config import Config
 
 
@@ -25,7 +25,7 @@ class TTSClient:
 
     def cache_key(self, text: str) -> str:
         tts = self.config.settings.tts
-        return hashlib.sha256(f"{tts.model}\n{tts.voice}\n{text}".encode()).hexdigest()
+        return cache_key(tts.model, tts.voice, text)
 
     def synthesize(self, text: str) -> bytes:
         if not text or len(text) > 4096:

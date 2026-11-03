@@ -99,3 +99,52 @@ def test_card_readiness_checked_again_before_action(config):
     config.cards["S16"].constraints["excluded_readiness"] = ["low"]
     snapshot = Snapshot(session_id="s", user_key="u", allowed_cards=("S16",))
     assert StateMachine(config).eligible(SessionState(session_id="s", user_key="u"), snapshot) == []
+
+
+def test_plain_speech_yields_first_sentence_before_stream_finishes(config):
+    class DelayedRemainder:
+        def stream_chat(self, *args, **kwargs):
+            yield "听起来这件事让你很累。"
+            raise AssertionError("Must yield speech before reading the next chunk")
+
+    context = TurnContext(
+        session_id="s",
+        turn_id=1,
+        generation=1,
+        text="很累",
+        kind="user",
+        stage=Stage.explore,
+        mode="normal",
+        snapshot=Snapshot(session_id="s", user_key="u"),
+        signals=TurnSignals(),
+        t0=time.monotonic(),
+    )
+    violations = []
+    stream = Talker(config, DelayedRemainder()).run(context, [], threading.Event(), {}, violations)
+    assert next(stream)[0] == "听起来这件事让你很累。"
+    assert not violations
+    stream.close()
+
+
+def test_cross_turn_question_budget(config):
+    context = TurnContext(
+        session_id="s",
+        turn_id=2,
+        generation=2,
+        text="是啊，很累",
+        kind="user",
+        stage=Stage.explore,
+        mode="normal",
+        snapshot=Snapshot(session_id="s", user_key="u"),
+        signals=TurnSignals(),
+        t0=time.monotonic(),
+    )
+    history = [{"role": "assistant", "text": "最近最累的是什么？"}]
+    violations = []
+    result = list(
+        Talker(config, FakeLLM(streams=["听起来很累。能再讲讲吗？"])).run(
+            context, history, threading.Event(), {}, violations
+        )
+    )
+    assert [sentence for sentence, _ in result] == ["听起来很累。"]
+    assert "rail_questions" in violations

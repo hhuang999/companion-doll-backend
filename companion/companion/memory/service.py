@@ -68,6 +68,26 @@ class MemoryService:
             try:
                 candidate = self.scope_candidate(candidate, state)
                 self.store.validate_refs(state.user_key, candidate.source_refs, allowed, db)
+                if candidate.support or candidate.feedback_valence != "unknown":
+                    events = [
+                        json.loads(
+                            db.execute(
+                                "SELECT data FROM interaction_events WHERE event_id=? AND user_key=?",
+                                (str(ref.id), state.user_key),
+                            ).fetchone()[0]
+                        )
+                        for ref in candidate.source_refs
+                        if ref.kind == "interaction_event"
+                    ]
+                    if candidate.kind != "support_experience" or not any(
+                        event["event_type"] == "explicit_feedback"
+                        and event["payload"]["attribution"] == "explicit"
+                        and event["payload"]["valence"] == candidate.feedback_valence
+                        and event["payload"].get("support")
+                        == (candidate.support.model_dump() if candidate.support else None)
+                        for event in events
+                    ):
+                        raise ValueError("Support attribution requires matching explicit feedback")
                 for ref in candidate.source_refs:
                     if (
                         ref.kind == "memory"
@@ -260,6 +280,8 @@ class MemoryService:
             "scope": item.scope,
             "source": [(r.kind, r.id) for r in item.source_refs],
             "mention": item.mention_policy,
+            "support": item.support.model_dump() if item.support else None,
+            "feedback_valence": item.feedback_valence,
         }
 
     def explicit_boundary(self, text, state, turn_id):

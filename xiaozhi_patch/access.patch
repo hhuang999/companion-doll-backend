@@ -1,0 +1,46 @@
+--- a/main/xiaozhi-server/core/websocket_server.py
++++ b/main/xiaozhi-server/core/websocket_server.py
+@@ -1,4 +1,5 @@
+ import asyncio
++import json
+ import logging
+ 
+ import websockets
+@@ -114,8 +115,8 @@
+         try:
+             await self._handle_auth(websocket)
+         except AuthenticationError:
+-            await websocket.send("认证失败")
+-            await websocket.close()
++            await websocket.send(json.dumps({"type": "error", "code": "AUTH_FAILED"}))
++            await websocket.close(code=1008, reason="Authentication failed")
+             return
+         # 创建ConnectionHandler时传入当前server实例
+         handler = ConnectionHandler(
+@@ -208,6 +209,15 @@
+             return False
+ 
+     async def _handle_auth(self, websocket: websockets.ServerConnection):
++        selected = self.config.get("selected_module", {}).get("LLM")
++        options = self.config.get("LLM", {}).get(selected, {})
++        if options.get("type") == "companion_llm":
++            from companion.adapters.xiaozhi.auth import authenticate
++            try:
++                websocket.companion_user_key = authenticate(options, dict(websocket.request.headers))
++            except (ValueError, OSError) as error:
++                raise AuthenticationError("Invalid companion credentials") from error
++            return
+         # 先认证，后建立连接
+         if self.auth_enable:
+             headers = dict(websocket.request.headers)
+--- a/main/xiaozhi-server/core/connection.py
++++ b/main/xiaozhi-server/core/connection.py
+@@ -215,7 +215,7 @@
+             else:
+                 self.client_ip = ws.remote_address[0]
+             self.logger.bind(tag=TAG).info(
+-                f"{self.client_ip} conn - Headers: {self.headers}"
++                f"Connection accepted; header names: {sorted(self.headers)}"
+             )
+ 
+             self.device_id = self.headers.get("device-id", None)

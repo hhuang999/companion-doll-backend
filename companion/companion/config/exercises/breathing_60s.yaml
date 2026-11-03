@@ -13,3 +13,20 @@ lines:
   pause_s: 3
 - text: 让呼吸照自己的节奏，我们先停在这里。
   pause_s: 0
+protocol:
+  version: course-1.0
+  goal: 短暂停下，注意自然呼吸，不调整节律
+  evidence_ids:
+  - E16
+  prerequisites:
+  - 愿意尝试，当前能安全停下
+  - 没有身体聚焦引起的不适
+  excluded_contexts:
+  - body_focus_distress
+  - unsafe_relationship
+  invitation: 愿意用半分钟留意自然呼吸吗？不用深呼吸，随时可以停。
+  stop: 拒绝、中止、新输入或风险接管立即取消；不自动恢复。
+  feedback_limits: 完成播放只说明执行，主观帮助需要用户明确反馈；一次无效不推断长期偏好。
+  request_phrases:
+  - 呼吸练习
+  - 留意自然呼吸

@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from companion.cognition.models import TurnPolicyFrame
+from companion.content.models import SupportReference
 
 
 def utcnow() -> datetime:
@@ -153,6 +154,7 @@ class Snapshot(FrozenModel):
     allowed_cards: tuple[str, ...] = ()
     preferred_card: str | None = None
     offer_exercise: bool = False
+    preferred_exercise: str | None = None
     core_memory: CoreMemory = Field(default_factory=CoreMemory)
     topic_changed: bool = False
     support_plan_id: str | None = None
@@ -194,6 +196,7 @@ class SessionState(BaseModel):
     action_turns: int = 0
     cards_used: dict[str, int] = Field(default_factory=dict)
     cards_refused: set[str] = Field(default_factory=set)
+    exercises_refused: set[str] = Field(default_factory=set)
     permission_asked_topic: int | None = None
     rest_reminded: bool = False
     active_plan_id: str | None = None
@@ -249,6 +252,7 @@ class OutputEvent(FrozenModel):
     offer_id: str | None = None
     followup_id: int | None = None
     template_version: str | None = None
+    support: SupportReference | None = None
 
 
 class PlaybackEvent(FrozenModel):

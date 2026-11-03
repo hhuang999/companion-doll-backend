@@ -28,7 +28,11 @@ try {
     if ($LASTEXITCODE) { throw 'Companion installation failed' }
     & $ServerPython xiaozhi_patch/configure.py --download-model
     if ($LASTEXITCODE) { throw 'Configuration failed' }
-    & $ServerPython -m companion.tools.prepare_audio --env-file .env --config-dir data/xiaozhi-config
+    & $ServerPython -m companion.tools.upgrade_config data/xiaozhi-config
+    if ($LASTEXITCODE) { throw 'Companion configuration upgrade failed' }
+    & $ServerPython -m companion.tools.prepare_audio --env-file .env --config-dir data/xiaozhi-config --bind-config
     if ($LASTEXITCODE) { throw 'Fixed audio preparation failed' }
+    & $ServerPython -m companion.tools.provision_device --device-id course-simulator --user-key synthetic-course-simulator --output data/device-client.json
+    if ($LASTEXITCODE) { throw 'Local simulator credential preparation failed' }
     Write-Host 'Ready. Start with ./scripts/run_xiaozhi.ps1'
 } finally { Pop-Location }

@@ -299,10 +299,14 @@ class CompanionCore:
                     if (
                         not directive
                         and runtime.snapshot.offer_exercise
+                        and runtime.snapshot.preferred_exercise in policy.allowed_action_ids
+                        and runtime.snapshot.preferred_exercise not in state.exercises_refused
+                        and not control_triggers
+                        and not self.machine.matches("refuse", text)
                         and not state.pending_offer
                         and state.stage in (Stage.explore, Stage.comfort)
                     ):
-                        self.machine.offer(state, "exercise", "breathing_60s")
+                        self.machine.offer(state, "exercise", runtime.snapshot.preferred_exercise)
                         directive = "exercise_offer"
                     if (
                         prior_offer
@@ -334,10 +338,35 @@ class CompanionCore:
                     state, plan, bundle, self.store.memory_items(state.user_key)
                 )
                 if state.stage == Stage.action and state.card_in_use:
+                    from companion.content.models import SupportReference
+
+                    card = self.config.cards[state.card_in_use]
                     policy = policy.model_copy(
                         update={
                             "allowed_action_ids": (state.card_in_use,),
                             "selection_reason": "current_consented_action",
+                            "support": SupportReference(
+                                identifier=card.id,
+                                version=card.protocol.version if card.protocol else "legacy",
+                                kind="card",
+                                step=state.action_turns + 1,
+                            ),
+                        }
+                    )
+                elif directive and directive.startswith("exercise:"):
+                    from companion.content.models import SupportReference
+
+                    exercise = self.config.exercises[directive.split(":", 1)[1]]
+                    policy = policy.model_copy(
+                        update={
+                            "support": SupportReference(
+                                identifier=exercise.id,
+                                version=exercise.protocol.version
+                                if exercise.protocol
+                                else "legacy",
+                                kind="exercise",
+                                step=state.resume_index + 1,
+                            )
                         }
                     )
                 context = TurnContext(
@@ -620,6 +649,9 @@ class CompanionCore:
             generation=context.generation,
             text=text,
             emoji=emoji,
+            support=context.policy_frame.support
+            if fields.get("purpose", "reply") in ("reply", "exercise")
+            else None,
             **fields,
         )
 
@@ -704,6 +736,10 @@ class CompanionCore:
                 else:
                     text = self.config.stages["templates"][context.directive]
                 offer = state.pending_offer
+                if context.directive == "exercise_offer" and offer:
+                    exercise = self.config.exercises.get(offer.target_id)
+                    if exercise and exercise.protocol:
+                        text = exercise.protocol.invitation
                 if self._gate(runtime, context):
                     emitted = True
                     yield self._text_event(

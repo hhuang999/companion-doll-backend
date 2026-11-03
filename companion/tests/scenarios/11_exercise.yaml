@@ -1,8 +1,14 @@
 name: 哭声练习与打断恢复
+fixture: {exercise: breathing_60s}
 auto_complete: false
 steps:
   - user: 我很难过
     signals: {events: [Cry], emotion: SAD}
+    expect: {offer: null, stage: comfort}
+  - user: 我想做一个练习
+    expect: {offer: action}
+  - wait: true
+  - user: 好
     expect: {offer: exercise}
   - user: 好
     expect: {mode: exercise, last_type: exercise_plan}

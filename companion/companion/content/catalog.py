@@ -89,3 +89,49 @@ class StrategyCatalog:
                 )
             result.append(value)
         return result
+
+    def exercises(self, assessment, state, text="") -> list[dict]:
+        """Only project eligible, reviewed exercises; consent remains a Core decision."""
+        if assessment.expressed_need in ("listen", "quiet") or state.mode == "crisis":
+            return []
+        contexts = set(assessment.support_constraints)
+        requested = {
+            exercise.id
+            for exercise in self.config.exercises.values()
+            if exercise.protocol
+            and any(phrase in text for phrase in exercise.protocol.request_phrases)
+        }
+        result = []
+        for exercise in self.config.exercises.values():
+            protocol = exercise.protocol
+            if (
+                exercise.status == "draft"
+                or (requested and exercise.id not in requested)
+                or protocol is None
+                or exercise.id in state.exercises_refused
+                or not self.config.content_reviewed(f"exercises/{exercise.id}.yaml")
+                or not set(protocol.required_contexts) <= contexts
+                or set(protocol.excluded_contexts) & contexts
+                or (
+                    protocol.pathways
+                    and not set(protocol.pathways) & set(assessment.pathway_signals)
+                )
+            ):
+                continue
+            result.append(
+                {
+                    "id": exercise.id,
+                    "name": exercise.name,
+                    **protocol.model_dump(
+                        include={
+                            "version",
+                            "goal",
+                            "evidence_ids",
+                            "prerequisites",
+                            "required_contexts",
+                            "excluded_contexts",
+                        }
+                    ),
+                }
+            )
+        return result

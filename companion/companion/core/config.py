@@ -7,7 +7,7 @@ from typing import Literal
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
-from companion.content.models import ContentManifest, StrategyProtocol
+from companion.content.models import ContentManifest, ExerciseProtocol, StrategyProtocol
 
 from .models import PlaybackSegment, Stage
 
@@ -161,6 +161,7 @@ class Exercise(SettingsModel):
     status: Literal["draft", "approved", "enabled"]
     emo: str
     lines: list[PlaybackSegment] = Field(min_length=1)
+    protocol: ExerciseProtocol | None = None
 
 
 class Config:
@@ -202,8 +203,9 @@ class Config:
             if total > self.settings.timing.exercise_max_s:
                 raise ValueError(f"Exercise exceeds time limit: {exercise.id}")
             self.exercises[exercise.id] = exercise
-            if exercise.status == "enabled" and not self.content_reviewed(
-                f"exercises/{exercise.id}.yaml"
+            if exercise.status == "enabled" and (
+                exercise.protocol is None
+                or not self.content_reviewed(f"exercises/{exercise.id}.yaml")
             ):
                 raise ValueError(
                     f"Enabled exercise has incomplete/stale content review: {exercise.id}"

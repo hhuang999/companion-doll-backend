@@ -105,6 +105,31 @@ def test_v2_04_independent_brief_exact_version_single_revision(engine):
     assert len([r for r in fake.requests if r["role"] == "planner"]) == 2
 
 
+def test_server_constraint_conflict_requires_revision_and_exact_recheck(engine):
+    from collections import deque
+
+    core, fake, _ = engine
+
+    def candidate(payload):
+        user = next(row for row in reversed(payload["history"]) if row["role"] == "user")
+        return {
+            "objective": "clarify",
+            "understanding": "合成约束冲突",
+            "evidence": [{"kind": "user_turn", "id": user["id"], "claim": "原话"}],
+            "open_question": None if "previous_candidate" in payload else "你想说说吗？",
+            "avoid": [{"kind": "no_topic_probe", "target": None}],
+        }
+
+    fake.roles["planner"] = deque([candidate, candidate])
+    input_turn(core, "这件事反复困扰我，怎么办")
+    assert core.wait_idle()
+    plan = core.store.active_support_plan("s")
+    assert plan and plan.candidate_version == 2 and plan.open_question is None
+    reviews = [row for row in fake.requests if row["role"] == "critic"]
+    assert len(reviews) == 2 and reviews[0]["payload"]["server_checks"]
+    assert not reviews[1]["payload"]["server_checks"]
+
+
 def test_v2_05_revision_without_recheck_never_publishes(engine):
     core, fake, _ = engine
     from collections import deque
