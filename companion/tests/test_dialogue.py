@@ -199,3 +199,12 @@ def test_closing_quote_is_not_a_spoken_segment(config):
     )
     result = list(Talker(config, Chunks()).run(context, [], threading.Event(), {}, []))
     assert [text for text, _ in result] == ["可以这样说：我有点委屈。"]
+
+
+def test_replay_advice_and_unfounded_effort_are_blocked(config):
+    from companion.core.output_rail import OutputRail
+
+    rail = OutputRail(config)
+    assert "rail_advice" in rail.check("从一个让你心跳快的小问题开始试试？", Stage.explore)
+    assert not rail.check("先从这个小问题试试。", Stage.action)
+    assert "rail_cliche" in rail.check("你已经很努力在面对这些了。", Stage.explore)
