@@ -7,7 +7,11 @@ import uuid
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-environment = dict(os.environ, PYTEST_DISABLE_PLUGIN_AUTOLOAD="1")
+temporary = root / "artifacts/tmp"
+temporary.mkdir(parents=True, exist_ok=True)
+environment = dict(
+    os.environ, PYTEST_DISABLE_PLUGIN_AUTOLOAD="1", TEMP=str(temporary), TMP=str(temporary)
+)
 targets = ["companion", "xiaozhi_patch/files", "xiaozhi_patch/apply.py", "scripts"]
 subprocess.run(
     [sys.executable, "-m", "ruff", "check", "--config", "companion/pyproject.toml", *targets],

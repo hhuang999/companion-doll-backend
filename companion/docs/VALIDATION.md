@@ -7,7 +7,7 @@
 - Windows 11，Python 3.10.20；具体依赖锁在 `requirements.lock`。
 - Aihubmix：Talker / 风险为 qwen-flash，Reasoner 为 qwen-plus，均关闭 thinking；TTS 为 gpt-4o-mini-tts / coral / WAV。
 - development 模式，开发 S16 夹具、待审核危机占位文本及三段 draft 练习。
-- 离线：`scripts/run.ps1 test`，**58 passed，3 个 online 测试未选中**；Ruff 与格式检查通过。
+- 离线：`scripts/run.ps1 test`，**59 passed，3 个 online 测试未选中**；Ruff 与格式检查通过。
 - 在线：`pytest -m online`，**3 passed**，覆盖真实对话与会话总结、可播放 WAV、120 条风险回归。补充快照字段后单独重跑对话与总结，**1 passed**。
 - `scripts/setup.ps1` 已实际运行成功；源码包和 wheel 已构建。小智统一补丁对下载的固定源文件执行 `git apply --check` 成功。
 
@@ -55,7 +55,7 @@ TTS 两次短文本实测均返回有效 WAV，分别耗时约 1235 ms 与 1938 
 
 ## 观察台与接入
 
-通过 ego-browser 打开本地 Streamlit 页面，检查风险、后台分析和统计页，并实际点击“标记为已处理”，待处理计数由 1 变为 0。过程中发现并修复了 Streamlit 将条件表达式返回值显示为内部对象的问题。截图接口发生超时，未生成可用截图；页面操作以浏览器状态与数据库结果验证。
+通过 ego-browser 打开本地 Streamlit 页面，检查风险、后台分析和统计页，并实际点击“标记为已处理”，待处理计数由 1 变为 0。过程中发现并修复了 Streamlit 将条件表达式返回值显示为内部对象的问题。热更新期间旧 fragment 留下异常日志，因此追加全新 AppTest 运行上下文，确认四个页签、风险提醒和对话记录正常渲染且没有应用异常。截图接口发生超时，未生成可用截图；页面操作以浏览器状态与数据库结果验证。
 
 小智适配器、两项 provider、统一补丁、配置覆盖和检查 / 应用工具已准备。补丁增加 abort 与 wake 来源两个钩子的提案仍待负责人确认，未修改真实上游工作副本。模拟传输测试通过；完整小智依赖环境启动和 ESP32 实测尚未执行。
 
