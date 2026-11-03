@@ -148,3 +148,54 @@ def test_cross_turn_question_budget(config):
     )
     assert [sentence for sentence, _ in result] == ["听起来很累。"]
     assert "rail_questions" in violations
+
+
+def test_reported_choice_does_not_revoke_action(config):
+    machine = StateMachine(config)
+    state = SessionState(
+        session_id="s", user_key="u", stage=Stage.action, card_in_use="safe_support"
+    )
+    machine.apply_rules(
+        state,
+        "姑姑会先问我愿不愿意说，我觉得她相对安全。",
+        TurnSignals(),
+        Snapshot(session_id="s", user_key="u"),
+    )
+    assert state.stage == Stage.action
+    assert state.card_in_use == "safe_support"
+    machine.apply_rules(
+        state, "我不愿意继续", TurnSignals(), Snapshot(session_id="s", user_key="u")
+    )
+    assert state.stage != Stage.action
+
+
+@pytest.mark.parametrize("text", ["我不想要办法，只是想说说。", "不要给建议", "只想说说"])
+def test_listening_request_does_not_open_an_offer(config, text):
+    state = SessionState(session_id="s", user_key="u", stage=Stage.explore)
+    result = StateMachine(config).apply_rules(
+        state, text, TurnSignals(), Snapshot(session_id="s", user_key="u")
+    )
+    assert state.pending_offer is None
+    assert result.directive != "action_offer"
+
+
+def test_closing_quote_is_not_a_spoken_segment(config):
+    class Chunks:
+        def stream_chat(self, *args, **kwargs):
+            yield "可以这样说：我有点委屈。"
+            yield "”"
+
+    context = TurnContext(
+        session_id="s",
+        turn_id=1,
+        generation=1,
+        text="我有点委屈",
+        kind="user",
+        stage=Stage.action,
+        mode="normal",
+        snapshot=Snapshot(session_id="s", user_key="u"),
+        signals=TurnSignals(),
+        t0=time.monotonic(),
+    )
+    result = list(Talker(config, Chunks()).run(context, [], threading.Event(), {}, []))
+    assert [text for text, _ in result] == ["可以这样说：我有点委屈。"]

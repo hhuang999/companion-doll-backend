@@ -150,6 +150,38 @@ def test_v2_05_revision_without_recheck_never_publishes(engine):
     assert core.store.query("SELECT status FROM cognitive_jobs")[0]["status"] == "timed_out"
 
 
+def test_end_evidence_repair_keeps_invalid_memory_out_of_store(engine):
+    from collections import deque
+
+    core, fake, _ = engine
+    input_turn(core, "今天想聊聊考试")
+    fake.roles["end"] = deque(
+        [
+            {
+                "memory_candidates": [
+                    {
+                        "kind": "episodic_event",
+                        "key": "invalid",
+                        "value": "未经提供的来源",
+                        "source_refs": [
+                            {"kind": "interaction_event", "id": "not-in-input", "claim": "错误来源"}
+                        ],
+                    }
+                ],
+                "summary": "错误",
+            },
+            {"memory_candidates": [], "summary": "用户想聊考试。"},
+        ]
+    )
+    core.on_session_end("s", "test")
+    assert core.wait_idle()
+    assert core.store.query("SELECT status FROM end_tasks")[0]["status"] == "done"
+    assert not core.store.query("SELECT * FROM memory_items WHERE key='invalid'")
+    runs = core.store.query("SELECT status,error FROM agent_runs WHERE role='end' ORDER BY attempt")
+    assert [r["status"] for r in runs] == ["schema_error", "completed"]
+    assert "EvidenceValidationError" in runs[0]["error"]
+
+
 def test_v2_06_budget_reservations_deadline_shared_repair():
     clock = [0.0]
     budget = Budget(

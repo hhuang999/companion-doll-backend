@@ -109,6 +109,7 @@ def run(args):
                         result["errors"].append(f"step {index}: no exercise to acknowledge")
                 else:
                     before, started = len(port.events), time.monotonic()
+                    runtime = core.sessions[session]
                     turn = core.on_input(
                         session,
                         str(index),
@@ -127,10 +128,8 @@ def run(args):
                             event.model_dump(mode="json") for event in port.events[before:]
                         ],
                         "turn": core.store.query("SELECT * FROM turns WHERE id=?", (turn,))[0],
-                        "policy": core.sessions[session]
-                        .contexts[turn]
-                        .policy_frame.model_dump(mode="json"),
-                        "state": core.sessions[session].state.model_dump(mode="json"),
+                        "policy": runtime.contexts[turn].policy_frame.model_dump(mode="json"),
+                        "state": runtime.state.model_dump(mode="json"),
                         "background_idle": idle,
                         "elapsed_ms": (time.monotonic() - started) * 1000,
                     }

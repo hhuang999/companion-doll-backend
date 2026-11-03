@@ -155,6 +155,10 @@ class Talker:
                         continue
                 else:
                     buffer += token
+                if count:
+                    # A streamed closing quote may arrive after its sentence was emitted.
+                    # It is typography, not a standalone spoken segment.
+                    buffer = buffer.lstrip('”’」』" \n')
                 while True:
                     boundary = next(
                         (i + 1 for i, char in enumerate(buffer) if char in punctuation and i >= 3),
@@ -189,7 +193,11 @@ class Talker:
                 if header.startswith("<<"):
                     violations.append("malformed_tag")
                 buffer = "" if header.startswith("<<") else header
-            if buffer.strip() and count < sentence_limit and not cancel.is_set():
+            if (
+                any(char.isalnum() for char in buffer)
+                and count < sentence_limit
+                and not cancel.is_set()
+            ):
                 rejected = self.rail.check(
                     buffer.strip(), context.stage, tuple(card.talker.never_say) if card else ()
                 )

@@ -15,6 +15,10 @@ from .base import utcnow
 from .models import Usage
 
 
+class EvidenceValidationError(ValueError):
+    """A typed result cites evidence outside the frozen job input."""
+
+
 class Agents:
     def __init__(self, config, store, llm):
         self.config, self.store, self.llm = config, store, llm
@@ -25,7 +29,7 @@ class Agents:
             autoescape=False,
         )
 
-    def call(self, job, role, schema, payload, budget, *, candidate_version=None):
+    def call(self, job, role, schema, payload, budget, *, candidate_version=None, validate=None):
         config = self.config.settings.cognition
         model = getattr(config, f"{role}_model")
         output_limit = {
@@ -89,6 +93,7 @@ class Agents:
                 "evidence、source_refs、concerns、facts字段必须是JSON数组，即使只有一项。"
                 "事实结构为{statement:文本,evidence:[{kind:来源类型,id:真实来源ID,claim:依据说明}]}。"
                 "只有hypotheses中的对象允许conflicting_evidence。不要复制schema或示意占位内容。"
+                "interaction_event引用只用feedback中的event_id，不能用output_id或support_plan_id。"
                 "时间未知则省略；提供时间必须是带时区的ISO格式。\n" + prompt,
             },
             {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
@@ -125,8 +130,13 @@ class Agents:
                     usage_callback=usage_values.append,
                 )
                 budget.check()
+                if validate is not None:
+                    try:
+                        validate(result)
+                    except ValueError as exc:
+                        raise EvidenceValidationError(str(exc)) from exc
                 status = "completed"
-            except (ValidationError, json.JSONDecodeError) as exc:
+            except (ValidationError, json.JSONDecodeError, EvidenceValidationError) as exc:
                 error = type(exc).__name__ + ":" + str(exc)[:600]
                 status = "schema_error"
                 if attempt == 2:

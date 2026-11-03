@@ -234,6 +234,7 @@ class Cognition:
                         Consolidation,
                         payload,
                         budget,
+                        validate=lambda value: self._validate(job, value, allowed),
                     )
                     self._validate(job, result, allowed)
                     candidates, summary = result.memory_candidates, result.summary
