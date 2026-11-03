@@ -21,6 +21,20 @@ def ref(state):
     return (EvidenceRef(kind="user_turn", id=state.latest_turn_id, claim="测试用户原话"),)
 
 
+def test_normal_words_are_not_interaction_boundaries(store):
+    memory = MemoryService(store)
+    state = state_and_turn(store, "我想下次先看看横轴和纵轴分别表示什么。")
+    for text in (
+        "我想下次先看看横轴和纵轴分别表示什么。",
+        "我在分别给两个朋友回消息",
+        "想识别问题在哪里",
+        "个别同学还在说话",
+    ):
+        assert memory.explicit_boundary(text, state, state.latest_turn_id) is None
+    for text in ("今天别问考试", "以后别主动给建议", "不要教我安排时间"):
+        assert memory.explicit_boundary(text, state, state.latest_turn_id) is not None
+
+
 def test_v2_16_scopes_expiry_reconnect_and_local_exception(store):
     now = [datetime(2026, 11, 3, 10, tzinfo=timezone.utc)]
     memory = MemoryService(store, "Asia/Shanghai", lambda: now[0])

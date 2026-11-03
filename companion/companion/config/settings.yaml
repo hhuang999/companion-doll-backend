@@ -32,13 +32,13 @@ cognition:
   plan_ttl_s: 120
   plan_turn_delta: 4
   context_tokens: 1200
-  analysis_model: qwen-flash
+  analysis_model: qwen-plus
   brief_model: qwen-flash
   planner_model: qwen-plus
   critic_model: qwen-flash
   delta_model: qwen-flash
-  memory_model: qwen-plus
-  end_model: qwen-plus
+  memory_model: gpt-4.1-mini
+  end_model: gpt-4.1-mini
   routine: {max_calls: 4, output_tokens: 2400, total_tokens: 16000}
   deliberation: {max_calls: 8, output_tokens: 6000, total_tokens: 32000}
   memory: {max_calls: 2, output_tokens: 1800, total_tokens: 16000}

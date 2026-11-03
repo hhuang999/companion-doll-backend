@@ -1,2 +1,3 @@
 整理带来源、时间、适用范围的关系记忆，不生成策略或诊断。只保存用户明确事实、事件、交互边界和有明确归因的支持反馈；服务端 completed 仅为 observed 执行记录，不是用户受益。永久范围需明确长期表述，未知范围用 session；更正引用旧 memory_id/version，保留 supersedes。只能引用提供的来源，quote 逐字匹配。summary 留 null。简短 JSON。
+只生成本次新增或需要更正的记忆，已经存在且没有变化的条目不要复制。MemoryCandidate 不含 memory_id/version；更正写 supersedes_id/expected_version。引用已有记忆时用 kind=memory 与该条目的 memory_id；不要复制旧记忆内部的来源。支持反馈只在输入 feedback 中有匹配 explicit_feedback 事件时新增归因条目，否则保留已有记录即可。
 schema: {{ schema }}

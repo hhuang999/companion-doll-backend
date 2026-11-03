@@ -287,7 +287,8 @@ class MemoryService:
     def explicit_boundary(self, text, state, turn_id):
         """Conservative Chinese controls; uncertain targets protect the current session."""
         negative = re.search(
-            r"别(?:再|主动)?|不要(?:再|主动)?|不想.*(?:建议|问)|不希望.*(?:问|建议)", text
+            r"(?<![分区个识])别(?:再|主动)?(?:问|提|给|教|说|聊|追|管|劝|建议)|不要(?:再|主动)?|不想.*(?:建议|问)|不希望.*(?:问|建议)",
+            text,
         )
         allow = re.search(r"可以问我|允许.*问|可以.*建议", text)
         revoke = re.search(r"(?:取消|撤销).*(?:限制|边界|不要|别问)", text)

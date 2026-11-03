@@ -39,6 +39,26 @@ class Agents:
         }[role]
         role_schema = compact_schema(schema.model_json_schema())
         if role == "analysis":
+            # Keep the persisted contract backward compatible. Online assessment
+            # does routing; explicit boundaries and dedicated consolidation own memory.
+            for field in ("memory_candidates", "boundary_candidates"):
+                role_schema["properties"].pop(field, None)
+            role_schema = reachable_schema(role_schema)
+        sources = {
+            "user_turn": [row["id"] for row in payload.get("history", []) if row["role"] == "user"]
+            + [row["id"] for row in payload.get("new_turns", [])],
+            "memory": [item["memory_id"] for item in payload.get("memory", [])],
+            "interaction_event": [item["event_id"] for item in payload.get("feedback", [])],
+        }
+        reference = role_schema.get("$defs", {}).get("EvidenceRef")
+        if reference and any(sources.values()):
+            reference["properties"]["kind"] = {
+                "enum": [kind for kind, ids in sources.items() if ids]
+            }
+            reference["properties"]["id"] = {
+                "enum": [identifier for ids in sources.values() for identifier in ids]
+            }
+        if role == "analysis":
             # Routing fields are optional for persisted legacy records, but every new
             # assessment must actually classify them rather than omit all defaults.
             role_schema["required"] = list(
@@ -84,12 +104,16 @@ class Agents:
                 input_tokens=estimated_input, output_tokens=output_limit, source="estimated"
             )
             reserved = False
+            reserved_output = output_limit
             usage_values = []
             error = None
             result = None
             status = "failed"
             try:
-                budget.reserve(estimated_input, output_limit, repair=attempt > 1)
+                reserved_output = budget.reserve(
+                    estimated_input, output_limit, repair=attempt > 1, allow_partial=True
+                )
+                usage = usage.model_copy(update={"output_tokens": reserved_output})
                 reserved = True
                 result = self.llm.complete_json(
                     model,
@@ -97,7 +121,7 @@ class Agents:
                     schema,
                     budget.deadline,
                     temperature=0.2,
-                    max_tokens=output_limit,
+                    max_tokens=reserved_output,
                     usage_callback=usage_values.append,
                 )
                 budget.check()
@@ -129,7 +153,7 @@ class Agents:
                 if usage_values:
                     usage = usage_values[-1]
                 if reserved:
-                    budget.settle(estimated_input, output_limit, usage)
+                    budget.settle(estimated_input, reserved_output, usage)
                 run_id = self.store.agent_run(
                     job.job_id,
                     role,
@@ -160,3 +184,27 @@ def compact_schema(value):
     if isinstance(value, list):
         return [compact_schema(v) for v in value]
     return value
+
+
+def reachable_schema(schema):
+    """Discard unused definitions after a role-specific schema projection."""
+    definitions = schema.get("$defs", {})
+    needed = set()
+
+    def visit(value):
+        if isinstance(value, dict):
+            reference = value.get("$ref", "")
+            if reference.startswith("#/$defs/"):
+                name = reference.rsplit("/", 1)[-1]
+                if name not in needed:
+                    needed.add(name)
+                    visit(definitions[name])
+            for key, child in value.items():
+                if key != "$defs":
+                    visit(child)
+        elif isinstance(value, list):
+            for child in value:
+                visit(child)
+
+    visit(schema)
+    return {**schema, "$defs": {name: definitions[name] for name in sorted(needed)}}

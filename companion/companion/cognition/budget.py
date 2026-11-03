@@ -26,13 +26,21 @@ class Budget:
         if self.clock() >= self.deadline:
             raise TimeoutError("Cognitive job deadline exceeded")
 
-    def reserve(self, input_tokens, output_tokens, repair=False):
+    def reserve(self, input_tokens, output_tokens, repair=False, *, allow_partial=False):
         with self.lock:
             self.check()
             if self.deadline - self.clock() < 0.1:
                 raise TimeoutError("Insufficient remaining dispatch time")
             if repair and self.repairs:
                 raise BudgetExceeded("Shared schema repair already consumed")
+            if allow_partial:
+                output_tokens = min(
+                    output_tokens,
+                    self.limits.output_tokens - self.output,
+                    self.limits.total_tokens - self.total - input_tokens,
+                )
+                if output_tokens < 128:
+                    raise BudgetExceeded("Insufficient output budget for a structured response")
             if (
                 self.calls + 1 > self.limits.max_calls
                 or self.output + output_tokens > self.limits.output_tokens
@@ -43,6 +51,7 @@ class Budget:
             self.repairs += int(repair)
             self.output += output_tokens
             self.total += input_tokens + output_tokens
+            return output_tokens
 
     def settle(self, reserved_input, reserved_output, usage):
         with self.lock:

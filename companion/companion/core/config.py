@@ -81,13 +81,13 @@ class CognitionSettings(SettingsModel):
     plan_ttl_s: float = Field(default=120, gt=0)
     plan_turn_delta: int = Field(default=4, ge=1)
     context_tokens: int = Field(default=1200, ge=300)
-    analysis_model: str = "qwen-flash"
+    analysis_model: str = "qwen-plus"
     brief_model: str = "qwen-flash"
     planner_model: str = "qwen-plus"
     critic_model: str = "qwen-flash"
     delta_model: str = "qwen-flash"
-    memory_model: str = "qwen-plus"
-    end_model: str = "qwen-plus"
+    memory_model: str = "gpt-4.1-mini"
+    end_model: str = "gpt-4.1-mini"
     routine: JobBudgetSettings = Field(
         default_factory=lambda: JobBudgetSettings(
             max_calls=4, output_tokens=2400, total_tokens=16000

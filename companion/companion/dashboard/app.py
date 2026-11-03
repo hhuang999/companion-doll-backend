@@ -35,7 +35,9 @@ st.title("Companion · 后端观察台")
 st.caption("v2 · 轮次策略、协作评审、关系记忆与独立风险 · 每 2 秒刷新")
 st.sidebar.caption("数据库")
 st.sidebar.code(str(db_path))
-st.sidebar.info("开发内容包含测试行动卡和待审核危机占位话术。模型与真机验收结果以验证报告为准。")
+st.sidebar.info(
+    "课程研究原型：仅合成案例或成年成员演示。内容来源、自动核查与工程回放分别记录；设备实测结果见验证报告。"
+)
 if not db_path.is_file():
     st.info("数据库尚未创建。先启动文字对话或运行剧本，再刷新此页。")
     st.stop()

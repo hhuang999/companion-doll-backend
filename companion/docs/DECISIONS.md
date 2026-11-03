@@ -89,3 +89,12 @@ Reasoner 每用户串行、跨用户并行。普通待运行任务合并，结�
 - 配置副本用发布v2资源基线作三方升级，预校验并备份，settings字段定制和音频路径保持。新增结构在既有JSON记录内可选，SQL版本保持2；未知数据库版本与事务迁移逻辑不变。
 - 课程LAN接入新增每设备独立bearer凭据、服务端用户映射和请求头日志脱敏。保留六核心接入点，另加access.patch；既有匿名连接需升级凭据。明文WS用于受控课程LAN，公网需TLS终止；公开Pages不连接运行后端。设备ACK仍未实现。
 - 固定音频资源由prepare_audio生成并绑定独立部署配置，验证文本/model/voice/文件hash/实测时长/停顿；生成资源不入公开仓库。课程内容准入仍要求真实回放回执，自动内容核查与工程验收分别记录。
+# 2026-11-04：真实回放后的角色与测量修正
+
+- 原 qwen-flash Analysis 在真实睡前场景遗漏bedtime、把安静环境错归no_private_space；qwen-plus同时承担Analysis/Critic又使长分析挤占20秒总deadline。线上Analysis去掉记忆候选的schema投影及不可达定义，保持持久契约兼容；明确边界由Core及时处理，长期整理由memory/end负责。最终待验配置使用qwen-plus Analysis/Planner、qwen-flash Brief/Critic，保持总deadline与任务预算。
+- qwen-plus memory多次在20秒内未完成。小规模真实故障探针将memory/end换为Aihubmix gpt-4.1-mini，定点约2–4秒；Analysis/Planner不采用该探针中的替代配置，因为目标策略未执行。完整最终集独立验证，不能从探针速度推断质量通过。
+- Aihubmix [结构化输出说明](https://docs.aihubmix.com/cn/api/Structured-Output)允许降级，因此保留本地Pydantic、来源和业务校验。实际qwen-plus的json_schema探针仍出现额外字段；gpt-4.1-mini能返回合法结构但也错判环境。结构合法不等于语义可靠，未据此关闭任何校验。
+- 每任务共享一次schema修复。原memory每调用预约1800输出Token，首次产生少量无效输出后第二次仍预约1800会必然超1800总额；现在原子预约不超过剩余额度（不足128则拒绝），将实际预约值传给API并结算。调用、总Token、deadline限制不提高；新增测试验证修复后总额仍≤1800。
+- 已有记忆只投影其memory_id、语义、范围和反馈归因，不把内部旧source_refs再次给模型当作当前原始输入。引用已有记忆必须用memory ID；新归因只用本次feedback实际提供的事件，减少重复候选和过期来源误引用。
+- 小智探针必须等待整个输入的outputs终态及线路静默，再发下一轮。wake记录为control，固定high接管可能不走Talker的output_status；分别处理并断言危机固定原文。旧probe1“通过”被判为无效测量，修正probe3另存证据，没有用剩余普通音频冒充危机缓存。
+- “分别/识别/个别”不再误触发“别”的交互边界。记录源与更正规则保持原样；普通叙述不能意外变成禁止追问。

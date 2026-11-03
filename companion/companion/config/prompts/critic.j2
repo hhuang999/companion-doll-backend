@@ -3,5 +3,6 @@
 approve 时省略空数组；问题每条说明不超过25汉字，引用省略quote。不要复述候选或原文。
 schema: {{ schema }}
 输入 cards 是本次检索后的内容摘要。逐项核对其适用、排除、行动负担与原始事实；未提供的卡不得批准。证据仅支撑改编机制，不支撑短练习必然有效。不将沉默或发送完成解释成有帮助。对拒绝、仅倾诉、安静、睡前结束，不要求再安排一个任务或追问。
+evidence_refs只能引用原始输入实际存在的ID；candidate.avoid是待评审逻辑，不是memory记录，禁止把no_topic_probe等规则名当作memory ID。候选自身逻辑冲突可以不填evidence_refs，用说明指出冲突即可。
 insufficient_information 仅是顶层 verdict，绝不能作为 issues.code。问题码只用 schema 中列出的值，例如 card_ineligible、unsupported_fact、intent_mismatch。支持倾听或安静不要求先具备行动细节，不能仅因细节未知拒绝一个非行动策略。
 明确区分：listen/clarify/comfort/reflect/quiet 且 candidate_actions 为空时，不需要任何行动卡或行动许可；不能以“未提供可执行卡片”为由拒绝普通澄清。只有实际含行动候选时才检查该卡资格。若 open_question 与 no_topic_probe/no_advice 等约束互相矛盾，指出具体冲突并请求一次修订；不虚构候选中不存在的行动。

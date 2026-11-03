@@ -24,15 +24,46 @@ async def main():
     user, headers = simulation_credentials(ROOT, "integration")
     report = {"user_key": user, "tag_parser": "passed", "rounds": []}
     decoder = opuslib_next.Decoder(16000, 1)
+    source_floor = 0
+
+    def latest_input():
+        with sqlite3.connect(ROOT / "data/xiaozhi.db") as db:
+            return db.execute(
+                "SELECT COALESCE(MAX(id),0) FROM turns WHERE user_key=? AND role IN ('user','control')",
+                (user,),
+            ).fetchone()[0]
+
+    def output_drained():
+        with sqlite3.connect(ROOT / "data/xiaozhi.db") as db:
+            turn = db.execute(
+                "SELECT id,output_status,risk_level FROM turns WHERE user_key=? AND role IN ('user','control') AND id>? ORDER BY id DESC LIMIT 1",
+                (user, source_floor),
+            ).fetchone()
+            if not turn or (
+                turn[1] not in ("generated", "interrupted", "error") and turn[2] != "high"
+            ):
+                return False
+            outputs = db.execute(
+                "SELECT status FROM outputs WHERE turn_id=?", (turn[0],)
+            ).fetchall()
+            return bool(outputs) and all(
+                row[0] in ("completed", "failed", "cancelled") for row in outputs
+            )
 
     async def receive_reply(ws, name, *, abort=False):
         started = time.monotonic()
         result = {"name": name, "sentences": [], "packets": 0, "pcm_bytes": 0}
         abort_at = None
+        stop_seen = False
         while True:
-            message = await asyncio.wait_for(
-                ws.recv(), max(0.01, 90 - (time.monotonic() - started))
-            )
+            if time.monotonic() - started > 90:
+                raise TimeoutError(f"Reply did not finish: {name}")
+            try:
+                message = await asyncio.wait_for(ws.recv(), 0.2)
+            except asyncio.TimeoutError:
+                if stop_seen and output_drained():
+                    break
+                continue
             if isinstance(message, bytes):
                 result["packets"] += 1
                 result["pcm_bytes"] += len(decoder.decode(message, 960))
@@ -55,7 +86,7 @@ async def main():
                 ):
                     if abort_at:
                         result["abort_to_stop_ms"] = (time.monotonic() - abort_at) * 1000
-                    break
+                    stop_seen = True
         assert result["pcm_bytes"] > 0 and result["sentences"], result
         assert result["expression"]["emotion"] == EMOJI_MAP.get(
             result["expression"]["text"], "neutral"
@@ -65,6 +96,8 @@ async def main():
         return result
 
     async def send_text(ws, text):
+        nonlocal source_floor
+        source_floor = latest_input()
         await ws.send(json.dumps({"type": "listen", "state": "detect", "text": text}))
 
     async def open_connection():
@@ -99,7 +132,10 @@ async def main():
         await send_text(ws, "今天写作业有点累，想和你说说。")
         await receive_reply(ws, "normal_response")
         await send_text(ws, "我现在要跳楼")
-        await receive_reply(ws, "crisis_abort", abort=True)
+        crisis_reply = await receive_reply(ws, "crisis_abort", abort=True)
+        from companion.core.config import Config
+
+        assert Config(ROOT / "data/xiaozhi-config").crisis["opening"] in crisis_reply["sentences"]
         # Drain the second idempotent stop emitted by the upstream abort handler.
         while True:
             try:
@@ -118,6 +154,7 @@ async def main():
         assert "我是 AI" not in "".join(returning["sentences"])
         # Feed upstream's official Chinese example through the actual Opus ASR route.
         await asyncio.sleep(2.1)
+        source_floor = latest_input()
         packets = await audio_to_data(
             str(SERVER / "models/SenseVoiceSmall/example/zh.mp3"), use_cache=False
         )

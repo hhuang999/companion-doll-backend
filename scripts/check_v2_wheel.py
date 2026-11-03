@@ -11,6 +11,7 @@ from companion.adapters.output import RecordingOutputPort
 from companion.core.config import Config
 from companion.core.models import SessionState, TurnSignals
 from companion.store import Store
+from companion.tools.upgrade_config import upgrade
 
 import companion
 
@@ -25,6 +26,19 @@ def main():
     for role in ("analysis", "brief", "planner", "critic", "delta", "memory", "end"):
         assert (config.directory / "prompts" / f"{role}.j2").is_file()
     assert (package / "store/migrations/002.sql").is_file()
+    assert (package / "tools/resources/config-v2-baseline.json").is_file()
+    assert len(config.cards) == 6 and len(config.exercises) == 3
+    assert config.read("course_scenarios.yaml")["version"] == "course-quality-1"
+    deployment = output / "config"
+    upgrade(deployment)
+    settings = deployment / "settings.yaml"
+    settings.write_text(
+        settings.read_text(encoding="utf-8").replace("history_turns: 10", "history_turns: 8"),
+        encoding="utf-8",
+    )
+    upgrade(deployment)
+    assert Config(deployment).settings.dialogue.history_turns == 8
+    assert upgrade(deployment)["changed"] == []
     core = build_core(config, output / "empty.db", fake=True)
     core.bind_output("wheel", "synthetic-wheel", RecordingOutputPort(core.on_playback_event))
     turn = core.on_input("wheel", "1", "我一直反复想那次考试，怎么办", TurnSignals())
@@ -100,6 +114,8 @@ def main():
         "repeat": "passed",
         "cli": "passed",
         "backup": str(backup),
+        "content_resources": "six strategies, three exercises, fixed replay suite",
+        "config_upgrade": "customized settings preserved; idempotent",
     }
     (output / "report.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"

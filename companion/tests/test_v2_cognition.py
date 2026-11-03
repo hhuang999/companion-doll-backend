@@ -168,6 +168,21 @@ def test_v2_06_budget_reservations_deadline_shared_repair():
         budget.check()
 
 
+def test_schema_repair_uses_remaining_output_without_raising_job_limit():
+    budget = Budget(
+        JobBudgetSettings(max_calls=2, output_tokens=1800, total_tokens=6000),
+        20,
+        threading.Event(),
+    )
+    first = budget.reserve(1000, 1800, allow_partial=True)
+    budget.settle(1000, first, Usage(input_tokens=1000, output_tokens=300, source="provider"))
+    repair = budget.reserve(1100, 1800, repair=True, allow_partial=True)
+    assert repair == 1500
+    assert budget.report()["accounted_output_tokens"] == 1800
+    with pytest.raises(BudgetExceeded):
+        budget.reserve(1, 128, allow_partial=True)
+
+
 def test_v2_07_foreign_evidence_and_forged_memory_rejected(engine):
     core, fake, _ = engine
     from collections import deque

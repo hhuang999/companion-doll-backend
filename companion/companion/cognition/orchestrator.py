@@ -140,10 +140,11 @@ class Cognition:
                         "scope",
                         "scope_ref",
                         "expires_at",
-                        "source_refs",
                         "mention_policy",
                         "boundary_rule",
                         "target",
+                        "support",
+                        "feedback_valence",
                     },
                 )
                 for m in (*bundle.boundaries, *bundle.items)
