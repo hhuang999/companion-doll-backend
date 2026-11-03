@@ -21,6 +21,6 @@ Analysis 解释有限证据，Planner 生成候选策略；deliberation 另并�
 - [运行、迁移、重试、清除与 wheel 验证](docs/V2_OPERATIONS.md)
 - [V2-01～V2-24 状态与证据](docs/V2_IMPLEMENTATION_STATUS.md)
 - [真实验收与性能结果](docs/VALIDATION.md)
-- [最终架构图集（源码仓库）](../docs/architecture-v2/index.html)
+- [v2 交互架构图集（GitHub Pages）](https://hhuang999.github.io/companion-doll-backend/)
 
 `python -m companion.tools.migrate --db data/companion.db` 可停服升级。v1→v2 先作 SQLite backup，再事务迁移；未知更高版本拒绝，回退恢复备份到新路径。wheel 包含所有配置、七角色提示词和迁移 SQL。

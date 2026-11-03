@@ -6,13 +6,13 @@
 
 ## v2 架构与工程状态
 
-[![v2 模块总图](docs/architecture-v2/preview.png)](docs/architecture-v2/index.html)
+[![v2 模块总图](docs/architecture-v2/preview.png)](https://hhuang999.github.io/companion-doll-backend/)
 
-[打开本地 v2 架构图集](docs/architecture-v2/index.html) · [逐项验收状态](companion/docs/V2_IMPLEMENTATION_STATUS.md) · [运行与迁移手册](companion/docs/V2_OPERATIONS.md)
+[打开 v2 交互架构图集](https://hhuang999.github.io/companion-doll-backend/) · [逐项验收状态](companion/docs/V2_IMPLEMENTATION_STATUS.md) · [运行与迁移手册](companion/docs/V2_OPERATIONS.md)
 
-图集分为实时与安全通路、有限协作与版本发布、记忆与语音模块四个视图，附本地实现提交的源码依据。HTML 下载后可以独立打开；本次升级未推送远端或更新公共站点。
+图集包含四个可交互视图：实时与安全通路、有限协作与版本发布、长期关系记忆、小智语音流水。点击节点可追溯到固定实现提交的 GitHub 源码；HTML 下载后也可以独立打开。
 
-旧的 [GitHub Pages v1 图集](https://hhuang999.github.io/companion-doll-backend/) 固定于历史提交 `d24f38f`，只解释 v1，不代表本次 v2。
+[v1 历史图集](https://hhuang999.github.io/companion-doll-backend/index-v1.html) 保留供比较，固定于历史提交 `d24f38f`。当前默认代码与 Pages 首页均为 v2。
 
 ## 立即运行
 

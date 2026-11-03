@@ -9,7 +9,7 @@
     "repository": {
       "url": "https://github.com/hhuang999/companion-doll-backend.git",
       "revision": "e3ef674820ee25c4873b4a9658a2a980060aa922",
-      "link_mode": "local-only"
+      "link_mode": "web"
     }
   },
   "components": [

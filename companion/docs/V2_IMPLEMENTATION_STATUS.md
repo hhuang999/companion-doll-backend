@@ -1,6 +1,6 @@
 # v2 实施与验收状态
 
-主规格：[ARCHITECTURE_V2](ARCHITECTURE_V2.md)。分支：`codex/backend-v2`。实际起点 `43253fe9719b1f96e41d40948b6a805211dc8adc`；未重置、未覆盖无关改动、未推送。
+主规格：[ARCHITECTURE_V2](ARCHITECTURE_V2.md)。分支：`codex/backend-v2`。实际起点 `43253fe9719b1f96e41d40948b6a805211dc8adc`；未重置、未覆盖无关改动。后续按用户授权同步至 GitHub `main` 并发布 v2 Pages。
 
 **M0～M6 的可独立完成工程、集成、验收执行与文档工作已完成。工程行为检查通过；对话质量与性能有未达项，正式内容/ESP32 硬件条件待提供。** 不将实现完成表述为全部产品验收通过。
 
@@ -65,4 +65,4 @@
 
 正式 S03–S19、审核危机文本及练习、ESP32 真机仍需负责人提供。默认 development 使用明确 fixture/draft，demo 审核门槛未降低。服务端 completed 不冒充设备 ACK。
 
-准确命令、升级/备份/恢复/清除说明见 [V2_OPERATIONS](V2_OPERATIONS.md)。[四张本地架构图](../../docs/architecture-v2/index.html) 反映最终源码，本次没有远端推送、合并或公共部署。原有无关未跟踪文稿、CODEX_UPGRADE_V2_PROMPT 和历史 .archify 证据保留。
+准确命令、升级/备份/恢复/清除说明见 [V2_OPERATIONS](V2_OPERATIONS.md)。[四张交互架构图](https://hhuang999.github.io/companion-doll-backend/) 反映最终源码；v2 开发阶段只作本地提交，后续按用户授权发布到 GitHub 和 Pages，图中源码链接固定于实现提交。原有无关未跟踪文稿、CODEX_UPGRADE_V2_PROMPT 和历史 .archify 证据保留。
