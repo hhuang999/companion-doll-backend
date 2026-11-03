@@ -6,6 +6,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from companion.cognition.models import TurnPolicyFrame
+
 
 def utcnow() -> datetime:
     return datetime.now(timezone.utc)
@@ -153,6 +155,8 @@ class Snapshot(FrozenModel):
     offer_exercise: bool = False
     core_memory: CoreMemory = Field(default_factory=CoreMemory)
     topic_changed: bool = False
+    support_plan_id: str | None = None
+    support_plan_version: int | None = None
 
 
 class PendingOffer(BaseModel):
@@ -176,6 +180,9 @@ class SessionState(BaseModel):
     mode: Mode = "normal"
     state_revision: int = 0
     topic_revision: int = 0
+    policy_revision: int = 0
+    support_plan_version: int = 0
+    active_support_plan_id: str | None = None
     generation: int = 0
     latest_turn_id: int = 0
     user_turns: int = 0
@@ -212,6 +219,7 @@ class TurnContext(FrozenModel):
     trigger_reasons: tuple[str, ...] = ()
     directive: str | None = None
     t0: float
+    policy_frame: TurnPolicyFrame = Field(default_factory=TurnPolicyFrame)
 
 
 class PlaybackSegment(FrozenModel):

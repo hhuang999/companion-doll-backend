@@ -9,6 +9,8 @@ import json
 import logging
 import tempfile
 import threading
+from collections import deque
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from companion.core.models import OutputEvent, PlaybackEvent, PlaybackSegment
@@ -19,6 +21,8 @@ logger = logging.getLogger(__name__)
 class XiaozhiTransport:
     def __init__(self, connection):
         self.connection = connection
+        self.metric = None
+        self.event = None
 
     async def encode(self, data: bytes) -> list[bytes]:
         from core.utils.util import audio_to_data
@@ -37,6 +41,7 @@ class XiaozhiTransport:
         from core.utils.textUtils import EMOJI_MAP
 
         conn = self.connection
+        self.event = event
         conn.sentence_id = event.output_id
         conn.client_abort = False
         conn.client_is_speaking = True
@@ -60,7 +65,15 @@ class XiaozhiTransport:
         )
 
         await send_tts_message(self.connection, "sentence_start", text)
-        await sendAudio(self.connection, packets)
+        if packets:
+            previous_count = getattr(self.connection, "audio_flow_control", {}).get(
+                "packet_count", 0
+            )
+            await sendAudio(self.connection, packets[0])
+            count = getattr(self.connection, "audio_flow_control", {}).get("packet_count", 0)
+            if self.metric and count > previous_count:
+                self.metric(self.event, "opus_first_packet_sent_ms")
+            await sendAudio(self.connection, packets[1:])
         await _wait_for_audio_completion(self.connection)
 
     async def stop(self) -> None:
@@ -99,6 +112,12 @@ class XiaozhiOutputPort:
         self.active_event = None
         self.stop_task = None
         self.closed = False
+        self.waiting = deque()
+        self.prefetch = None
+        self.synthesis_pool = ThreadPoolExecutor(max_workers=2, thread_name_prefix="tts-prefetch")
+        self.synthesis_slots = asyncio.Semaphore(2)
+        if isinstance(transport, XiaozhiTransport):
+            transport.metric = metric
         self.worker = loop.create_task(self._run())
 
     def valid(self, event):
@@ -122,8 +141,61 @@ class XiaozhiOutputPort:
                 return
             self.seen.add(event.output_id)
             if self.metric:
+                self.metric(event, "audio_queue_ms")
+            self.loop.call_soon_threadsafe(self._enqueue, event)
+
+    def _enqueue(self, event):
+        if not self.valid(event):
+            self.acknowledge(event, "cancelled")
+            return
+        self.waiting.append(event)
+        self.queue.put_nowait(event)
+        self._prefetch_next()
+
+    def _prefetch_next(self):
+        if self.prefetch or not self.active_event or not self.waiting:
+            return
+        event = self.waiting[0]
+        if event.type == "text" and self.valid(event):
+            self.prefetch = (
+                event,
+                self.loop.create_task(
+                    self._prepare(event, PlaybackSegment(text=event.text), False)
+                ),
+            )
+
+    async def _prepare(self, event, segment, fixed):
+        if not self.valid(event):
+            raise asyncio.CancelledError
+        if fixed:
+            data, duration = self._audio(segment, True)
+        else:
+            await self.synthesis_slots.acquire()
+            if not self.valid(event):
+                self.synthesis_slots.release()
+                raise asyncio.CancelledError
+            if self.metric:
                 self.metric(event, "tts_submit_ms")
-            self.loop.call_soon_threadsafe(self.queue.put_nowait, event)
+                self.metric(event, "tts_start_ms")
+            future = self.synthesis_pool.submit(self._audio, segment, False)
+
+            # A cancelled await does not release a still-running synchronous HTTP slot.
+            def release_slot(_):
+                if not self.loop.is_closed():
+                    self.loop.call_soon_threadsafe(self.synthesis_slots.release)
+
+            future.add_done_callback(release_slot)
+            data, duration = await asyncio.shield(asyncio.wrap_future(future, loop=self.loop))
+            if self.metric:
+                self.metric(event, "tts_complete_ms")
+        if not self.valid(event):
+            raise asyncio.CancelledError
+        packets = await self.transport.encode(data)
+        if not self.valid(event):
+            raise asyncio.CancelledError
+        if self.metric:
+            self.metric(event, "opus_first_packet_ready_ms")
+        return packets, duration
 
     def cancel_before(self, session_id, generation):
         with self.lock:
@@ -136,6 +208,11 @@ class XiaozhiOutputPort:
             self.loop.call_soon_threadsafe(self._cancel, generation)
 
     def _cancel(self, generation):
+        if self.prefetch and self.prefetch[0].generation < generation:
+            _, task = self.prefetch
+            task.cancel()
+            task.add_done_callback(self._consume_cancelled_prefetch)
+            self.prefetch = None
         if self.active_event and self.active_event.generation >= generation:
             return
         if self.active:
@@ -148,6 +225,11 @@ class XiaozhiOutputPort:
             await self.transport.stop()
 
         self.stop_task = self.loop.create_task(stop())
+
+    @staticmethod
+    def _consume_cancelled_prefetch(task):
+        if not task.cancelled():
+            task.exception()
 
     def _audio(self, segment, fixed):
         cached = self.cache_dir / f"{self.tts.cache_key(segment.text)}.wav"
@@ -176,11 +258,21 @@ class XiaozhiOutputPort:
             raise ValueError("Measured exercise exceeds 90 seconds")
         started = False
         for index, segment in enumerate(segments, event.plan.start_index if event.plan else 0):
+            if not self.valid(event):
+                raise asyncio.CancelledError
             if fixed_audio is not None:
                 data, _ = fixed_audio[index - event.plan.start_index]
+                packets = await self.transport.encode(data)
+                if self.metric:
+                    self.metric(event, "opus_first_packet_ready_ms")
+            elif self.prefetch and self.prefetch[0].output_id == event.output_id:
+                _, task = self.prefetch
+                self.prefetch = None
+                self._prefetch_next()
+                packets, _ = await task
             else:
-                data, _ = await asyncio.to_thread(self._audio, segment, False)
-            packets = await self.transport.encode(data)
+                packets, _ = await self._prepare(event, segment, False)
+            self._prefetch_next()
             if not self.valid(event):
                 raise asyncio.CancelledError
             if not started:
@@ -194,6 +286,8 @@ class XiaozhiOutputPort:
             await asyncio.sleep(segment.pause_s)
         if self.valid(event):
             await self.transport.finish()
+            if self.metric:
+                self.metric(event, "server_completed_ms")
             self.acknowledge(event, "completed")
 
     async def _run(self):
@@ -202,6 +296,8 @@ class XiaozhiOutputPort:
             try:
                 if event is None:
                     return
+                if self.waiting and self.waiting[0].output_id == event.output_id:
+                    self.waiting.popleft()
                 if self.stop_task:
                     await self.stop_task
                 if not self.valid(event):
@@ -227,8 +323,13 @@ class XiaozhiOutputPort:
             self.closed = True
         if self.active:
             self.active.cancel()
+        if self.prefetch:
+            self.prefetch[1].cancel()
+            self.prefetch[1].add_done_callback(self._consume_cancelled_prefetch)
+            self.prefetch = None
         if self.stop_task:
             await self.stop_task
         await self.transport.stop()
         self.queue.put_nowait(None)
         await self.worker
+        self.synthesis_pool.shutdown(wait=False, cancel_futures=True)

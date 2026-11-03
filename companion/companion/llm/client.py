@@ -10,6 +10,7 @@ import httpx
 from openai import OpenAI
 from pydantic import BaseModel
 
+from companion.cognition.models import Usage
 from companion.core.config import LLMSettings
 
 
@@ -89,6 +90,7 @@ class AihubmixClient:
         **params: object,
     ) -> BaseModel:
         accept_late_high = params.pop("accept_late_high", False)
+        usage_callback = params.pop("usage_callback", None)
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             raise TimeoutError("JSON request deadline exceeded before dispatch")
@@ -107,6 +109,16 @@ class AihubmixClient:
             with self._lock:
                 self.degradations.append(degraded)
         completion = response.parse()
+        if usage_callback:
+            usage_callback(
+                Usage(
+                    input_tokens=completion.usage.prompt_tokens,
+                    output_tokens=completion.usage.completion_tokens,
+                    source="provider",
+                )
+                if completion.usage
+                else Usage()
+            )
         result = schema.model_validate_json(completion.choices[0].message.content or "")
         if time.monotonic() > deadline:
             if accept_late_high and getattr(result, "level", None) == "high":
@@ -116,3 +128,7 @@ class AihubmixClient:
 
     def close(self) -> None:
         self.client.close()
+
+    def background_client(self):
+        # Separate HTTP connection pool from Talker/Risk; provider QoS is still shared.
+        return AihubmixClient(self.settings)

@@ -1,5 +1,17 @@
 # 实现决定
 
+## v2 实施决定（进行中）
+
+默认 development 已切到 `Cognition`；旧 Reasoner 不再作为发布执行器。`reasoner_runs` 保留历史，新的角色调用和最终事务结果写入 `agent_runs` / `cognitive_jobs`。Snapshot 是经代码卡片检查后的 SupportPlan 兼容投影；`active_support_plan_id` 与旧播放 `active_plan_id` 分开。
+
+数据库采用事务化 v1→v2 迁移和 SQLite backup API；OS 文件锁覆盖迁移/活动 Core，进程退出自动释放，观察台仍只读直连。短事务支持 SAVEPOINT，使输入、明确控制、边界和状态可一起提交。后端锁序统一为用户锁→会话锁→Store。
+
+后台编排与模型执行槽位分开；独立 Brief 使用专用有限执行器，后台 HTTP 客户端独立于实时客户端。无法中止的同步请求保留实际槽位，取消不伪造线程已退出。Token 预留采用可解释的保守估算（非 ASCII 字符按 2、ASCII 按 1/2，加消息开销），标 estimated；返回 provider usage 后结算，缺失不写零。模型初值保持 qwen-flash/qwen-plus，真实验收后记录调整。
+
+接口核查：[Aihubmix 结构化输出](https://docs.aihubmix.com/cn/api/Structured-Output) 说明存在自动降级，继续执行本地 Pydantic 和来源校验；[TTS](https://docs.aihubmix.com/cn/api/TTS) 的接口描述不作为增量音频实测证据，本次采用完整 WAV 合成加下一句有界预取；[Python SQLite backup](https://docs.python.org/3.10/library/sqlite3.html#sqlite3.Connection.backup) 用于 WAL 一致备份。
+
+原测试 `test_old_reasoner_is_rejected_and_end_task_survives` 改查 v2 任务 cancelled：明确静默/会话结束主动取消旧协作，结束任务仍须 done，新会话不能被覆盖。没有取消原有许可、风险或恢复断言。
+
 ## 运行边界
 
 采用一个独立 Python 包，以 CLI 与 OutputPort 驱动公共核心。SQLite 是会话和记忆的持久化来源；核心不引用小智模块，小智的可选依赖只在适配器实际运行时导入。一个数据库只运行一个核心进程，观察台独立只读查询。

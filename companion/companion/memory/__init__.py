@@ -1,0 +1,1 @@
+"""Sourced, scoped relationship memory."""

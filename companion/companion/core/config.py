@@ -66,6 +66,48 @@ class TTSSettings(SettingsModel):
     response_format: Literal["wav"] = "wav"
 
 
+class JobBudgetSettings(SettingsModel):
+    max_calls: int = Field(gt=0)
+    output_tokens: int = Field(gt=0)
+    total_tokens: int = Field(gt=0)
+
+
+class CognitionSettings(SettingsModel):
+    model_workers: int = Field(default=2, ge=1, le=8)
+    max_pending: int = Field(default=256, ge=1)
+    queue_timeout_s: float = Field(default=30, gt=0)
+    plan_ttl_s: float = Field(default=120, gt=0)
+    plan_turn_delta: int = Field(default=4, ge=1)
+    context_tokens: int = Field(default=1200, ge=300)
+    analysis_model: str = "qwen-flash"
+    brief_model: str = "qwen-flash"
+    planner_model: str = "qwen-plus"
+    critic_model: str = "qwen-flash"
+    delta_model: str = "qwen-flash"
+    memory_model: str = "qwen-plus"
+    end_model: str = "qwen-plus"
+    routine: JobBudgetSettings = Field(
+        default_factory=lambda: JobBudgetSettings(
+            max_calls=4, output_tokens=2400, total_tokens=16000
+        )
+    )
+    deliberation: JobBudgetSettings = Field(
+        default_factory=lambda: JobBudgetSettings(
+            max_calls=8, output_tokens=6000, total_tokens=32000
+        )
+    )
+    memory: JobBudgetSettings = Field(
+        default_factory=lambda: JobBudgetSettings(
+            max_calls=2, output_tokens=1800, total_tokens=16000
+        )
+    )
+    end_consolidation: JobBudgetSettings = Field(
+        default_factory=lambda: JobBudgetSettings(
+            max_calls=2, output_tokens=2400, total_tokens=16000
+        )
+    )
+
+
 class Settings(SettingsModel):
     runtime: RuntimeSettings = Field(default_factory=RuntimeSettings)
     llm: LLMSettings = Field(default_factory=LLMSettings)
@@ -74,6 +116,7 @@ class Settings(SettingsModel):
     pools: PoolSettings = Field(default_factory=PoolSettings)
     storage: StorageSettings = Field(default_factory=StorageSettings)
     tts: TTSSettings = Field(default_factory=TTSSettings)
+    cognition: CognitionSettings = Field(default_factory=CognitionSettings)
     alert_webhook: str | None = None
 
 

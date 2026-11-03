@@ -1,6 +1,5 @@
 """Session orchestration. Model and playback I/O never owns dialogue state."""
 
-import json
 import logging
 import threading
 import time
@@ -26,8 +25,6 @@ from .models import (
     PlaybackEvent,
     PlaybackPlan,
     PlaybackSegment,
-    ReasonerOutput,
-    ReasonerTask,
     RiskResult,
     SessionState,
     Snapshot,
@@ -35,7 +32,6 @@ from .models import (
     TurnContext,
     TurnSignals,
 )
-from .reasoner import ReasonerScheduler
 from .risk import RiskDetector
 from .state_machine import StateMachine
 from .talker import Talker
@@ -78,6 +74,13 @@ class CompanionCore:
         self.registry_lock = threading.RLock()
         self.closing = False
         self.purging: set[str] = set()
+        from collections import defaultdict
+
+        from companion.store.lease import WriterLease
+
+        self.writer_lease = WriterLease(store.path)
+        self.user_locks = defaultdict(threading.RLock)
+        self.user_epochs = {}
         self._notifications = (
             ThreadPoolExecutor(max_workers=1, thread_name_prefix="risk-notify")
             if config.settings.alert_webhook
@@ -88,9 +91,12 @@ class CompanionCore:
         self.validator = Validator(config)
         self.exercise = ExercisePlayer(config)
         self.risk = RiskDetector(config, llm)
-        self.reasoner = ReasonerScheduler(
-            config.settings.pools.reasoner_workers, self._run_reasoner
-        )
+        from companion.cognition.interaction import Interactions
+        from companion.cognition.orchestrator import Cognition
+
+        self.cognition = Cognition(self)
+        self.reasoner = self.cognition.scheduler
+        self.interactions = Interactions(self, self.cognition.memory)
         self.templates = Environment(
             loader=FileSystemLoader(config.directory / "prompts"),
             undefined=StrictUndefined,
@@ -104,6 +110,9 @@ class CompanionCore:
                 snapshot = Snapshot(session_id=state.session_id, user_key=state.user_key)
                 self.sessions[state.session_id] = SessionRuntime(state, snapshot, None)
                 self.reasoner.submit(state.user_key, state.session_id, "process_restart", "end")
+
+    def user_lock(self, user_key):
+        return self.user_locks[user_key]
 
     def today(self) -> str:
         return datetime.now(ZoneInfo(self.config.settings.runtime.timezone)).date().isoformat()
@@ -152,87 +161,177 @@ class CompanionCore:
             raise ValueError("User input cannot be empty")
         runtime = self.sessions[session_id]
         t0 = time.monotonic()
-        with runtime.lock:
-            state = runtime.state
-            if state.lifecycle != "active" or state.user_key in self.purging:
-                raise RuntimeError("Session is not active")
-            existing = self.store.existing_input(session_id, input_id)
-            if existing:
-                if existing["text"] != text or existing["input_kind"] != kind:
-                    raise ValueError("Input id reused for different content")
-                return existing["id"]
-            for cancel in runtime.cancels.values():
-                cancel.set()
-            if state.mode == "exercise":
-                plan_event = runtime.outputs.get(state.active_plan_id or "")
-                state.resume_script_id = (
-                    plan_event.plan.script_id if plan_event and plan_event.plan else None
+        with self.user_lock(runtime.state.user_key), runtime.lock:
+            with self.store.transaction():
+                state = runtime.state.model_copy(deep=True)
+                if state.lifecycle != "active" or state.user_key in self.purging:
+                    raise RuntimeError("Session is not active")
+                existing = self.store.existing_input(session_id, input_id)
+                if existing:
+                    if existing["text"] != text or existing["input_kind"] != kind:
+                        raise ValueError("Input id reused for different content")
+                    return existing["id"]
+                for cancel in runtime.cancels.values():
+                    cancel.set()
+                if state.mode == "exercise":
+                    state.policy_revision += 1
+                    plan_event = runtime.outputs.get(state.active_plan_id or "")
+                    state.resume_script_id = (
+                        plan_event.plan.script_id if plan_event and plan_event.plan else None
+                    )
+                    state.mode = "normal"
+                    state.active_plan_id = None
+                state.generation += 1
+                state.state_revision += 1
+                turn_id = self.store.add_input(state, input_id, text, kind, signals)
+                state.latest_turn_id = turn_id
+                if kind == "user":
+                    state.user_turns += 1
+                runtime.cancels[turn_id] = threading.Event()
+                runtime.metrics[turn_id] = {}
+                initial = self.risk.lexicon(text) if kind == "user" else RiskResult()
+                runtime.risks[turn_id] = initial
+                directive = None
+                triggers = ()
+                control_triggers = ()
+                control_changed = False
+                if kind == "user" and state.mode != "crisis" and initial.level != "high":
+                    control_triggers, control_changed = self.interactions.input(
+                        state, text, turn_id
+                    )
+                from companion.cognition.policy import build_turn_policy, plan_invalid_reason
+
+                bundle = self.cognition.memory.retrieve(
+                    state, text, self.config.settings.cognition.context_tokens
                 )
-                state.mode = "normal"
-                state.active_plan_id = None
-            state.generation += 1
-            state.state_revision += 1
-            turn_id = self.store.add_input(state, input_id, text, kind, signals)
-            state.latest_turn_id = turn_id
-            if kind == "user":
-                state.user_turns += 1
-            runtime.cancels[turn_id] = threading.Event()
-            runtime.metrics[turn_id] = {}
-            initial = self.risk.lexicon(text) if kind == "user" else RiskResult()
-            runtime.risks[turn_id] = initial
-            directive = None
-            triggers = ()
-            runtime.snapshot = runtime.snapshot.model_copy(
-                update={"core_memory": self.store.core_memory(state.user_key, self.today())}
-            )
-            if state.mode != "crisis" and initial.level != "high" and kind == "user":
-                result = self.machine.apply_rules(state, text, signals, runtime.snapshot)
-                directive, triggers = result.directive, result.trigger_reasons
-                if (
-                    not triggers
-                    and state.user_turns - state.last_reasoner_user_index
-                    >= self.config.settings.dialogue.reasoner_every_n_turns
+                plan = self.store.active_support_plan(state.session_id)
+                policy = build_turn_policy(
+                    state, plan, bundle, self.store.memory_items(state.user_key)
+                )
+                if plan_invalid_reason(
+                    plan, state, bundle.model_dump(), self.store.memory_items(state.user_key)
                 ):
-                    triggers = ("periodic",)
-                if (
-                    signals.emotion in ("SAD", "ANGRY", "FEARFUL")
-                    and state.user_turns - state.last_reasoner_user_index >= 2
-                ):
-                    triggers += ("emotion",)
-                if (
-                    not directive
-                    and runtime.snapshot.offer_exercise
-                    and not state.pending_offer
-                    and state.stage in (Stage.explore, Stage.comfort)
-                ):
-                    self.machine.offer(state, "exercise", "breathing_60s")
-                    directive = "exercise_offer"
-            context = TurnContext(
-                session_id=session_id,
-                turn_id=turn_id,
-                generation=state.generation,
-                text=text,
-                kind=kind,
-                stage=state.stage,
-                mode=state.mode,
-                card_id=state.card_in_use,
-                snapshot=runtime.snapshot,
-                signals=signals,
-                trigger_reasons=triggers,
-                directive=directive,
-                t0=t0,
-            )
-            runtime.contexts[turn_id] = context
-            self.store.update_turn(
-                turn_id,
-                stage=state.stage.value,
-                mode=state.mode,
-                card=state.card_in_use,
-                snapshot_version=runtime.snapshot.version,
-                generation=state.generation,
-            )
-            self.store.save_state(state)
-            port, generation = runtime.port, state.generation
+                    runtime.snapshot = runtime.snapshot.model_copy(
+                        update={
+                            "allowed_cards": (),
+                            "preferred_card": None,
+                            "offer_exercise": False,
+                            "stage_proposal": None,
+                            "topic_changed": False,
+                        }
+                    )
+                runtime.snapshot = runtime.snapshot.model_copy(
+                    update={"core_memory": self.store.core_memory(state.user_key, self.today())}
+                )
+                if state.mode != "crisis" and initial.level != "high" and kind == "user":
+                    prior_offer = (
+                        state.pending_offer.model_copy(deep=True) if state.pending_offer else None
+                    )
+                    # Unchecked plans cannot initiate a new invitation. A current explicit
+                    # acceptance still follows the already active deterministic offer.
+                    if policy.selection_reason == "unchecked_delta_non_action" and not prior_offer:
+                        runtime.snapshot = runtime.snapshot.model_copy(
+                            update={
+                                "allowed_cards": (),
+                                "preferred_card": None,
+                                "offer_exercise": False,
+                                "stage_proposal": None,
+                            }
+                        )
+                    result = self.machine.apply_rules(state, text, signals, runtime.snapshot)
+                    directive, triggers = (
+                        result.directive,
+                        tuple(dict.fromkeys((*control_triggers, *result.trigger_reasons))),
+                    )
+                    if control_changed and not triggers:
+                        triggers = ("boundary",)
+                    if (
+                        not triggers
+                        and state.user_turns - state.last_reasoner_user_index
+                        >= self.config.settings.dialogue.reasoner_every_n_turns
+                    ):
+                        triggers = ("periodic",)
+                    if (
+                        signals.emotion in ("SAD", "ANGRY", "FEARFUL")
+                        and state.user_turns - state.last_reasoner_user_index >= 2
+                    ):
+                        triggers += ("emotion",)
+                    if (
+                        not directive
+                        and runtime.snapshot.offer_exercise
+                        and not state.pending_offer
+                        and state.stage in (Stage.explore, Stage.comfort)
+                    ):
+                        self.machine.offer(state, "exercise", "breathing_60s")
+                        directive = "exercise_offer"
+                    if (
+                        prior_offer
+                        and prior_offer.active
+                        and self.machine.matches("agree", text)
+                        and (
+                            state.stage == Stage.action
+                            or state.mode == "exercise"
+                            or (state.pending_offer and state.pending_offer.accepted_at)
+                        )
+                    ):
+                        self.interactions.record(
+                            state, "offer_accepted", "user_explicit", turn_id=turn_id
+                        )
+                    if (
+                        prior_offer
+                        and not state.pending_offer
+                        and state.stage != Stage.action
+                        and state.mode != "exercise"
+                    ):
+                        self.interactions.record(
+                            state, "offer_withdrawn", "deterministic_rule", turn_id=turn_id
+                        )
+                    if "topic_changed" in result.trigger_reasons:
+                        self.interactions.record(
+                            state, "topic_changed", "deterministic_rule", turn_id=turn_id
+                        )
+                policy = build_turn_policy(
+                    state, plan, bundle, self.store.memory_items(state.user_key)
+                )
+                if state.stage == Stage.action and state.card_in_use:
+                    policy = policy.model_copy(
+                        update={
+                            "allowed_action_ids": (state.card_in_use,),
+                            "selection_reason": "current_consented_action",
+                        }
+                    )
+                context = TurnContext(
+                    session_id=session_id,
+                    turn_id=turn_id,
+                    generation=state.generation,
+                    text=text,
+                    kind=kind,
+                    stage=state.stage,
+                    mode=state.mode,
+                    card_id=state.card_in_use,
+                    snapshot=runtime.snapshot,
+                    signals=signals,
+                    trigger_reasons=triggers,
+                    directive=directive,
+                    t0=t0,
+                    policy_frame=policy,
+                )
+                runtime.contexts[turn_id] = context
+                self.store.connection().execute(
+                    "INSERT INTO turn_policies VALUES (?,?,?)",
+                    (turn_id, session_id, policy.model_dump_json()),
+                )
+                self.store.update_turn(
+                    turn_id,
+                    stage=state.stage.value,
+                    mode=state.mode,
+                    card=state.card_in_use,
+                    snapshot_version=runtime.snapshot.version,
+                    generation=state.generation,
+                )
+                self.store.save_state(state)
+                port, generation = runtime.port, state.generation
+            runtime.state = state
         self.store.cancel_outputs(session_id, generation)
         if port:
             port.cancel_before(session_id, generation)
@@ -252,10 +351,16 @@ class CompanionCore:
                 previous,
                 lambda result, elapsed: self._risk_result(session_id, turn_id, result, elapsed),
             )
-            with runtime.lock:
+            with self.user_lock(runtime.state.user_key), runtime.lock:
                 runtime.risk_futures[turn_id] = future
-        for trigger in triggers:
-            self.reasoner.submit(runtime.state.user_key, session_id, trigger)
+        if control_changed:
+            self.reasoner.cancel_user(runtime.state.user_key, session_id, "explicit_control")
+        if triggers:
+            self.reasoner.submit(runtime.state.user_key, session_id, triggers)
+        if control_triggers and any(
+            t in control_triggers for t in ("boundary", "correction", "feedback")
+        ):
+            self.reasoner.submit(runtime.state.user_key, session_id, "interaction_memory", "memory")
         return turn_id
 
     def _risk_result(self, session_id: str, turn_id: int, risk: RiskResult, elapsed: float) -> None:
@@ -280,7 +385,7 @@ class CompanionCore:
                     )
                     self._notify_risk(event_id, risk)
             return
-        with runtime.lock:
+        with self.user_lock(runtime.state.user_key), runtime.lock:
             if runtime.state.user_key in self.purging:
                 return
             previous = runtime.risks.get(turn_id, RiskResult())
@@ -301,6 +406,9 @@ class CompanionCore:
             first = risk.level == "high" and runtime.state.mode != "crisis" and active
             if first:
                 runtime.state.mode = "crisis"
+                runtime.state.policy_revision += 1
+                runtime.state.active_support_plan_id = None
+                self.store.invalidate_plans(session_id)
                 runtime.state.state_revision += 1
                 runtime.state.generation += 1
                 runtime.state.pending_offer = None
@@ -312,6 +420,7 @@ class CompanionCore:
             else:
                 port, generation = None, runtime.state.generation
         if first:
+            self.reasoner.cancel_user(runtime.state.user_key, session_id, "risk_high")
             if port:
                 port.cancel_before(session_id, generation)
             self.store.cancel_outputs(session_id, generation)
@@ -322,7 +431,7 @@ class CompanionCore:
         if risk.level != "none":
             event_id = self.store.record_risk(session_id, turn_id, risk, dict(metrics))
             self._notify_risk(event_id, risk)
-        with runtime.lock:
+        with self.user_lock(runtime.state.user_key), runtime.lock:
             self.store.save_state(runtime.state)
             self.store.update_turn(turn_id, latency=dict(metrics))
             if first:
@@ -356,7 +465,7 @@ class CompanionCore:
         self._notifications.submit(send)
 
     def _crisis_reply(self, runtime: SessionRuntime, context: TurnContext, *, first: bool) -> None:
-        with runtime.lock:
+        with self.user_lock(runtime.state.user_key), runtime.lock:
             state = runtime.state
             if context.turn_id in runtime.crisis_sent or state.lifecycle != "active":
                 return
@@ -416,7 +525,7 @@ class CompanionCore:
                 )
             except FutureTimeout:
                 runtime.metrics[context.turn_id]["gate_pending"] = True
-        with runtime.lock:
+        with self.user_lock(runtime.state.user_key), runtime.lock:
             if not self._valid(runtime, context):
                 return False
             runtime.metrics[context.turn_id].setdefault(
@@ -441,7 +550,7 @@ class CompanionCore:
         runtime = self.sessions.get(session_id)
         if runtime is None:
             return
-        with runtime.lock:
+        with self.user_lock(runtime.state.user_key), runtime.lock:
             context = runtime.contexts[turn_id]
             if turn_id in runtime.responded or not self._valid(runtime, context):
                 return
@@ -542,7 +651,7 @@ class CompanionCore:
                         emoji,
                         purpose="fallback" if metrics.get("fallback") else "reply",
                     )
-            with runtime.lock:
+            with self.user_lock(runtime.state.user_key), runtime.lock:
                 reminder_due = (
                     context.kind == "user"
                     and not context.directive
@@ -579,7 +688,7 @@ class CompanionCore:
         runtime = self.sessions.get(event.session_id)
         if runtime is None:
             return False
-        with runtime.lock:
+        with self.user_lock(runtime.state.user_key), runtime.lock:
             state = runtime.state
             if (
                 state.lifecycle != "active"
@@ -632,7 +741,7 @@ class CompanionCore:
         if runtime is None:
             return
         should_end = False
-        with runtime.lock:
+        with self.user_lock(runtime.state.user_key), runtime.lock:
             state = runtime.state
             output = runtime.outputs.get(event.output_id)
             if not output or event.generation != state.generation or state.lifecycle != "active":
@@ -646,6 +755,7 @@ class CompanionCore:
                 if output.type == "exercise_plan" and event.segment_index is not None:
                     state.resume_index = event.segment_index
                 return
+            self.interactions.playback(state, output, event)
             self.store.output_status(event.output_id, event.status)
             if event.status == "started":
                 if (
@@ -678,6 +788,7 @@ class CompanionCore:
                 if output.type == "exercise_plan" and state.active_plan_id == output.output_id:
                     state.active_plan_id = None
                     state.mode = "normal"
+                    state.policy_revision += 1
                     state.resume_index = 0
                     self.machine.move(state, Stage.comfort)
                 should_end = output.purpose == "idle_end"
@@ -701,7 +812,7 @@ class CompanionCore:
         runtime = self.sessions.get(session_id)
         if not runtime:
             return
-        with runtime.lock:
+        with self.user_lock(runtime.state.user_key), runtime.lock:
             state = runtime.state
             if state.lifecycle != "active" or generation != state.generation:
                 return
@@ -710,6 +821,7 @@ class CompanionCore:
             for cancel in runtime.cancels.values():
                 cancel.set()
             if state.mode == "exercise":
+                state.policy_revision += 1
                 output = runtime.outputs.get(state.active_plan_id or "")
                 state.resume_script_id = output.plan.script_id if output and output.plan else None
                 state.mode = "normal"
@@ -724,11 +836,14 @@ class CompanionCore:
         runtime = self.sessions.get(session_id)
         if runtime is None:
             return
-        with runtime.lock:
+        with self.user_lock(runtime.state.user_key), runtime.lock:
             state = runtime.state
             if state.lifecycle != "active":
                 return
             state.lifecycle = "ending"
+            state.policy_revision += 1
+            state.active_support_plan_id = None
+            self.store.invalidate_plans(session_id)
             state.state_revision += 1
             state.generation += 1
             state.pending_offer = None
@@ -740,152 +855,11 @@ class CompanionCore:
         self.store.cancel_outputs(session_id, generation)
         if port:
             port.cancel_before(session_id, generation)
+        self.reasoner.cancel_user(state.user_key, session_id, "session_ended")
+        self.interactions.record(
+            state, "session_ended", "deterministic_rule", turn_id=state.latest_turn_id or None
+        )
         self.reasoner.submit(state.user_key, session_id, reason, "end")
-
-    def _run_reasoner(self, session_id: str, kind: str, triggers: tuple[str, ...]) -> None:
-        runtime = self.sessions.get(session_id)
-        if runtime is None:
-            return
-        with runtime.lock:
-            state = runtime.state.model_copy(deep=True)
-            if state.user_key in self.purging or (
-                kind == "normal" and (state.lifecycle != "active" or state.mode == "crisis")
-            ):
-                return
-            task = ReasonerTask(
-                session_id=session_id,
-                user_key=state.user_key,
-                kind=kind,
-                trigger_reasons=triggers,
-                source_turn_id=state.latest_turn_id,
-                state_revision=state.state_revision,
-                topic_revision=state.topic_revision,
-                base_snapshot_version=runtime.snapshot.version,
-                user_index=state.user_turns,
-            )
-            snapshot = runtime.snapshot
-            runtime.state.last_reasoner_user_index = state.user_turns
-        started = time.monotonic()
-        deadline = started + self.config.settings.timing.reasoner_timeout_s
-        history = self.store.history(
-            session_id, task.source_turn_id, self.config.settings.dialogue.reasoner_context_turns
-        )
-        source_ids = {r["id"] for r in history if r["role"] == "user"}
-        payload = {
-            "history": history,
-            "state": state.model_dump(mode="json"),
-            "snapshot": snapshot.model_dump(mode="json"),
-            "cards": [
-                card.model_dump() for card in self.config.cards.values() if card.status != "draft"
-            ],
-            "ending": kind == "end",
-            "today": self.today(),
-            "followups": self.store.query(
-                "SELECT id,content,status FROM followups WHERE user_key=?", (state.user_key,)
-            ),
-        }
-        prompt = self.templates.get_template("reasoner.j2").render(
-            schema=json.dumps(ReasonerOutput.model_json_schema(), ensure_ascii=False),
-            ending=kind == "end",
-        )
-        messages = [
-            {"role": "system", "content": prompt},
-            {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
-        ]
-        try:
-            if kind == "end" and not source_ids:
-                output = ReasonerOutput(session_summary="")
-            else:
-                from pydantic import ValidationError
-
-                for attempt in range(2):
-                    try:
-                        output = self.llm.complete_json(
-                            self.config.settings.llm.reasoner_model,
-                            messages,
-                            ReasonerOutput,
-                            deadline,
-                            temperature=0.2,
-                            max_tokens=1800,
-                        )
-                        break
-                    except (ValidationError, json.JSONDecodeError):
-                        if attempt == 1:
-                            raise
-                        messages.append(
-                            {
-                                "role": "user",
-                                "content": "Return valid JSON matching the supplied schema.",
-                            }
-                        )
-            validated, rejected = self.validator.validate(
-                output,
-                state,
-                source_ids,
-                datetime.fromisoformat(self.today()).date(),
-                ending=kind == "end",
-            )
-            with runtime.lock:
-                current = runtime.state
-                if current.user_key in self.purging:
-                    return
-                stale = kind == "normal" and (
-                    current.lifecycle != "active"
-                    or current.mode == "crisis"
-                    or current.latest_turn_id != task.source_turn_id
-                    or current.state_revision != task.state_revision
-                    or runtime.snapshot.version != task.base_snapshot_version
-                )
-                duration = (time.monotonic() - started) * 1000
-                if stale:
-                    self.store.record_run(
-                        task, "superseded", duration, result=output.model_dump(mode="json")
-                    )
-                    if current.lifecycle == "active" and current.mode != "crisis":
-                        self.reasoner.submit(current.user_key, session_id, "superseded")
-                    return
-                next_snapshot = None
-                if kind == "normal":
-                    next_snapshot = Snapshot(
-                        session_id=session_id,
-                        user_key=state.user_key,
-                        version=snapshot.version + 1,
-                        source_turn_id=task.source_turn_id,
-                        trigger=",".join(triggers),
-                        assessment=validated.assessment,
-                        stage_proposal=validated.stage_proposal,
-                        allowed_cards=validated.cards.allowed,
-                        preferred_card=validated.cards.preferred,
-                        offer_exercise=validated.offer_exercise,
-                        topic_changed=validated.topic_changed,
-                        core_memory=snapshot.core_memory,
-                    )
-                self.store.publish(
-                    task,
-                    next_snapshot,
-                    validated.memory,
-                    validated.session_summary,
-                    output.model_dump(mode="json"),
-                    [r.model_dump() for r in rejected],
-                    duration,
-                )
-                if next_snapshot:
-                    runtime.snapshot = next_snapshot
-                if kind == "end":
-                    current.lifecycle = "closed"
-                    self.store.save_state(current)
-                    with self.registry_lock:
-                        self.sessions.pop(session_id, None)
-        except Exception as error:
-            logger.exception("Reasoner failed for %s", session_id)
-            status = "timeout" if isinstance(error, TimeoutError) else "error"
-            self.store.record_run(
-                task, status, (time.monotonic() - started) * 1000, error=type(error).__name__
-            )
-            if kind == "end":
-                self.store.fail_end(session_id, type(error).__name__)
-                with self.registry_lock:
-                    self.sessions.pop(session_id, None)
 
     def wait_idle(self, timeout: float = 25) -> bool:
         started = time.monotonic()
@@ -896,7 +870,9 @@ class CompanionCore:
     def purge_user(self, user_key: str) -> None:
         with self.registry_lock:
             self.purging.add(user_key)
+            self.user_epochs[user_key] = self.user_epochs.get(user_key, 0) + 1
             sessions = [key for key, rt in self.sessions.items() if rt.state.user_key == user_key]
+        self.reasoner.cancel_user(user_key, reason="purge")
         for session_id in sessions:
             self.on_session_end(session_id, "purge")
         if not self.risk.wait_idle(
@@ -914,9 +890,10 @@ class CompanionCore:
         for session_id in list(self.sessions):
             self.on_session_end(session_id, "shutdown")
         self.risk.close()
-        self.reasoner.close()
+        self.cognition.close()
         if self._notifications:
             self._notifications.shutdown(wait=True)
         close = getattr(self.llm, "close", None)
         if close:
             close()
+        self.writer_lease.close()

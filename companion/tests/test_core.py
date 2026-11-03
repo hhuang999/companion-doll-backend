@@ -127,7 +127,7 @@ def test_old_reasoner_is_rejected_and_end_task_survives(config, store):
     try:
         turn(core, "怎么办")
         deadline = time.monotonic() + 3
-        while "reasoner" not in llm.calls and time.monotonic() < deadline:
+        while "analysis" not in llm.calls and time.monotonic() < deadline:
             time.sleep(0.005)
         turn(core, "不想说了")
         core.on_session_end("s", "test")
@@ -140,10 +140,10 @@ def test_old_reasoner_is_rejected_and_end_task_survives(config, store):
         )
         assert core.sessions["new"].state.stage == Stage.opening
         assert (
-            core.store.query("SELECT status FROM reasoner_runs WHERE session_id='s' ORDER BY id")[
-                0
-            ]["status"]
-            == "superseded"
+            core.store.query(
+                "SELECT status FROM cognitive_jobs WHERE session_id='s' ORDER BY queued_at"
+            )[0]["status"]
+            == "cancelled"
         )
     finally:
         llm.reasoner_release.set()

@@ -19,12 +19,15 @@ from companion.core.models import (
     utcnow,
 )
 
+from .cognition import CognitionStore
+from .migrate import migrate
+
 
 def dump(value: object) -> str:
     return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
 
 
-class Store:
+class Store(CognitionStore):
     def __init__(self, path: str | Path, busy_timeout_ms: int = 5000) -> None:
         self.path = Path(path).resolve()
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -34,10 +37,11 @@ class Store:
         self._connections: list[sqlite3.Connection] = []
         connection = self.connection()
         connection.execute("PRAGMA journal_mode=WAL")
-        version = connection.execute("PRAGMA user_version").fetchone()[0]
-        if version not in (0, 1):
-            raise ValueError(f"Unsupported database version: {version}")
-        connection.executescript(Path(__file__).with_name("schema.sql").read_text())
+        try:
+            self.migration_backup = migrate(connection, self.path)
+        except BaseException:
+            self.close()
+            raise
 
     def connection(self) -> sqlite3.Connection:
         if not hasattr(self._local, "connection"):
@@ -56,6 +60,20 @@ class Store:
     def transaction(self) -> Iterator[sqlite3.Connection]:
         with self._lock:
             connection = self.connection()
+            if connection.in_transaction:
+                # Core can group input, controls, memory and state into one atomic unit.
+                import uuid
+
+                name = "nested_" + uuid.uuid4().hex
+                connection.execute(f"SAVEPOINT {name}")
+                try:
+                    yield connection
+                    connection.execute(f"RELEASE {name}")
+                except BaseException:
+                    connection.execute(f"ROLLBACK TO {name}")
+                    connection.execute(f"RELEASE {name}")
+                    raise
+                return
             with connection:
                 connection.execute("BEGIN IMMEDIATE")
                 yield connection
@@ -68,6 +86,9 @@ class Store:
             db.execute(
                 "INSERT OR IGNORE INTO users(user_key,created_at) VALUES (?,?)",
                 (state.user_key, utcnow().isoformat()),
+            )
+            db.execute(
+                "INSERT OR IGNORE INTO user_revisions(user_key) VALUES (?)", (state.user_key,)
             )
             db.execute(
                 "INSERT INTO sessions(session_id,user_key,started_at,state) VALUES (?,?,?,?)",
@@ -462,6 +483,11 @@ class Store:
 
     def recover(self) -> list[dict]:
         with self.transaction() as db:
+            for row in db.execute(
+                "SELECT job_id FROM cognitive_jobs WHERE status IN ('running','queued')"
+            ).fetchall():
+                self.finish_job(row[0], "interrupted", error="process_restart", db=db)
+            db.execute("UPDATE support_plans SET status='invalidated' WHERE status='active'")
             db.execute(
                 "UPDATE followups SET status='pending',reservation_session_id=NULL WHERE status='reserved'"
             )
@@ -493,12 +519,27 @@ class Store:
 
     def purge_user(self, user_key: str) -> None:
         with self.transaction() as db:
+            db.execute(
+                "DELETE FROM memory_sources WHERE memory_id IN (SELECT memory_id FROM memory_items WHERE user_key=?)",
+                (user_key,),
+            )
+            db.execute("UPDATE memory_items SET supersedes_id=NULL WHERE user_key=?", (user_key,))
+            for table in (
+                "memory_corrections",
+                "memory_items",
+                "interaction_events",
+                "support_plans",
+                "cognitive_jobs",
+                "user_revisions",
+            ):
+                db.execute(f"DELETE FROM {table} WHERE user_key=?", (user_key,))
             sessions = [
                 r[0]
                 for r in db.execute("SELECT session_id FROM sessions WHERE user_key=?", (user_key,))
             ]
             for session_id in sessions:
                 for table in (
+                    "turn_policies",
                     "outputs",
                     "risk_events",
                     "card_usage",

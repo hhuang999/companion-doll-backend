@@ -59,7 +59,9 @@ def main() -> None:
     print(
         f"mode={config.settings.runtime.mode}; model={'fake fixtures' if args.fake else config.settings.llm.talker_model}"
     )
-    print("Commands: /state, /wait, /cry TEXT, /emotion SAD TEXT, /end, /quit")
+    print(
+        "Commands: /state, /policy, /memory, /jobs, /wait, /cry TEXT, /emotion SAD TEXT, /end, /quit"
+    )
 
     def turn(text: str, kind: str = "user", signals: TurnSignals | None = None) -> None:
         identifier = core.on_input(
@@ -84,6 +86,26 @@ def main() -> None:
                 continue
             if text == "/wait":
                 print(f"background_idle={core.wait_idle()}")
+                continue
+            if text in ("/policy", "/memory", "/jobs"):
+                state = core.sessions[session_id].state
+                if text == "/memory":
+                    value = core.cognition.memory.retrieve(state, "").model_dump(mode="json")
+                elif text == "/policy":
+                    context = core.sessions[session_id].contexts.get(state.latest_turn_id)
+                    value = {
+                        "active_plan": core.store.active_support_plan(session_id).model_dump(
+                            mode="json"
+                        )
+                        if core.store.active_support_plan(session_id)
+                        else None,
+                        "last_turn_policy": context.policy_frame.model_dump(mode="json")
+                        if context
+                        else None,
+                    }
+                else:
+                    value = core.store.cognitive_diagnostics(state.user_key, session_id)
+                print(json.dumps(value, ensure_ascii=False, indent=2))
                 continue
             if text == "/end":
                 turn("", "idle_end")

@@ -7,6 +7,7 @@ from collections.abc import Iterator
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+from companion.cognition.policy import prompt_projection
 from companion.llm.client import LLMClient
 
 from .config import Config
@@ -65,10 +66,20 @@ class Talker:
             stage=config.stages[context.stage.value],
             card=card,
             step=step,
-            memory=context.snapshot.core_memory.model_dump_json()[:450],
+            memory=prompt_projection(
+                context.policy_frame, config.settings.cognition.context_tokens
+            ),
             signals=context.signals.model_dump_json(),
         )
         messages = [{"role": "system", "content": prompt}]
+        messages.append(
+            {
+                "role": "user",
+                "content": "<policy_data>"
+                + prompt_projection(context.policy_frame, config.settings.cognition.context_tokens)
+                + "</policy_data>",
+            }
+        )
         messages += [{"role": r["role"], "content": r["text"]} for r in history]
         if not history or history[-1].get("id") != context.turn_id:
             messages.append({"role": "user", "content": context.text})

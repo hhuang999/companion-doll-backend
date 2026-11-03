@@ -36,6 +36,8 @@ class StateMachine:
     @staticmethod
     def move(state: SessionState, target: Stage) -> None:
         if state.stage != target:
+            if state.stage in (Stage.action, Stage.quiet) or target in (Stage.action, Stage.quiet):
+                state.policy_revision += 1
             state.stage = target
             state.state_revision += 1
             if target == Stage.closing:
@@ -148,6 +150,7 @@ class StateMachine:
             if offer.active and self.matches("agree", text):
                 if offer.kind in ("exercise", "resume_exercise"):
                     state.mode = "exercise"
+                    state.policy_revision += 1
                     state.pending_offer = None
                     return RuleResult(
                         fired_rules=("exercise_accepted",), directive=f"exercise:{offer.target_id}"
