@@ -4,9 +4,17 @@
 
 当前默认运行 `development`：S16 是开发夹具，危机文本是明确标注的测试占位内容，三段练习是待审核草稿。正式 17 张行动卡、审核话术和真机验收仍待补齐；`demo` 模式会检查这些条件。最新证据与未达项见 [验证报告](companion/docs/VALIDATION.md)。
 
+## 交互式后端架构
+
+[![情感陪伴玩偶后端架构图](docs/assets/backend-architecture.png)](https://hhuang999.github.io/companion-doll-backend/)
+
+**[打开交互架构图 →](https://hhuang999.github.io/companion-doll-backend/)** · 可缩放、切换主题、按流程聚焦，并通过组件源码链接查看对应实现。页面下方详细解释实时对话、风险接管、后台分析、记忆和播放机制。
+
+GitHub README 显示静态预览，完整交互页面由 GitHub Pages 发布。架构图绑定到页面标注的源码提交；最新验证状态见上方验证报告。
+
 ## 立即运行
 
-在本目录打开 PowerShell。当前工作区已安装 `.venv`，可以直接运行：
+首次使用请先按下方“安装到新环境”建立 `.venv`，并配置 `.env`。然后在本目录打开 PowerShell：
 
 ```powershell
 # 离线文字对话，不调用 API
