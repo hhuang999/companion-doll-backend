@@ -106,6 +106,34 @@ def build_turn_policy(state, plan, bundle, all_items, *, now=None):
     )
 
 
+def exercise_eligibility(plan, frame, new_inputs, matches):
+    """Return allowed IDs and whether conditions are current, including consent-only deltas."""
+    if plan is None or frame.selection_reason not in ("verified", "unchecked_delta_non_action"):
+        return (), False
+    for row in new_inputs:
+        signals = json.loads(row["signals"])
+        if (
+            not matches("agree", row["text"])
+            or signals.get("emotion") not in (None, "NEUTRAL")
+            or set(signals.get("events", ())) - {"Speech"}
+        ):
+            return (), False
+    if frame.active_boundaries or any(item.kind == "no_advice" for item in plan.avoid):
+        return (), True
+    allowed = tuple(
+        action.action_id
+        for action in plan.candidate_actions
+        if action.kind == "exercise"
+        and action.when_met
+        and not action.exclusions_present
+        and not any(
+            item.kind == "no_repeat_offer" and item.target in (None, action.action_id)
+            for item in plan.avoid
+        )
+    )
+    return allowed, True
+
+
 def prompt_projection(frame, budget=1200):
     from companion.memory.service import MemoryService
 

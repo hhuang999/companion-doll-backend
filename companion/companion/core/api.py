@@ -220,7 +220,11 @@ class CompanionCore:
                     control_triggers, control_changed = self.interactions.input(
                         state, text, turn_id
                     )
-                from companion.cognition.policy import build_turn_policy, plan_invalid_reason
+                from companion.cognition.policy import (
+                    build_turn_policy,
+                    exercise_eligibility,
+                    plan_invalid_reason,
+                )
 
                 bundle = self.cognition.memory.retrieve(
                     state, text, self.config.settings.cognition.context_tokens
@@ -248,14 +252,32 @@ class CompanionCore:
                     prior_offer = (
                         state.pending_offer.model_copy(deep=True) if state.pending_offer else None
                     )
-                    # Unchecked plans cannot initiate a new invitation. A current explicit
-                    # acceptance still follows the already active deterministic offer.
+                    unchecked_inputs = self.store.query(
+                        "SELECT text,signals FROM turns WHERE session_id=? AND role='user' "
+                        "ORDER BY id DESC LIMIT ?",
+                        (
+                            session_id,
+                            max(0, state.user_turns - plan.checked_through_user_index)
+                            if plan and policy.selection_reason == "unchecked_delta_non_action"
+                            else 0,
+                        ),
+                    )
+                    exercise_ids, exercise_conditions_current = exercise_eligibility(
+                        plan, policy, unchecked_inputs, self.machine.matches
+                    )
+                    exercise_pending = (
+                        runtime.snapshot.offer_exercise
+                        or state.resume_script_id
+                        or (prior_offer and prior_offer.kind in ("exercise", "resume_exercise"))
+                    )
+                    # Only a consent-only delta may carry reviewed exercise conditions forward.
                     if policy.selection_reason == "unchecked_delta_non_action" and not prior_offer:
                         runtime.snapshot = runtime.snapshot.model_copy(
                             update={
                                 "allowed_cards": (),
                                 "preferred_card": None,
-                                "offer_exercise": False,
+                                "offer_exercise": runtime.snapshot.offer_exercise
+                                and runtime.snapshot.preferred_exercise in exercise_ids,
                                 "stage_proposal": None,
                             }
                         )
@@ -272,11 +294,26 @@ class CompanionCore:
                                 else None,
                             }
                         )
-                    result = self.machine.apply_rules(state, text, signals, runtime.snapshot)
+                    result = self.machine.apply_rules(
+                        state,
+                        text,
+                        signals,
+                        runtime.snapshot,
+                        allowed_exercise_ids=exercise_ids,
+                        exercise_conditions_current=exercise_conditions_current,
+                    )
                     directive, triggers = (
                         result.directive,
                         tuple(dict.fromkeys((*control_triggers, *result.trigger_reasons))),
                     )
+                    if (
+                        exercise_pending
+                        and not exercise_conditions_current
+                        and not control_triggers
+                        and not self.machine.matches("refuse", text)
+                        and state.stage != Stage.quiet
+                    ):
+                        triggers = tuple(dict.fromkeys((*triggers, "exercise_recheck")))
                     if (
                         policy.active_boundaries or any(a.kind == "no_advice" for a in policy.avoid)
                     ) and directive in ("action_offer", "exercise_offer", "resume_offer"):
@@ -299,7 +336,7 @@ class CompanionCore:
                     if (
                         not directive
                         and runtime.snapshot.offer_exercise
-                        and runtime.snapshot.preferred_exercise in policy.allowed_action_ids
+                        and runtime.snapshot.preferred_exercise in exercise_ids
                         and runtime.snapshot.preferred_exercise not in state.exercises_refused
                         and not control_triggers
                         and not self.machine.matches("refuse", text)

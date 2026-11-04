@@ -89,6 +89,9 @@ class StateMachine:
         signals: TurnSignals,
         snapshot: Snapshot,
         now: float | None = None,
+        *,
+        allowed_exercise_ids: tuple[str, ...] = (),
+        exercise_conditions_current: bool = False,
     ) -> RuleResult:
         now = time.monotonic() if now is None else now
         settings = self.config.settings.dialogue
@@ -132,6 +135,8 @@ class StateMachine:
         offer = state.pending_offer
         if offer:
             expired = offer.topic_revision != state.topic_revision
+            if offer.kind in ("exercise", "resume_exercise"):
+                expired |= offer.target_id not in allowed_exercise_ids
             if offer.accepted_at is not None:
                 expired |= now - offer.accepted_at >= settings.accepted_wait_s
                 expired |= (
@@ -168,6 +173,7 @@ class StateMachine:
                 exercise_id = snapshot.preferred_exercise
                 if (
                     snapshot.offer_exercise
+                    and exercise_id in allowed_exercise_ids
                     and exercise_id in self.config.exercises
                     and exercise_id not in state.exercises_refused
                 ):
@@ -217,6 +223,15 @@ class StateMachine:
             self.move(state, Stage.comfort)
             return RuleResult(trigger_reasons=tuple(triggers))
         if state.resume_script_id and not refusal and not correction:
+            if state.resume_script_id not in allowed_exercise_ids:
+                if exercise_conditions_current:
+                    state.resume_script_id = None
+                    state.resume_index = 0
+                    return RuleResult(directive="offer_expired")
+                return RuleResult(
+                    trigger_reasons=tuple(triggers + ["exercise_recheck"]),
+                    directive="waiting_card",
+                )
             self.offer(state, "resume_exercise", state.resume_script_id)
             state.resume_script_id = None
             return RuleResult(directive="resume_offer")

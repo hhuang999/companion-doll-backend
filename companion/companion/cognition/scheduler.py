@@ -17,6 +17,7 @@ DELIBERATION_TRIGGERS = REPAIR_TRIGGERS | {
     "cry",
     "emotion",
     "risk_watch",
+    "exercise_recheck",
 }
 
 

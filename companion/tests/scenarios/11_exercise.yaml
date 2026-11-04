@@ -15,6 +15,10 @@ steps:
   - interrupt: true
     expect: {mode: normal}
   - user: 刚才有声音
+    # New circumstances require reassessment before a fresh resume invitation.
+    expect: {offer: null, last_purpose: waiting_card}
+  - wait: true
+  - user: 好
     expect: {offer: resume_exercise}
   - user: 好
     expect: {mode: exercise}
