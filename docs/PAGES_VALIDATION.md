@@ -48,3 +48,7 @@ Impeccable首次context受缓存目录权限影响；后来将缓存放入本地
 第一轮发现并修正系统图未选中通路的低对比度与小字号；手机不再默认展示裁切的横向全图。第二轮截图曾因浏览器窗口被最小化而中断，确认当前任务标签后恢复窗口并完整重跑；没有将失败的截图当作通过证据。Impeccable检测只运行一次，发现的低对比与小字号进入修正；最终实际图中文字恢复实色。未调用独立子代理，复核在本侧会话内完成。
 
 证据入口为隔离工作副本的 `artifacts/daylight/review-first.json`、`review-final.json` 和各 `*-final.png`；图片生成提示词公开保存于 `assets/image-provenance.json`。本轮是网站验收，不代表重跑后端152项测试、模型回放或语音性能样本。
+
+Node语法、Prettier格式和git diff空白检查通过。改版提交 `7e4bfea` 已推送任务分支并正常快进到main；[Pages部署41776176121](https://github.com/hhuang999/companion-doll-backend/actions/runs/41776176121) completed/success。
+
+实际线上浏览器检查通过：新首屏、四通路与安全分支、拒绝行动、P90 4.02秒、六策略与16来源；12项新增资源与交互图返回HTTP200，两种字体实际加载。近景图采用懒加载，滚入记忆章节后确认已解码。线上截图与结果保存在 `artifacts/daylight/online.png`、`online.json`。此后的发布记录提交仅修改本文。
