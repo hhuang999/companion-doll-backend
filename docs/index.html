@@ -3,95 +3,95 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#e9bc69" />
+    <meta name="theme-color" content="#f5f5f1" />
     <meta
       name="description"
       content="探索情感陪伴玩偶怎样听见意愿、协作选择支持，并记住有依据的反馈。含互动机制演示、策略目录、架构与真实验证。"
     />
-    <title>情感陪伴玩偶 · 陪伴，从听见开始</title>
+    <title>Companion · 有些时刻，只需要被听见</title>
     <link rel="icon" href="assets/companion-mark.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="assets/fonts/companion-sans.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link rel="stylesheet" href="assets/project.css" />
     <script src="assets/project.js" defer></script>
   </head>
   <body>
     <a class="skip" href="#main">跳到正文</a>
     <header class="masthead">
-      <a class="brand" href="#main"
+      <a class="brand" href="#main" aria-label="Companion 情感陪伴玩偶首页"
         ><img
           src="assets/companion-mark.svg"
-          width="36"
-          height="36"
+          width="34"
+          height="34"
           alt=""
-        /><span>情感陪伴玩偶<small>Companion / AIAA 3800</small></span></a
+        /><span>companion<span class="brand-dot">.</span></span></a
       >
       <nav aria-label="项目导航">
-        <a href="#experience">体验机制</a><a href="#strategies">支持策略</a
-        ><a href="#architecture">系统架构</a><a href="#validation">验证记录</a>
+        <a href="#experience">体验</a><a href="#architecture">系统</a
+        ><a href="#strategies">支持</a><a href="#validation">实测</a>
       </nav>
       <a
         class="repo-link"
         href="https://github.com/hhuang999/companion-doll-backend"
-        >源码
+        >GitHub
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M5 19 19 5M5 5h14v14" /></svg
       ></a>
     </header>
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
+        <picture class="hero-image"
+          ><source
+            media="(max-width: 640px)"
+            srcset="assets/companion-daylight-small.webp" />
+          <img
+            src="assets/companion-daylight.webp"
+            width="1672"
+            height="941"
+            fetchpriority="high"
+            alt="日光洒在木桌与柔软的陪伴玩偶上。AI生成的外观概念，非实物照片。"
+        /></picture>
         <div class="hero-copy">
-          <h1 id="hero-title">陪伴，<br />从<span>听见</span>开始。</h1>
-          <p class="intro">有时想找一个办法。<br />有时，只想把今天说完。</p>
-          <p class="hero-description">
-            我们为情感陪伴玩偶构建了一个后端：及时回应，认真判断，也给拒绝和沉默留出位置。
-          </p>
+          <h1 id="hero-title">有些时刻，<br />只需要<span>被听见。</span></h1>
+          <p>一个懂得回应，也懂得等待的<br />情感陪伴系统。</p>
           <a class="button primary" href="#experience"
-            >试着改变一次对话
+            >开启一段对话
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12h14m-6-6 6 6-6 6" /></svg
           ></a>
-          <p class="scope">
-            面向高中生日常压力的课程研究原型。<br />演示仅使用合成案例或成年成员扮演。
-          </p>
         </div>
-        <div class="hero-scene" aria-label="一次回应背后的责任">
-          <div class="scene-top">
-            <span>一句话，被认真接住。</span
-            ><span>实时 / 后台 / 安全 / 记忆</span>
-          </div>
-          <blockquote>
-            “今天考得不太好。<br />先别给我建议，<br />听我说说就好。”
-          </blockquote>
-          <div class="reply-line">
-            <img
-              src="assets/companion-mark.svg"
-              width="36"
-              height="36"
-              alt=""
-            />
-            <p>好，先听你说。</p>
-          </div>
-          <div class="scene-thread" aria-hidden="true">
-            <svg viewBox="0 0 510 90" preserveAspectRatio="none">
-              <path
-                d="M22 0v28q0 17 20 17h410q20 0 20 20v25M176 45v45M324 45v45"
-              />
-            </svg>
-          </div>
-          <div class="scene-notes">
-            <div>
-              <b>此刻</b>
-              <p>先回应意愿</p>
-            </div>
-            <div>
-              <b>幕后</b>
-              <p>暂不进入行动</p>
-            </div>
-            <div>
-              <b>以后</b>
-              <p>记住这次边界</p>
-            </div>
-          </div>
-          <p class="scene-caption">合成对话示意 · 安全检测始终独立运行</p>
+        <a class="hero-listen" href="#experience"
+          ><span class="listening-mark" aria-hidden="true"
+            ><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span
+          ><span>“好，先听你说。”<small>探索一次回应背后的协作</small></span
+          ><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h14m-6-6 6 6-6 6" /></svg
+        ></a>
+        <p class="hero-caption">外观概念 · AI 生成</p>
+      </section>
+      <div class="project-strip">
+        <span>情感陪伴玩偶</span>
+        <p>AIAA 3800 · 人机交互课程研究原型</p>
+        <a href="#architecture"
+          >探索内部设计 <span aria-hidden="true">↓</span></a
+        >
+      </div>
+      <section class="intro-section section" aria-labelledby="intro-title">
+        <h2 id="intro-title">
+          柔软的陪伴，<br /><span>有清楚的技术支撑。</span>
+        </h2>
+        <div>
+          <p>
+            及时接住一句话。在后台认真思考。<br />记住有依据的反馈，也尊重每一次拒绝。
+          </p>
+          <p class="note">
+            面向高中生日常压力的设计情境；演示使用合成案例或成年成员扮演。本站展示后端机制，不提供在线心理服务。
+          </p>
         </div>
       </section>
 
@@ -101,9 +101,9 @@
         aria-labelledby="experience-title"
       >
         <div class="section-heading">
-          <h2 id="experience-title">同一句烦恼，<br />可以有不同的下一步。</h2>
+          <h2 id="experience-title">先听见你，<br />再决定下一步。</h2>
           <p>
-            改变用户的意愿，看看回应与后台判断怎样一起变化。这里使用预设合成内容，不调用在线模型。
+            选择一种当下的需要，观察回应与后台判断如何改变。每一种选择，都有位置。
           </p>
         </div>
         <div class="demo-picker" role="group" aria-label="选择演示情境">
@@ -119,7 +119,7 @@
           <div class="conversation">
             <div class="panel-heading">
               <h3>你听见的</h3>
-              <span>合成对话</span>
+              <span class="status-label"><i></i>合成对话 · 非在线模型</span>
             </div>
             <div
               class="dialogue-content"
@@ -152,6 +152,10 @@
             </div>
           </div>
           <div class="backstage">
+            <div class="instrument-label">
+              <span>SUPPORT / DECISION</span
+              ><span class="signal-dot" aria-hidden="true"></span>
+            </div>
             <div class="panel-heading">
               <h3>系统考虑的</h3>
               <span id="demo-mode">routine / 非行动支持</span>
@@ -200,145 +204,208 @@
       </section>
 
       <section
-        class="research section"
-        id="research"
-        aria-labelledby="research-title"
-      >
-        <div class="section-heading">
-          <h2 id="research-title">从生活里的压力，<br />找到支持的入口。</h2>
-          <p>
-            五类压力与四条共同路径帮助理解情境。它们可以重叠，也不是诊断标签。怕被评价、担心隐私、不确定谁安全，同样影响一个人是否愿意开口。
-          </p>
-        </div>
-        <div class="research-map">
-          <div>
-            <h3>压力来自哪里</h3>
-            <p class="large-list">
-              学业负担 <span>社会评价</span><br />关系冲突 <span>未来迷茫</span
-              ><br />自我压力
-            </p>
-          </div>
-          <div class="map-connector" aria-hidden="true">
-            <svg viewBox="0 0 180 160">
-              <path
-                d="M0 20h35q30 0 30 30v60q0 30 30 30h85M0 140h35q30 0 30-30V50q0-30 30-30h85M0 80h180"
-              />
-            </svg>
-          </div>
-          <div>
-            <h3>此刻怎样困扰我</h3>
-            <p class="large-list">
-              反复想 <span>自我批评</span><br />睡眠变差 <span>孤独</span>
-            </p>
-          </div>
-        </div>
-        <div class="research-foot">
-          <p>
-            <b>证据如何进入设计</b><br />核查来源 → 提取机制 →
-            编写步骤与排除条件 → 真实模型链路验证。
-          </p>
-          <p>
-            16 项来源记录研究对象与阅读范围；短语音改编不继承完整干预的效果。<a
-              href="#sources"
-              >查看研究来源</a
-            >
-          </p>
-        </div>
-      </section>
-
-      <section
-        class="strategies section"
-        id="strategies"
-        aria-labelledby="strategy-title"
-      >
-        <div class="section-heading">
-          <h2 id="strategy-title">六种支持，<br />选择权一直在你。</h2>
-          <p>
-            先核对适用条件，再选择一个焦点。这里筛选内容映射；实际运行还会检查安全情境、意愿、历史拒绝与明确许可。
-          </p>
-        </div>
-        <div class="catalog-tools">
-          <label
-            >压力情境<select id="pressure">
-              <option value="">全部情境</option>
-              <option value="academic">学业</option>
-              <option value="social_evaluative">社会评价</option>
-              <option value="relationship">关系</option>
-              <option value="future">未来</option>
-              <option value="self">自我压力</option>
-            </select></label
-          ><label
-            >共同路径<select id="pathway">
-              <option value="">全部路径</option>
-              <option value="rumination">反复想</option>
-              <option value="self_criticism">自我批评</option>
-              <option value="sleep">睡眠</option>
-              <option value="loneliness">孤独</option>
-            </select></label
-          ><label
-            >现在的意愿<select id="intent">
-              <option value="explore">想了解一种支持</option>
-              <option value="listen">只想被听见</option>
-              <option value="quiet">想安静 / 结束</option>
-            </select></label
-          ><button type="button" id="reset" class="text-button">
-            重置筛选
-          </button>
-        </div>
-        <p class="catalog-status" id="catalog-status" role="status">
-          正在读取版本化策略目录…
-        </p>
-        <div id="catalog" class="catalog"></div>
-        <p class="catalog-fallback">
-          也可直接阅读<a
-            href="https://github.com/hhuang999/companion-doll-backend/tree/main/companion/companion/config/cards"
-            >六类策略配置</a
-          >。
-        </p>
-        <details class="exercise-block">
-          <summary>
-            三段可以随时停下的短练习<span>自然呼吸 / 外部定位 / 睡前暂停</span>
-          </summary>
-          <div id="exercises" class="exercise-list"></div>
-          <p class="note">
-            固定音频与停顿实测均不超过90秒。自然呼吸不屏气、不强制节奏；不适即停。播放完成与用户觉得有帮助，分别记录。
-          </p>
-        </details>
-      </section>
-
-      <section
         class="architecture section"
         id="architecture"
         aria-labelledby="architecture-title"
       >
         <div class="section-heading">
-          <h2 id="architecture-title">温和的回应背后，<br />职责必须清楚。</h2>
+          <h2 id="architecture-title">温柔的表面。<br />严谨的内部。</h2>
           <p>
             Python
             模块化单体中，实时交互、后台协作、独立安全和长期记忆各负其责。模型提出判断，Core
             决定什么能在此刻执行。
           </p>
         </div>
-        <div class="system-lanes">
-          <div>
-            <span class="lane-name">实时交互</span>
-            <p>输入 / ASR <i>→</i> Core <i>→</i> Talker <i>→</i> 语音输出</p>
-            <small>冻结当轮策略，按 generation 取消旧输出。</small>
+        <div class="system-explorer">
+          <div class="system-controls">
+            <div class="system-selector" role="group" aria-label="选择系统通路">
+              <button type="button" data-route="realtime" aria-pressed="true">
+                <span class="route-control" aria-hidden="true"></span
+                ><span>实时交互<small>TALKER</small></span>
+              </button>
+              <button type="button" data-route="cognition" aria-pressed="false">
+                <span class="route-control" aria-hidden="true"></span
+                ><span>后台协作<small>COGNITION</small></span>
+              </button>
+              <button type="button" data-route="safety" aria-pressed="false">
+                <span class="route-control" aria-hidden="true"></span
+                ><span>独立安全<small>SAFETY</small></span>
+              </button>
+              <button type="button" data-route="memory" aria-pressed="false">
+                <span class="route-control" aria-hidden="true"></span
+                ><span>关系记忆<small>MEMORY</small></span>
+              </button>
+            </div>
+            <div
+              class="route-description"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <h3 id="route-title">回应，不必等所有思考完成。</h3>
+              <p id="route-description">
+                Core 冻结当轮策略，Talker
+                生成回应并分句交给语音流水。新输入可取消旧
+                generation，后台继续判断仍有效的产物。
+              </p>
+              <a id="route-link" href="architecture-course/audio.html"
+                >查看语音与取消细节</a
+              >
+            </div>
           </div>
-          <div>
-            <span class="lane-name">后台协作</span>
-            <p>Analysis <i>→</i> Planner <i>↔</i> Critic</p>
-            <small>完整评议加入独立 Brief，最多修订一次并复核。</small>
+          <div
+            class="mobile-route-flow"
+            aria-live="polite"
+            aria-label="所选通路的模块"
+          >
+            <ol id="route-stages">
+              <li>Input<small>文字 / ASR</small></li>
+              <li>Core<small>当轮策略</small></li>
+              <li>Talker<small>流式生成</small></li>
+              <li>Output gate<small>输出校验</small></li>
+              <li>Voice<small>TTS / Opus</small></li>
+            </ol>
           </div>
-          <div>
-            <span class="lane-name">独立安全</span>
-            <p>风险检测 <i>→</i> 输出闸门 <i>→</i> 固定接管</p>
-            <small>迟到的 high 仍可接管，不等后台协作完成。</small>
-          </div>
-          <div>
-            <span class="lane-name">长期记忆</span>
-            <p>来源校验 <i>→</i> 范围 / 更正 <i>→</i> 相关检索</p>
-            <small>策略、记忆和结束总结分别判断有效性。</small>
+          <button
+            class="diagram-toggle"
+            id="diagram-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="system-board"
+          >
+            展开完整信号图 +
+          </button>
+          <div
+            class="system-board"
+            id="system-board"
+            data-active-route="realtime"
+          >
+            <div class="board-header">
+              <span>COMPANION / SIGNAL FLOW</span><span>交互机制示意</span>
+            </div>
+            <svg
+              class="system-diagram"
+              viewBox="0 0 820 440"
+              role="img"
+              aria-labelledby="system-svg-title system-svg-desc"
+            >
+              <title id="system-svg-title">四条独立协作的系统通路</title>
+              <desc id="system-svg-desc">
+                输入经Core到Talker及语音；后台Analysis、Planner、Critic协作；风险经输出闸门独立接管；记忆经来源和范围校验后参与上下文。选择左侧按钮查看各通路。
+              </desc>
+              <defs>
+                <marker
+                  id="flow-arrow"
+                  viewBox="0 0 8 8"
+                  refX="6"
+                  refY="4"
+                  markerWidth="5"
+                  markerHeight="5"
+                  orient="auto-start-reverse"
+                >
+                  <path
+                    d="m1 1 5 3-5 3"
+                    fill="none"
+                    stroke="context-stroke"
+                    stroke-width="1.4"
+                  />
+                </marker>
+              </defs>
+              <g class="flow-route" data-track="cognition">
+                <path
+                  class="flow-line"
+                  d="M260 217V87H345M465 87H500M620 87H655M715 119V165H280V217"
+                />
+                <path class="flow-line feedback-line" d="M715 55V32H560V55" />
+                <g class="flow-node" transform="translate(345 55)">
+                  <rect width="120" height="64" rx="6" />
+                  <text x="60" y="29">Analysis</text>
+                  <text class="node-note" x="60" y="48">情境理解</text>
+                </g>
+                <g class="flow-node" transform="translate(500 55)">
+                  <rect width="120" height="64" rx="6" />
+                  <text x="60" y="29">Planner</text>
+                  <text class="node-note" x="60" y="48">策略规划</text>
+                </g>
+                <g class="flow-node" transform="translate(655 55)">
+                  <rect width="120" height="64" rx="6" />
+                  <text x="60" y="29">Critic</text>
+                  <text class="node-note" x="60" y="48">独立评审</text>
+                </g>
+                <text class="route-note" x="345" y="150">
+                  独立 Brief · 一次修订与复核 · CAS → Core
+                </text>
+              </g>
+              <g class="flow-route" data-track="realtime">
+                <path
+                  class="flow-line"
+                  d="M155 249H205M315 249H365M485 249H535M650 249H690"
+                />
+                <g class="flow-node" transform="translate(35 217)">
+                  <rect width="120" height="64" rx="6" />
+                  <text x="60" y="29">Input</text>
+                  <text class="node-note" x="60" y="48">文字 / ASR</text>
+                </g>
+                <g class="flow-node core-node" transform="translate(205 217)">
+                  <rect width="110" height="64" rx="6" />
+                  <text x="55" y="29">Core</text>
+                  <text class="node-note" x="55" y="48">当轮策略</text>
+                </g>
+                <g class="flow-node" transform="translate(365 217)">
+                  <rect width="120" height="64" rx="6" />
+                  <text x="60" y="29">Talker</text>
+                  <text class="node-note" x="60" y="48">流式生成</text>
+                </g>
+                <g class="flow-node" transform="translate(535 217)">
+                  <rect width="115" height="64" rx="6" />
+                  <text x="57" y="29">Output gate</text>
+                  <text class="node-note" x="57" y="48">输出校验</text>
+                </g>
+                <g class="flow-node" transform="translate(690 217)">
+                  <rect width="95" height="64" rx="6" />
+                  <text x="47" y="29">Voice</text>
+                  <text class="node-note" x="47" y="48">TTS / Opus</text>
+                </g>
+              </g>
+              <g class="flow-route" data-track="safety">
+                <path
+                  class="flow-line"
+                  d="M95 217V87H130M240 87H290V183H592V217"
+                />
+                <g class="flow-node" transform="translate(130 55)">
+                  <rect width="110" height="64" rx="6" />
+                  <text x="55" y="29">Risk</text>
+                  <text class="node-note" x="55" y="48">独立风险检测</text>
+                </g>
+                <text class="route-note" x="35" y="150">
+                  迟到 high 仍可接管
+                </text>
+              </g>
+              <g class="flow-route" data-track="memory">
+                <path
+                  class="flow-line"
+                  d="M260 281V366H365M535 366H655M715 334V301H260V281"
+                />
+                <g class="flow-node" transform="translate(365 334)">
+                  <rect width="170" height="64" rx="6" />
+                  <text x="85" y="29">Source + Scope</text>
+                  <text class="node-note" x="85" y="48">
+                    来源 / 范围 / 更正
+                  </text>
+                </g>
+                <g class="flow-node" transform="translate(655 334)">
+                  <rect width="120" height="64" rx="6" />
+                  <text x="60" y="29">Memory</text>
+                  <text class="node-note" x="60" y="48">相关检索</text>
+                </g>
+                <text class="route-note" x="35" y="370">
+                  跨回合，保留有依据的理解。
+                </text>
+              </g>
+            </svg>
+            <div class="board-footer">
+              <span><i class="signal-dot"></i>所选通路高亮</span
+              ><span>Python 模块化单体 · 非真实运行监控</span>
+            </div>
           </div>
         </div>
         <details class="layered-details">
@@ -391,39 +458,165 @@
         id="memory"
         aria-labelledby="memory-title"
       >
-        <div class="section-heading">
-          <h2 id="memory-title">记住这一次，<br />不替你定义每一次。</h2>
-          <p>
-            “这个办法没帮助”可以改变下一步。可归因的反馈保留来源、策略版本、步骤和有效范围。
-          </p>
-        </div>
-        <div class="memory-example">
-          <blockquote>
-            “刚才这个办法没帮助，<br />我现在只想有人听。”<small
-              >合成反馈示例</small
-            >
-          </blockquote>
-          <div class="memory-explanation">
-            <h3>记录什么，也决定怎么回应。</h3>
-            <dl>
-              <div>
-                <dt>本次事实</dt>
-                <dd>对刚执行的具体支持，明确反馈“无帮助”。</dd>
-              </div>
-              <div>
-                <dt>当前行为</dt>
-                <dd>停止行动；本会话不重复同一方法，尊重“只听”的边界。</dd>
-              </div>
-              <div>
-                <dt>下次相遇</dt>
-                <dd>
-                  检查范围与时效。一次反馈不变成永久偏好；用户更正会关联替代旧记录。
-                </dd>
-              </div>
-            </dl>
-            <a href="architecture-course/memory.html">探索记忆的来源与范围</a>
+        <figure class="memory-photo">
+          <img
+            src="assets/companion-touch.webp"
+            srcset="
+              assets/companion-touch-small.webp  768w,
+              assets/companion-touch.webp       1122w
+            "
+            sizes="(max-width: 760px) 100vw, 48vw"
+            width="1122"
+            height="1402"
+            loading="lazy"
+            alt="一只手轻轻触碰陪伴玩偶，柔软织物与自然光构成安静的场景。AI概念视觉。"
+          />
+          <figcaption>陪伴场景概念 · AI 生成</figcaption>
+        </figure>
+        <div class="memory-copy">
+          <div class="section-heading">
+            <h2 id="memory-title">每一次相遇，<br />都值得认真记住。</h2>
+            <p>
+              “这个办法没帮助”可以改变下一步。可归因的反馈保留来源、策略版本、步骤和有效范围。
+            </p>
+          </div>
+          <div class="memory-example">
+            <blockquote>
+              “刚才这个办法没帮助，<br />我现在只想有人听。”<small
+                >合成反馈示例</small
+              >
+            </blockquote>
+            <div class="memory-explanation">
+              <h3>记录什么，也决定怎么回应。</h3>
+              <dl>
+                <div>
+                  <dt>本次事实</dt>
+                  <dd>对刚执行的具体支持，明确反馈“无帮助”。</dd>
+                </div>
+                <div>
+                  <dt>当前行为</dt>
+                  <dd>停止行动；本会话不重复同一方法，尊重“只听”的边界。</dd>
+                </div>
+                <div>
+                  <dt>下次相遇</dt>
+                  <dd>
+                    检查范围与时效。一次反馈不变成永久偏好；用户更正会关联替代旧记录。
+                  </dd>
+                </div>
+              </dl>
+              <a href="architecture-course/memory.html">探索记忆的来源与范围</a>
+            </div>
           </div>
         </div>
+      </section>
+      <section
+        class="strategies section"
+        id="strategies"
+        aria-labelledby="strategy-title"
+      >
+        <div class="section-heading">
+          <h2 id="strategy-title">六种支持，<br />选择权一直在你。</h2>
+          <p>
+            先核对适用条件，再选择一个焦点。这里筛选内容映射；实际运行还会检查安全情境、意愿、历史拒绝与明确许可。
+          </p>
+        </div>
+        <details class="research-disclosure" id="research">
+          <summary>
+            这些支持从哪里来？<span>五类压力 · 四条路径 · 研究依据</span>
+          </summary>
+          <div class="research-body">
+            <div class="section-heading">
+              <h2 id="research-title">
+                从生活里的压力，<br />找到支持的入口。
+              </h2>
+              <p>
+                五类压力与四条共同路径帮助理解情境。它们可以重叠，也不是诊断标签。怕被评价、担心隐私、不确定谁安全，同样影响一个人是否愿意开口。
+              </p>
+            </div>
+            <div class="research-map">
+              <div>
+                <h3>压力来自哪里</h3>
+                <p class="large-list">
+                  学业负担 <span>社会评价</span><br />关系冲突
+                  <span>未来迷茫</span><br />自我压力
+                </p>
+              </div>
+              <div class="map-connector" aria-hidden="true">
+                <svg viewBox="0 0 180 160">
+                  <path
+                    d="M0 20h35q30 0 30 30v60q0 30 30 30h85M0 140h35q30 0 30-30V50q0-30 30-30h85M0 80h180"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3>此刻怎样困扰我</h3>
+                <p class="large-list">
+                  反复想 <span>自我批评</span><br />睡眠变差 <span>孤独</span>
+                </p>
+              </div>
+            </div>
+            <div class="research-foot">
+              <p>
+                <b>证据如何进入设计</b><br />核查来源 → 提取机制 →
+                编写步骤与排除条件 → 真实模型链路验证。
+              </p>
+              <p>
+                16
+                项来源记录研究对象与阅读范围；短语音改编不继承完整干预的效果。<a
+                  href="#sources"
+                  >查看研究来源</a
+                >
+              </p>
+            </div>
+          </div>
+        </details>
+        <div class="catalog-tools">
+          <label
+            >压力情境<select id="pressure">
+              <option value="">全部情境</option>
+              <option value="academic">学业</option>
+              <option value="social_evaluative">社会评价</option>
+              <option value="relationship">关系</option>
+              <option value="future">未来</option>
+              <option value="self">自我压力</option>
+            </select></label
+          ><label
+            >共同路径<select id="pathway">
+              <option value="">全部路径</option>
+              <option value="rumination">反复想</option>
+              <option value="self_criticism">自我批评</option>
+              <option value="sleep">睡眠</option>
+              <option value="loneliness">孤独</option>
+            </select></label
+          ><label
+            >现在的意愿<select id="intent">
+              <option value="explore">想了解一种支持</option>
+              <option value="listen">只想被听见</option>
+              <option value="quiet">想安静 / 结束</option>
+            </select></label
+          ><button type="button" id="reset" class="text-button">
+            重置筛选
+          </button>
+        </div>
+        <p class="catalog-status" id="catalog-status" role="status">
+          正在读取版本化策略目录…
+        </p>
+        <div id="catalog" class="catalog"></div>
+        <p class="catalog-fallback">
+          也可直接阅读<a
+            href="https://github.com/hhuang999/companion-doll-backend/tree/main/companion/companion/config/cards"
+            >六类策略配置</a
+          >。
+        </p>
+        <details class="exercise-block">
+          <summary>
+            三段可以随时停下的短练习<span>自然呼吸 / 外部定位 / 睡前暂停</span>
+          </summary>
+          <div id="exercises" class="exercise-list"></div>
+          <p class="note">
+            固定音频与停顿实测均不超过90秒。自然呼吸不屏气、不强制节奏；不适即停。播放完成与用户觉得有帮助，分别记录。
+          </p>
+        </details>
       </section>
 
       <section
@@ -432,7 +625,7 @@
         aria-labelledby="validation-title"
       >
         <div class="section-heading">
-          <h2 id="validation-title">把体验做出来，<br />也把等待测出来。</h2>
+          <h2 id="validation-title">体验，也经得起测量。</h2>
           <p>
             2026年11月4日记录：152
             项离线检查通过，完成17段固定多轮场景与补测。最终30次普通动态语音成功，失败与质量限制保留在报告中。
@@ -509,7 +702,7 @@
 
       <section class="run section" id="run" aria-labelledby="run-title">
         <div>
-          <h2 id="run-title">把这次探索，<br />带到真实对话里。</h2>
+          <h2 id="run-title">从这里，<br />让它开始回应。</h2>
           <p>
             先用离线模型走通流程，再接入 Aihubmix 和小智语音。启动前按 README
             安装环境并配置自己的密钥。
@@ -553,7 +746,7 @@
         aria-labelledby="sources-title"
       >
         <div class="section-heading">
-          <h2 id="sources-title">每一步设计，<br />都有来处。</h2>
+          <h2 id="sources-title">设计有依据。探索有来处。</h2>
           <p>
             保留研究对象、阅读范围与外推限制。课程原型的工程运行证据，与心理支持效果证据分开呈现。
           </p>
@@ -572,26 +765,34 @@
       </section>
     </main>
     <footer>
-      <div class="footer-brand">
-        <img
-          src="assets/companion-mark.svg"
-          width="32"
-          height="32"
-          alt=""
-        /><span>情感陪伴玩偶<small>让支持可以开始，也可以被拒绝。</small></span>
+      <div class="footer-wordmark" aria-hidden="true">
+        companion<span>.</span>
       </div>
-      <div>
-        <a href="https://github.com/hhuang999/companion-doll-backend">GitHub</a
-        ><a href="index-v2.html">v2 历史展示</a
-        ><a href="index-v1.html">v1 历史图集</a>
-        <p>
-          内容 <span id="content-version">course-1.0</span> · 来源提交
-          <a
-            id="revision"
-            href="https://github.com/hhuang999/companion-doll-backend"
-            >查看仓库</a
+      <div class="footer-bottom">
+        <div class="footer-brand">
+          <img
+            src="assets/companion-mark.svg"
+            width="32"
+            height="32"
+            alt=""
+          /><span
+            >情感陪伴玩偶<small>让支持可以开始，也可以被拒绝。</small></span
           >
-        </p>
+        </div>
+        <div>
+          <a href="https://github.com/hhuang999/companion-doll-backend"
+            >GitHub</a
+          ><a href="index-v2.html">v2 历史展示</a
+          ><a href="index-v1.html">v1 历史图集</a>
+          <p>
+            内容 <span id="content-version">course-1.0</span> · 来源提交
+            <a
+              id="revision"
+              href="https://github.com/hhuang999/companion-doll-backend"
+              >查看仓库</a
+            >
+          </p>
+        </div>
       </div>
     </footer>
   </body>

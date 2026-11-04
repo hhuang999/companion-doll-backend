@@ -440,6 +440,126 @@ async function loadCatalog() {
   }
 }
 
+function initSystemExplorer() {
+  const routes = {
+    realtime: {
+      title: "回应，不必等所有思考完成。",
+      text: "Core 冻结当轮策略，Talker 生成回应并分句交给语音流水。新输入可取消旧 generation，后台继续判断仍有效的产物。",
+      link: "architecture-course/audio.html",
+      label: "查看语音与取消细节",
+      stages: [
+        ["Input", "文字 / ASR"],
+        ["Core", "当轮策略"],
+        ["Talker", "流式生成"],
+        ["Output gate", "输出校验"],
+        ["Voice", "TTS / Opus"],
+      ],
+    },
+    cognition: {
+      title: "一个提议，经过不同角色的判断。",
+      text: "Analysis 理解情境，Planner 提议支持，Critic 独立评审。完整评议加入独立 Brief，最多修订一次并复核；候选通过有效性与最终 CAS 校验才会发布。",
+      link: "architecture-course/collaboration.html",
+      label: "查看评议与发布协议",
+      stages: [
+        ["Analysis", "情境理解"],
+        ["Planner", "策略规划"],
+        ["Critic", "独立评审"],
+        ["CAS", "有效性校验"],
+        ["Core", "发布策略"],
+      ],
+    },
+    safety: {
+      title: "需要保护时，安全独立接管。",
+      text: "风险检测与后台策略协作分开运行。迟到的 high 仍可关闭原输出闸门、取消当前 generation，并由固定安全音频接管。",
+      link: "architecture-course/overview.html",
+      label: "查看安全与责任边界",
+      stages: [
+        ["Risk", "独立风险检测"],
+        ["Output gate", "关闭原输出"],
+        ["Cancel", "取消旧代次"],
+        ["Fixed audio", "固定安全音频"],
+      ],
+    },
+    memory: {
+      title: "记住有依据的事，保留更正的空间。",
+      text: "记忆先核对来源、时间与适用范围，再参与相关检索。用户更正关联旧记录，明确反馈绑定具体支持；一次无效不直接变成永久偏好。",
+      link: "architecture-course/memory.html",
+      label: "查看记忆与恢复机制",
+      stages: [
+        ["Source", "核对来源"],
+        ["Scope", "时间与范围"],
+        ["Memory", "保存与更正"],
+        ["Retrieval", "相关检索"],
+      ],
+    },
+  };
+  const board = $(".system-board");
+  let pulses = [];
+  function clearPulses() {
+    pulses.forEach(({ node, animation }) => {
+      animation.cancel();
+      node.remove();
+    });
+    pulses = [];
+  }
+  document.querySelectorAll("[data-route]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const route = button.dataset.route;
+      document.querySelectorAll("[data-route]").forEach((item) => {
+        item.setAttribute("aria-pressed", String(item === button));
+      });
+      board.dataset.activeRoute = route;
+      $("#route-title").textContent = routes[route].title;
+      $("#route-description").textContent = routes[route].text;
+      $("#route-link").textContent = routes[route].label;
+      $("#route-link").href = routes[route].link;
+      $("#route-stages").replaceChildren(
+        ...routes[route].stages.map(([name, note]) => {
+          const item = element("li", name);
+          item.append(element("small", note));
+          return item;
+        }),
+      );
+      clearPulses();
+      board.classList.remove("switched");
+      if (event.detail > 0 && !reducedMotion.matches) {
+        void board.offsetWidth;
+        board.classList.add("switched");
+        board
+          .querySelectorAll(`[data-track="${route}"] .flow-line`)
+          .forEach((path) => {
+            const node = path.cloneNode(false);
+            node.setAttribute("class", "flow-pulse");
+            node.removeAttribute("marker-end");
+            const length = path.getTotalLength();
+            node.style.strokeDasharray = `22 ${length + 22}`;
+            path.parentNode.append(node);
+            const animation = node.animate(
+              { strokeDashoffset: [22, -length] },
+              { duration: 1300, easing: "linear" },
+            );
+            animation.onfinish = () => node.remove();
+            pulses.push({ node, animation });
+          });
+      }
+    });
+  });
+  $("#diagram-toggle").addEventListener("click", (event) => {
+    const expanded = board.classList.toggle("expanded");
+    event.currentTarget.setAttribute("aria-expanded", String(expanded));
+    event.currentTarget.textContent = expanded
+      ? "收起完整信号图 −"
+      : "展开完整信号图 +";
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) clearPulses();
+  });
+  reducedMotion.addEventListener("change", (event) => {
+    if (event.matches) clearPulses();
+  });
+}
+
+initSystemExplorer();
 initDemo();
 initLatency();
 $("#copy-command").addEventListener("click", async () => {
