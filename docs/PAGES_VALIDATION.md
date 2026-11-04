@@ -21,4 +21,6 @@ Impeccable首次context受缓存目录权限影响；后来将缓存放入本地
 
 ## 发布
 
-使用现有GitHub Pages main:/docs。发布后记录部署工作流与实际线上检查；发布前不把本地结果写作已上线。
+改版提交 `44f1750` 已推送到 `codex/pages-experience` 并正常快进集成 `main`，沿用 `main:/docs`。[部署工作流41772253361](https://github.com/hhuang999/companion-doll-backend/actions/runs/41772253361) completed/success。
+
+已通过实际浏览器访问[线上项目站](https://hhuang999.github.io/companion-doll-backend/)：新标题、6项策略与16项来源显示正确；拒绝邀请后回应“好，先不安排办法。”；P90显示4.02秒。12项资源（含字体、机制图、五张架构图与历史入口）均HTTP200。截图及结构化记录位于 `artifacts/pages-redesign/online.png`、`online.json`。后续发布记录提交仅补充此文，不改变页面行为。
