@@ -4,6 +4,8 @@ GitHub Pages 从 `main:/docs` 发布，入口是 `index.html`。`assets/project.
 
 ## 当前来源
 
+首页架构部分的 `assets/layered-multiagent.png` 是经用户反馈重绘的 AI 辅助机制图，突出 L0–L3 内容职责、独立 Brief、Planner/Critic 修订复核和反馈记忆。L0–L3 是解释性分层，不是新增四个服务或固定执行阶段；六类策略也不是六个 Agent。图下提供可访问的文字说明和原图链接；具体源码仍以交互图为准。更新此图时同时核对说明、alt 文本、图片尺寸和窄屏阅读。
+
 `architecture-course/` 保存五张架构图的可编辑 JSON 与原始生成 HTML；源码固定到实现提交，详见其中 README。`index-v2.html` / `architecture-v2/` 与 `index-v1.html` / `diagrams/` 为历史，不代表当前内容准入和模型配置。
 
 ## 更新步骤

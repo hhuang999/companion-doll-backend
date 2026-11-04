@@ -11,3 +11,5 @@
 维护：编辑 `docs/index.html` / `docs/assets/project.css` / `docs/assets/project.js`；运行构建脚本刷新 `project-data.json`。架构图使用archify候选与finalize生成，不手改HTML。旧图库在 `index-v1.html`、`index-v2.html`。验收使用ego-browser，实际核验CSS视口宽1600、1422、853和390px（浏览器缩放会改变请求的设备宽度）、筛选空集、详情展开、键盘和资源。源码引用应固定到最终实现提交。
 
 2026-11-04实际检查：筛选/空态/展开、键盘跳到正文与可见焦点、reduced-motion、五图主题/缩放可用；九项内部链接/资源200。项目异常0，浏览器扩展异常另列；本地证据在artifacts/autonomous-upgrade/browser。
+
+2026-11-04图解更新：架构区增加“分层策略驱动的 Multi-Agent 协作”主图与三段文字解释，提供原图链接和完整 alt；原有五张源码交互图继续作为细节入口。L0–L3明确为内容职责分层，routine/deliberation分别说明。Ego实际1600px与390px视口无横向溢出，图片1536×1024加载正常，键盘焦点可见，图片与五个图页返回200、未捕获页面异常。最小化窗口导致普通截图失败，恢复后使用CDP区域截图核对图片；证据在artifacts/pages-layered。
