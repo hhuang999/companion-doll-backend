@@ -23,7 +23,8 @@ Analysis 解释有限证据，Planner 生成候选策略；deliberation 另并�
 - [真实验收与性能结果](docs/VALIDATION.md)
 - [小智协议、凭据与联调交接](docs/XIAOZHI_HANDOFF.md)
 - [研究与策略设计](docs/autonomous-upgrade/STRATEGY_DESIGN.md)
-- [项目研究与系统设计说明（在线阅读）](https://hhuang999.github.io/companion-doll-backend/research-design/)
-- [项目展示与交互架构（GitHub Pages）](https://hhuang999.github.io/companion-doll-backend/)
+- [项目研究与系统设计说明（在线阅读）](https://hhuang999.github.io/companion-doll-backend/)
+- [项目展示与交互架构（辅助入口）](https://hhuang999.github.io/companion-doll-backend/showcase.html)
+- [完整安装与运行说明](../ENGINEERING.md)
 
 `python -m companion.tools.migrate --db data/companion.db` 可停服升级。v1→v2 先作 SQLite backup，再事务迁移；未知更高版本拒绝，回退恢复备份到新路径。wheel 包含所有配置、七角色提示词和迁移 SQL。

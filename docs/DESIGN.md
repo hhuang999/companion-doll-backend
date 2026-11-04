@@ -1,5 +1,7 @@
 # Companion：日光场景与技术表达
 
+本约定现适用于辅助交互展示页 `showcase.html`。默认首页为完整研究说明，其正文与排版维护在 `companion/docs/research-design/`。
+
 2026-11-04，第二次视觉改版。用户否定前版的赭色大标题和文字主导布局，明确选择 **Daylight 的场景感 + Teenage Engineering 的技术表达**。本文件替代前版视觉约定，产品事实仍以根目录 PRODUCT.md 为准。
 
 ## 设计方向

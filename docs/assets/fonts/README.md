@@ -1,7 +1,7 @@
 # Self-hosted fonts
 
 - `manrope.woff2`: Manrope variable font, Latin and navigation symbols. [Official source](https://github.com/google/fonts/tree/main/ofl/manrope); license `manrope-OFL.txt`.
-- `companion-sans.woff2`: Noto Sans SC variable font, non-ASCII characters used in `docs/index.html`, `docs/assets/project.js` and `docs/assets/project-data.json`. [Official source](https://github.com/google/fonts/tree/main/ofl/notosanssc); license `notosanssc-OFL.txt`.
+- `companion-sans.woff2`: Noto Sans SC variable font, non-ASCII characters used in `docs/showcase.html`, `docs/assets/project.js` and `docs/assets/project-data.json`. [Official source](https://github.com/google/fonts/tree/main/ofl/notosanssc); license `notosanssc-OFL.txt`.
 
 No font request leaves the site at runtime. System fonts only provide a fallback for loading or newly added characters. The prior Serif subset is no longer used.
 
@@ -13,7 +13,7 @@ from fontTools import subset
 from fontTools.ttLib import TTFont
 
 text = ''.join(Path(p).read_text(encoding='utf-8') for p in [
-    'docs/index.html', 'docs/assets/project.js', 'docs/assets/project-data.json',
+    'docs/showcase.html', 'docs/assets/project.js', 'docs/assets/project-data.json',
 ])
 jobs = [
     ('NotoSansSC[wght].ttf', 'companion-sans.woff2', {c for c in text if ord(c) > 127}),

@@ -1,800 +1,648 @@
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f5f5f1" />
-    <meta
-      name="description"
-      content="探索情感陪伴玩偶怎样听见意愿、协作选择支持，并记住有依据的反馈。含互动机制演示、策略目录、架构与真实验证。"
-    />
-    <title>Companion · 有些时刻，只需要被听见</title>
-    <link rel="icon" href="assets/companion-mark.svg" type="image/svg+xml" />
-    <link
-      rel="preload"
-      href="assets/fonts/companion-sans.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link rel="stylesheet" href="assets/project.css" />
-    <script src="assets/project.js" defer></script>
-  </head>
-  <body>
-    <a class="skip" href="#main">跳到正文</a>
-    <header class="masthead">
-      <a class="brand" href="#main" aria-label="Companion 情感陪伴玩偶首页"
-        ><img
-          src="assets/companion-mark.svg"
-          width="34"
-          height="34"
-          alt=""
-        /><span>companion<span class="brand-dot">.</span></span></a
-      >
-      <nav aria-label="项目导航">
-        <a href="#experience">体验</a><a href="#architecture">系统</a
-        ><a href="#strategies">支持</a><a href="#validation">实测</a>
-      </nav>
-      <a
-        class="repo-link"
-        href="https://github.com/hhuang999/companion-doll-backend"
-        >GitHub
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 19 19 5M5 5h14v14" /></svg
-      ></a>
-    </header>
-    <main id="main">
-      <section class="hero" aria-labelledby="hero-title">
-        <picture class="hero-image"
-          ><source
-            media="(max-width: 640px)"
-            srcset="assets/companion-daylight-small.webp" />
-          <img
-            src="assets/companion-daylight.webp"
-            width="1672"
-            height="941"
-            fetchpriority="high"
-            alt="日光洒在木桌与柔软的陪伴玩偶上。AI生成的外观概念，非实物照片。"
-        /></picture>
-        <div class="hero-copy">
-          <h1 id="hero-title">有些时刻，<br />只需要<span>被听见。</span></h1>
-          <p>一个懂得回应，也懂得等待的<br />情感陪伴系统。</p>
-          <a class="button primary" href="#experience"
-            >开启一段对话
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-          ></a>
-        </div>
-        <a class="hero-listen" href="#experience"
-          ><span class="listening-mark" aria-hidden="true"
-            ><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span
-          ><span>“好，先听你说。”<small>探索一次回应背后的协作</small></span
-          ><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-        ></a>
-        <p class="hero-caption">外观概念 · AI 生成</p>
-      </section>
-      <div class="project-strip">
-        <span>情感陪伴玩偶</span>
-        <p>AIAA 3800 · 人机交互课程研究原型</p>
-        <a href="research-design/"
-          >阅读研究与系统设计说明 <span aria-hidden="true">→</span></a
-        >
-      </div>
-      <section class="intro-section section" aria-labelledby="intro-title">
-        <h2 id="intro-title">
-          柔软的陪伴，<br /><span>有清楚的技术支撑。</span>
-        </h2>
-        <div>
-          <p>
-            及时接住一句话。在后台认真思考。<br />记住有依据的反馈，也尊重每一次拒绝。
-          </p>
-          <p class="note">
-            面向高中生日常压力的设计情境；演示使用合成案例或成年成员扮演。本站展示后端机制，不提供在线心理服务。
-          </p>
-        </div>
-      </section>
-
-      <section
-        class="experience section"
-        id="experience"
-        aria-labelledby="experience-title"
-      >
-        <div class="section-heading">
-          <h2 id="experience-title">先听见你，<br />再决定下一步。</h2>
-          <p>
-            选择一种当下的需要，观察回应与后台判断如何改变。每一种选择，都有位置。
-          </p>
-        </div>
-        <div class="demo-picker" role="group" aria-label="选择演示情境">
-          <button type="button" data-scenario="listen" aria-pressed="true">
-            我只想说说</button
-          ><button type="button" data-scenario="action" aria-pressed="false">
-            我想试个办法</button
-          ><button type="button" data-scenario="feedback" aria-pressed="false">
-            这个办法没帮助
-          </button>
-        </div>
-        <div class="demo-stage">
-          <div class="conversation">
-            <div class="panel-heading">
-              <h3>你听见的</h3>
-              <span class="status-label"><i></i>合成对话 · 非在线模型</span>
-            </div>
-            <div
-              class="dialogue-content"
-              id="dialogue-content"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              <p class="speaker">用户</p>
-              <p class="user-line" id="demo-user">
-                今天考得不太好。我只想说说，先别给建议。
-              </p>
-              <div class="assistant-response">
-                <span class="speaker">玩偶</span>
-                <p id="demo-reply">好，先听你说。</p>
-              </div>
-            </div>
-            <div class="demo-actions" id="demo-actions" hidden>
-              <p>如果你是对话中的用户：</p>
-              <button type="button" id="consent-yes">好，试一步</button
-              ><button type="button" id="consent-no">还是先不做了</button>
-            </div>
-            <div class="demo-controls">
-              <button type="button" class="play-button" id="demo-play">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m8 5 11 7-11 7Z" /></svg
-                ><span>演示判断过程</span></button
-              ><button type="button" class="text-button" id="demo-reset">
-                重新开始
-              </button>
-            </div>
-          </div>
-          <div class="backstage">
-            <div class="instrument-label">
-              <span>SUPPORT / DECISION</span
-              ><span class="signal-dot" aria-hidden="true"></span>
-            </div>
-            <div class="panel-heading">
-              <h3>系统考虑的</h3>
-              <span id="demo-mode">routine / 非行动支持</span>
-            </div>
-            <ol class="decision-path" id="decision-path">
-              <li>
-                <span class="path-dot" aria-hidden="true"></span>
-                <div>
-                  <b>理解当下需要</b>
-                  <p>明确想被听见，不追问解决办法。</p>
-                </div>
-              </li>
-              <li>
-                <span class="path-dot" aria-hidden="true"></span>
-                <div>
-                  <b>尊重行动边界</b>
-                  <p>目录过滤排除行动支持，保留倾听。</p>
-                </div>
-              </li>
-              <li>
-                <span class="path-dot" aria-hidden="true"></span>
-                <div>
-                  <b>按范围记住</b>
-                  <p>记录当前边界，不推断永久偏好。</p>
-                </div>
-              </li>
-            </ol>
-            <p class="demo-status" id="demo-status" role="status">
-              可以先看结果，也可以逐步演示。
-            </p>
-            <a class="inline-link" href="#architecture"
-              >这些判断由哪些模块承担？</a
-            >
-          </div>
-        </div>
-        <p class="note">
-          演示按顺序解释职责。实际实时 Talker
-          与后台协作并行；风险通路可独立接管。
-        </p>
-        <noscript
-          ><p class="notice">
-            启用 JavaScript
-            可切换情境。当前展示“只想被听见”：保留倾听，不进入行动支持。
-          </p></noscript
-        >
-      </section>
-
-      <section
-        class="architecture section"
-        id="architecture"
-        aria-labelledby="architecture-title"
-      >
-        <div class="section-heading">
-          <h2 id="architecture-title">温柔的表面。<br />严谨的内部。</h2>
-          <p>
-            Python
-            模块化单体中，实时交互、后台协作、独立安全和长期记忆各负其责。模型提出判断，Core
-            决定什么能在此刻执行。
-          </p>
-        </div>
-        <div class="system-explorer">
-          <div class="system-controls">
-            <div class="system-selector" role="group" aria-label="选择系统通路">
-              <button type="button" data-route="realtime" aria-pressed="true">
-                <span class="route-control" aria-hidden="true"></span
-                ><span>实时交互<small>TALKER</small></span>
-              </button>
-              <button type="button" data-route="cognition" aria-pressed="false">
-                <span class="route-control" aria-hidden="true"></span
-                ><span>后台协作<small>COGNITION</small></span>
-              </button>
-              <button type="button" data-route="safety" aria-pressed="false">
-                <span class="route-control" aria-hidden="true"></span
-                ><span>独立安全<small>SAFETY</small></span>
-              </button>
-              <button type="button" data-route="memory" aria-pressed="false">
-                <span class="route-control" aria-hidden="true"></span
-                ><span>关系记忆<small>MEMORY</small></span>
-              </button>
-            </div>
-            <div
-              class="route-description"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              <h3 id="route-title">回应，不必等所有思考完成。</h3>
-              <p id="route-description">
-                Core 冻结当轮策略，Talker
-                生成回应并分句交给语音流水。新输入可取消旧
-                generation，后台继续判断仍有效的产物。
-              </p>
-              <a id="route-link" href="architecture-course/audio.html"
-                >查看语音与取消细节</a
-              >
-            </div>
-          </div>
-          <div
-            class="mobile-route-flow"
-            aria-live="polite"
-            aria-label="所选通路的模块"
-          >
-            <ol id="route-stages">
-              <li>Input<small>文字 / ASR</small></li>
-              <li>Core<small>当轮策略</small></li>
-              <li>Talker<small>流式生成</small></li>
-              <li>Output gate<small>输出校验</small></li>
-              <li>Voice<small>TTS / Opus</small></li>
-            </ol>
-          </div>
-          <button
-            class="diagram-toggle"
-            id="diagram-toggle"
-            type="button"
-            aria-expanded="false"
-            aria-controls="system-board"
-          >
-            展开完整信号图 +
-          </button>
-          <div
-            class="system-board"
-            id="system-board"
-            data-active-route="realtime"
-          >
-            <div class="board-header">
-              <span>COMPANION / SIGNAL FLOW</span><span>交互机制示意</span>
-            </div>
-            <svg
-              class="system-diagram"
-              viewBox="0 0 820 440"
-              role="img"
-              aria-labelledby="system-svg-title system-svg-desc"
-            >
-              <title id="system-svg-title">四条独立协作的系统通路</title>
-              <desc id="system-svg-desc">
-                输入经Core到Talker及语音；后台Analysis、Planner、Critic协作；风险经输出闸门独立接管；记忆经来源和范围校验后参与上下文。选择左侧按钮查看各通路。
-              </desc>
-              <defs>
-                <marker
-                  id="flow-arrow"
-                  viewBox="0 0 8 8"
-                  refX="6"
-                  refY="4"
-                  markerWidth="5"
-                  markerHeight="5"
-                  orient="auto-start-reverse"
-                >
-                  <path
-                    d="m1 1 5 3-5 3"
-                    fill="none"
-                    stroke="context-stroke"
-                    stroke-width="1.4"
-                  />
-                </marker>
-              </defs>
-              <g class="flow-route" data-track="cognition">
-                <path
-                  class="flow-line"
-                  d="M260 217V87H345M465 87H500M620 87H655M715 119V165H280V217"
-                />
-                <path class="flow-line feedback-line" d="M715 55V32H560V55" />
-                <g class="flow-node" transform="translate(345 55)">
-                  <rect width="120" height="64" rx="6" />
-                  <text x="60" y="29">Analysis</text>
-                  <text class="node-note" x="60" y="48">情境理解</text>
-                </g>
-                <g class="flow-node" transform="translate(500 55)">
-                  <rect width="120" height="64" rx="6" />
-                  <text x="60" y="29">Planner</text>
-                  <text class="node-note" x="60" y="48">策略规划</text>
-                </g>
-                <g class="flow-node" transform="translate(655 55)">
-                  <rect width="120" height="64" rx="6" />
-                  <text x="60" y="29">Critic</text>
-                  <text class="node-note" x="60" y="48">独立评审</text>
-                </g>
-                <text class="route-note" x="345" y="150">
-                  独立 Brief · 一次修订与复核 · CAS → Core
-                </text>
-              </g>
-              <g class="flow-route" data-track="realtime">
-                <path
-                  class="flow-line"
-                  d="M155 249H205M315 249H365M485 249H535M650 249H690"
-                />
-                <g class="flow-node" transform="translate(35 217)">
-                  <rect width="120" height="64" rx="6" />
-                  <text x="60" y="29">Input</text>
-                  <text class="node-note" x="60" y="48">文字 / ASR</text>
-                </g>
-                <g class="flow-node core-node" transform="translate(205 217)">
-                  <rect width="110" height="64" rx="6" />
-                  <text x="55" y="29">Core</text>
-                  <text class="node-note" x="55" y="48">当轮策略</text>
-                </g>
-                <g class="flow-node" transform="translate(365 217)">
-                  <rect width="120" height="64" rx="6" />
-                  <text x="60" y="29">Talker</text>
-                  <text class="node-note" x="60" y="48">流式生成</text>
-                </g>
-                <g class="flow-node" transform="translate(535 217)">
-                  <rect width="115" height="64" rx="6" />
-                  <text x="57" y="29">Output gate</text>
-                  <text class="node-note" x="57" y="48">输出校验</text>
-                </g>
-                <g class="flow-node" transform="translate(690 217)">
-                  <rect width="95" height="64" rx="6" />
-                  <text x="47" y="29">Voice</text>
-                  <text class="node-note" x="47" y="48">TTS / Opus</text>
-                </g>
-              </g>
-              <g class="flow-route" data-track="safety">
-                <path
-                  class="flow-line"
-                  d="M95 217V87H130M240 87H290V183H592V217"
-                />
-                <g class="flow-node" transform="translate(130 55)">
-                  <rect width="110" height="64" rx="6" />
-                  <text x="55" y="29">Risk</text>
-                  <text class="node-note" x="55" y="48">独立风险检测</text>
-                </g>
-                <text class="route-note" x="35" y="150">
-                  迟到 high 仍可接管
-                </text>
-              </g>
-              <g class="flow-route" data-track="memory">
-                <path
-                  class="flow-line"
-                  d="M260 281V366H365M535 366H655M715 334V301H260V281"
-                />
-                <g class="flow-node" transform="translate(365 334)">
-                  <rect width="170" height="64" rx="6" />
-                  <text x="85" y="29">Source + Scope</text>
-                  <text class="node-note" x="85" y="48">
-                    来源 / 范围 / 更正
-                  </text>
-                </g>
-                <g class="flow-node" transform="translate(655 334)">
-                  <rect width="120" height="64" rx="6" />
-                  <text x="60" y="29">Memory</text>
-                  <text class="node-note" x="60" y="48">相关检索</text>
-                </g>
-                <text class="route-note" x="35" y="370">
-                  跨回合，保留有依据的理解。
-                </text>
-              </g>
-            </svg>
-            <div class="board-footer">
-              <span><i class="signal-dot"></i>所选通路高亮</span
-              ><span>Python 模块化单体 · 非真实运行监控</span>
-            </div>
-          </div>
-        </div>
-        <details class="layered-details">
-          <summary>
-            分层策略与多 Agent 机制总图<span>展开查看 L0–L3 / 协作 / 反馈</span>
-          </summary>
-          <figure>
-            <a
-              href="assets/layered-multiagent.png"
-              target="_blank"
-              rel="noopener"
-              ><img
-                src="assets/layered-multiagent.png"
-                width="1536"
-                height="1024"
-                loading="lazy"
-                decoding="async"
-                alt="全局原则、阶段意愿、六类支持、具体步骤，经Analysis、独立Brief、Planner及Critic形成候选，通过许可与版本校验交给Talker；明确反馈经来源校验进入记忆。"
-            /></a>
-            <figcaption>
-              AI 辅助机制示意，点击打开原图。L0–L3
-              是内容职责，不是四个服务或必经阶段；六类策略也不是六个 Agent。
-            </figcaption>
-          </figure>
-        </details>
-        <div class="architecture-index">
-          <h3>继续往模块里看</h3>
-          <div class="diagram-links">
-            <a href="architecture-course/content.html"
-              ><b>证据与策略闭环</b><span>从研究转译到许可执行</span></a
-            ><a href="architecture-course/overview.html"
-              ><b>模块与责任边界</b><span>实时、安全、后台与存储</span></a
-            ><a href="architecture-course/collaboration.html"
-              ><b>评议与有效性</b><span>独立 Brief、修订与最终 CAS</span></a
-            ><a href="architecture-course/memory.html"
-              ><b>关系记忆与恢复</b><span>来源、范围、更正和结束重试</span></a
-            ><a href="architecture-course/audio.html"
-              ><b>语音流水与取消</b
-              ><span>下一句预取、代次取消与固定音频</span></a
-            >
-          </div>
-        </div>
-        <p class="note">
-          交互图支持节点检查、关系追踪、主题与缩放；源码链接固定到对应实现提交。
-        </p>
-      </section>
-
-      <section
-        class="memory section"
-        id="memory"
-        aria-labelledby="memory-title"
-      >
-        <figure class="memory-photo">
-          <img
-            src="assets/companion-touch.webp"
-            srcset="
-              assets/companion-touch-small.webp  768w,
-              assets/companion-touch.webp       1122w
-            "
-            sizes="(max-width: 760px) 100vw, 48vw"
-            width="1122"
-            height="1402"
-            loading="lazy"
-            alt="一只手轻轻触碰陪伴玩偶，柔软织物与自然光构成安静的场景。AI概念视觉。"
-          />
-          <figcaption>陪伴场景概念 · AI 生成</figcaption>
-        </figure>
-        <div class="memory-copy">
-          <div class="section-heading">
-            <h2 id="memory-title">每一次相遇，<br />都值得认真记住。</h2>
-            <p>
-              “这个办法没帮助”可以改变下一步。可归因的反馈保留来源、策略版本、步骤和有效范围。
-            </p>
-          </div>
-          <div class="memory-example">
-            <blockquote>
-              “刚才这个办法没帮助，<br />我现在只想有人听。”<small
-                >合成反馈示例</small
-              >
-            </blockquote>
-            <div class="memory-explanation">
-              <h3>记录什么，也决定怎么回应。</h3>
-              <dl>
-                <div>
-                  <dt>本次事实</dt>
-                  <dd>对刚执行的具体支持，明确反馈“无帮助”。</dd>
-                </div>
-                <div>
-                  <dt>当前行为</dt>
-                  <dd>停止行动；本会话不重复同一方法，尊重“只听”的边界。</dd>
-                </div>
-                <div>
-                  <dt>下次相遇</dt>
-                  <dd>
-                    检查范围与时效。一次反馈不变成永久偏好；用户更正会关联替代旧记录。
-                  </dd>
-                </div>
-              </dl>
-              <a href="architecture-course/memory.html">探索记忆的来源与范围</a>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section
-        class="strategies section"
-        id="strategies"
-        aria-labelledby="strategy-title"
-      >
-        <div class="section-heading">
-          <h2 id="strategy-title">六种支持，<br />选择权一直在你。</h2>
-          <p>
-            先核对适用条件，再选择一个焦点。这里筛选内容映射；实际运行还会检查安全情境、意愿、历史拒绝与明确许可。
-          </p>
-        </div>
-        <details class="research-disclosure" id="research">
-          <summary>
-            这些支持从哪里来？<span>五类压力 · 四条路径 · 研究依据</span>
-          </summary>
-          <div class="research-body">
-            <div class="section-heading">
-              <h2 id="research-title">
-                从生活里的压力，<br />找到支持的入口。
-              </h2>
-              <p>
-                五类压力与四条共同路径帮助理解情境。它们可以重叠，也不是诊断标签。怕被评价、担心隐私、不确定谁安全，同样影响一个人是否愿意开口。
-              </p>
-            </div>
-            <div class="research-map">
-              <div>
-                <h3>压力来自哪里</h3>
-                <p class="large-list">
-                  学业负担 <span>社会评价</span><br />关系冲突
-                  <span>未来迷茫</span><br />自我压力
-                </p>
-              </div>
-              <div class="map-connector" aria-hidden="true">
-                <svg viewBox="0 0 180 160">
-                  <path
-                    d="M0 20h35q30 0 30 30v60q0 30 30 30h85M0 140h35q30 0 30-30V50q0-30 30-30h85M0 80h180"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3>此刻怎样困扰我</h3>
-                <p class="large-list">
-                  反复想 <span>自我批评</span><br />睡眠变差 <span>孤独</span>
-                </p>
-              </div>
-            </div>
-            <div class="research-foot">
-              <p>
-                <b>证据如何进入设计</b><br />核查来源 → 提取机制 →
-                编写步骤与排除条件 → 真实模型链路验证。
-              </p>
-              <p>
-                16
-                项来源记录研究对象与阅读范围；短语音改编不继承完整干预的效果。<a
-                  href="#sources"
-                  >查看研究来源</a
-                >
-              </p>
-            </div>
-          </div>
-        </details>
-        <div class="catalog-tools">
-          <label
-            >压力情境<select id="pressure">
-              <option value="">全部情境</option>
-              <option value="academic">学业</option>
-              <option value="social_evaluative">社会评价</option>
-              <option value="relationship">关系</option>
-              <option value="future">未来</option>
-              <option value="self">自我压力</option>
-            </select></label
-          ><label
-            >共同路径<select id="pathway">
-              <option value="">全部路径</option>
-              <option value="rumination">反复想</option>
-              <option value="self_criticism">自我批评</option>
-              <option value="sleep">睡眠</option>
-              <option value="loneliness">孤独</option>
-            </select></label
-          ><label
-            >现在的意愿<select id="intent">
-              <option value="explore">想了解一种支持</option>
-              <option value="listen">只想被听见</option>
-              <option value="quiet">想安静 / 结束</option>
-            </select></label
-          ><button type="button" id="reset" class="text-button">
-            重置筛选
-          </button>
-        </div>
-        <p class="catalog-status" id="catalog-status" role="status">
-          正在读取版本化策略目录…
-        </p>
-        <div id="catalog" class="catalog"></div>
-        <p class="catalog-fallback">
-          也可直接阅读<a
-            href="https://github.com/hhuang999/companion-doll-backend/tree/main/companion/companion/config/cards"
-            >六类策略配置</a
-          >。
-        </p>
-        <details class="exercise-block">
-          <summary>
-            三段可以随时停下的短练习<span>自然呼吸 / 外部定位 / 睡前暂停</span>
-          </summary>
-          <div id="exercises" class="exercise-list"></div>
-          <p class="note">
-            固定音频与停顿实测均不超过90秒。自然呼吸不屏气、不强制节奏；不适即停。播放完成与用户觉得有帮助，分别记录。
-          </p>
-        </details>
-      </section>
-
-      <section
-        class="validation section"
-        id="validation"
-        aria-labelledby="validation-title"
-      >
-        <div class="section-heading">
-          <h2 id="validation-title">体验，也经得起测量。</h2>
-          <p>
-            2026年11月4日记录：152
-            项离线检查通过，完成17段固定多轮场景与补测。最终30次普通动态语音成功，失败与质量限制保留在报告中。
-          </p>
-        </div>
-        <div class="latency-layout">
-          <div class="latency-explainer">
-            <h3>一句回应，时间花在哪里？</h3>
-            <p>
-              从服务端收到文本，到本机客户端收到首个音频包。条带按累计分位数作差示意，不代表一条样本的分段耗时。
-            </p>
-            <div class="segmented" role="group" aria-label="延迟统计分位数">
-              <button type="button" data-percentile="p50" aria-pressed="true">
-                P50 中位数</button
-              ><button type="button" data-percentile="p90" aria-pressed="false">
-                P90
-              </button>
-            </div>
-            <p class="note">
-              30次顺序尝试 · 动态 TTS 无缓存 · 普通后台开启<br />不包含用户说话、ASR等待或扬声器首响。
-            </p>
-          </div>
-          <div class="latency-chart">
-            <div class="chart-heading">
-              <span>客户端首包</span
-              ><strong id="latency-total">3.61<span>秒</span></strong>
-            </div>
-            <div class="time-track" aria-hidden="true">
-              <span id="time-text"></span><span id="time-tts"></span
-              ><span id="time-wire"></span>
-            </div>
-            <dl class="time-legend" aria-live="polite">
-              <div>
-                <dt><span class="swatch text"></span>文本成句</dt>
-                <dd id="latency-text">1.26 s</dd>
-              </div>
-              <div>
-                <dt><span class="swatch tts"></span>至 TTS 完成</dt>
-                <dd id="latency-tts">3.54 s</dd>
-              </div>
-              <div>
-                <dt><span class="swatch wire"></span>至客户端首包</dt>
-                <dd id="latency-wire">3.61 s</dd>
-              </div>
-            </dl>
-            <p class="chart-note">
-              整段 WAV 合成是当前首包等待的主要来源之一。
-            </p>
-          </div>
-        </div>
-        <div class="validation-records">
-          <div>
-            <h3>已完成工程检查</h3>
-            <p>
-              并发与取消、来源校验、迁移与幂等、独立 wheel
-              安装、观察台，以及本机 WebSocket / Opus / ASR 联调。
-            </p>
-          </div>
-          <div>
-            <h3>如实保留的差距</h3>
-            <p>
-              900 ms
-              文本首句、常规后台8秒尚未稳定达到。真机首响1.8秒参考目标未测；偶发角色超时、重复安慰等表达仍需精修。
-            </p>
-          </div>
-        </div>
-        <a
-          class="button outline"
-          data-source="companion/docs/VALIDATION.md"
-          href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/VALIDATION.md"
-          >阅读完整结果、失败与复现说明</a
-        >
-      </section>
-
-      <section class="run section" id="run" aria-labelledby="run-title">
-        <div>
-          <h2 id="run-title">从这里，<br />让它开始回应。</h2>
-          <p>
-            先用离线模型走通流程，再接入 Aihubmix 和小智语音。启动前按 README
-            安装环境并配置自己的密钥。
-          </p>
-          <div class="run-links">
-            <a
-              data-source="companion/README.md"
-              href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/README.md"
-              >安装与运行</a
-            ><a
-              data-source="companion/docs/autonomous-upgrade/DEMO.md"
-              href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/autonomous-upgrade/DEMO.md"
-              >课程演示脚本</a
-            ><a
-              data-source="companion/docs/XIAOZHI_HANDOFF.md"
-              href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/XIAOZHI_HANDOFF.md"
-              >小智接入交接</a
-            >
-          </div>
-        </div>
-        <div class="terminal">
-          <div>
-            <span>PowerShell · 仓库根目录</span
-            ><button type="button" id="copy-command">复制离线启动命令</button>
-          </div>
-          <pre><code><span># 离线演示</span>
-./scripts/run.ps1 fake
-
-<span># 真实模型</span>
-./scripts/run.ps1 live
-
-<span># 本地观察台</span>
-./scripts/run.ps1 dashboard</code></pre>
-          <p id="copy-status" role="status"></p>
-        </div>
-      </section>
-
-      <section
-        class="sources section"
-        id="sources"
-        aria-labelledby="sources-title"
-      >
-        <div class="section-heading">
-          <h2 id="sources-title">设计有依据。探索有来处。</h2>
-          <p>
-            保留研究对象、阅读范围与外推限制。课程原型的工程运行证据，与心理支持效果证据分开呈现。
-          </p>
-        </div>
-        <a
-          data-source="companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md"
-          href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md"
-          >阅读完整研究核查与设计依据</a
-        >
-        <details class="source-disclosure">
-          <summary>展开16项来源与实际阅读范围</summary>
-          <div id="source-list" class="source-list">
-            <p>来源目录正在加载；完整核查可通过上方链接阅读。</p>
-          </div>
-        </details>
-      </section>
-    </main>
-    <footer>
-      <div class="footer-wordmark" aria-hidden="true">
-        companion<span>.</span>
-      </div>
-      <div class="footer-bottom">
-        <div class="footer-brand">
-          <img
-            src="assets/companion-mark.svg"
-            width="32"
-            height="32"
-            alt=""
-          /><span
-            >情感陪伴玩偶<small>让支持可以开始，也可以被拒绝。</small></span
-          >
-        </div>
-        <div>
-          <a href="https://github.com/hhuang999/companion-doll-backend"
-            >GitHub</a
-          ><a href="research-design/">研究与系统设计说明</a
-          ><a href="index-v2.html">v2 历史展示</a
-          ><a href="index-v1.html">v1 历史图集</a>
-          <p>
-            内容 <span id="content-version">course-1.0</span> · 来源提交
-            <a
-              id="revision"
-              href="https://github.com/hhuang999/companion-doll-backend"
-              >查看仓库</a
-            >
-          </p>
-        </div>
-      </div>
-    </footer>
-  </body>
-</html>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>情感陪伴玩偶的研究与系统设计</title><style>:root {
+  color-scheme: light;
+  --ink: #252c2b;
+  --muted: #6a7470;
+  --accent: #28685f;
+  --rule: #dce0da;
+  --sans: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 32px; }
+body { margin: 0; background: #fdfcf9; color: var(--ink); }
+main {
+  width: min(840px, calc(100% - 56px));
+  margin: 0 auto;
+  padding: 80px 0 100px;
+  font: 18px/1.95 "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+}
+.report-header { margin: 0 0 56px; }
+.kicker { color: var(--muted); font: 12px/1.6 var(--sans); letter-spacing: .12em; margin-bottom: 24px; }
+h1 { font: 700 39px/1.45 var(--sans); letter-spacing: -.035em; margin: 0 0 20px; }
+.subtitle { font: 18px/1.8 var(--sans); color: var(--muted); margin: 0; }
+h2 { font: 600 27px/1.5 var(--sans); margin: 74px 0 28px; letter-spacing: -.02em; }
+h3 { font: 600 20px/1.65 var(--sans); margin: 38px 0 16px; }
+p { margin: 0 0 20px; text-align: justify; overflow-wrap: break-word; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+code { font: .82em Consolas, monospace; overflow-wrap: anywhere; }
+figure { margin: 36px -40px 38px; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font: 13px/1.8 var(--sans); color: var(--muted); margin: 14px 40px 0; }
+.table-scroll { margin: 26px 0 32px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font: 13px/1.8 var(--sans); }
+th, td { padding: 12px 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { border-top: 1px solid #6a7470; border-bottom-color: #a2aca5; font-weight: 600; }
+td:first-child { font-weight: 500; }
+blockquote { border-left: 2px solid var(--rule); margin: 24px 0; padding-left: 24px; }
+.side-toc { position: fixed; left: 30px; top: 80px; bottom: 32px; width: 205px; overflow-y: auto; font: 12px/1.8 var(--sans); }
+.side-toc p { text-align: left; color: var(--muted); margin-bottom: 16px; }
+.toc ul { list-style: none; padding: 0; margin: 0; }
+.toc li { margin: 0 0 13px; }
+.toc a { color: #606a65; text-decoration: none; }
+.toc a:hover, .toc a:focus-visible { color: var(--accent); text-decoration: underline; }
+.mobile-toc { display: none; }
+.edition { border-top: 1px solid var(--rule); margin-top: 52px; padding-top: 18px; font: 12px/1.8 var(--sans); color: var(--muted); }
+@media (min-width: 1280px) and (max-width: 1500px) {
+  main { margin-left: 290px; }
+  figure { margin-left: -20px; margin-right: -20px; }
+  figcaption { margin-left: 20px; margin-right: 20px; }
+}
+@media (max-width: 1279px) {
+  .side-toc { display: none; }
+  .mobile-toc { display: block; border-bottom: 1px solid var(--rule); padding: 14px 28px; font: 13px/1.7 var(--sans); }
+  .mobile-toc summary { cursor: pointer; color: var(--muted); }
+  .mobile-toc .toc { padding: 18px 0 4px; columns: 2; }
+  main { padding-top: 48px; }
+  figure { margin-left: 0; margin-right: 0; }
+  figcaption { margin-left: 0; margin-right: 0; }
+}
+@media (max-width: 600px) {
+  main { width: calc(100% - 40px); font-size: 17px; line-height: 1.9; padding-top: 36px; }
+  h1 { font-size: 30px; }
+  h2 { font-size: 24px; margin-top: 54px; }
+  h3 { font-size: 19px; margin-top: 30px; }
+  .report-header { margin-bottom: 40px; }
+  .subtitle { font-size: 16px; }
+  .mobile-toc { padding: 12px 20px; }
+  .mobile-toc .toc { columns: 1; }
+  .table-scroll table { min-width: 640px; }
+  figure { margin: 28px -10px; }
+  figcaption { margin-left: 10px; margin-right: 10px; }
+}
+@media print {
+  @page { size: A4; margin: 18mm 16mm; }
+  body { background: white; }
+  .side-toc, .mobile-toc, .edition { display: none; }
+  main { width: auto; max-width: none; margin: 0; padding: 0; font-size: 10pt; line-height: 1.75; }
+  .report-header { margin-bottom: 24pt; }
+  h1 { font-size: 23pt; }
+  h2 { font-size: 16pt; margin-top: 24pt; break-after: avoid; }
+  h3 { font-size: 12pt; break-after: avoid; }
+  p { orphans: 3; widows: 3; margin-bottom: 10pt; }
+  figure { margin: 16pt 0; break-inside: avoid; }
+  figure img { max-height: 220mm; object-fit: contain; }
+  figcaption { font-size: 8pt; margin: 7pt 0 0; }
+  .table-scroll { overflow: visible; }
+  .table-scroll table { min-width: 0; font-size: 8pt; }
+  tr { break-inside: avoid; }
+  thead { display: table-header-group; }
+  a { color: inherit; text-decoration: none; }
+}
+</style></head><body><nav class="side-toc" aria-label="章节目录"><p>情感陪伴玩偶<br>研究与系统设计</p><div class="toc">
+<ul>
+<li><a href="#_1">情感陪伴玩偶的研究与系统设计</a><ul>
+<li><a href="#_2">摘要</a></li>
+<li><a href="#1">1. 日常压力中的支持需求</a></li>
+<li><a href="#2">2. 研究依据如何影响设计</a></li>
+<li><a href="#3">3. 支持内容与交互组织</a></li>
+<li><a href="#4">4. 后台协作如何形成支持方向</a></li>
+<li><a href="#5">5. 跨会话记忆与反馈</a></li>
+<li><a href="#6">6. 对话持续变化时的执行控制</a></li>
+<li><a href="#7">7. 三个合成交互过程</a></li>
+<li><a href="#8">8. 验证结果与尚待回答的问题</a></li>
+<li><a href="#a">附录A 设计要求与实现对应</a></li>
+<li><a href="#b">附录B 角色契约与版本说明</a></li>
+<li><a href="#_5">参考文献与项目资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav><details class="mobile-toc"><summary>章节目录</summary><div class="toc">
+<ul>
+<li><a href="#_1">情感陪伴玩偶的研究与系统设计</a><ul>
+<li><a href="#_2">摘要</a></li>
+<li><a href="#1">1. 日常压力中的支持需求</a></li>
+<li><a href="#2">2. 研究依据如何影响设计</a></li>
+<li><a href="#3">3. 支持内容与交互组织</a></li>
+<li><a href="#4">4. 后台协作如何形成支持方向</a></li>
+<li><a href="#5">5. 跨会话记忆与反馈</a></li>
+<li><a href="#6">6. 对话持续变化时的执行控制</a></li>
+<li><a href="#7">7. 三个合成交互过程</a></li>
+<li><a href="#8">8. 验证结果与尚待回答的问题</a></li>
+<li><a href="#a">附录A 设计要求与实现对应</a></li>
+<li><a href="#b">附录B 角色契约与版本说明</a></li>
+<li><a href="#_5">参考文献与项目资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</details><main><article><header class="report-header"><p class="kicker">课程项目研究报告</p><h1 id="_1">情感陪伴玩偶的研究与系统设计</h1><p class="subtitle">日常压力支持中的内容选择、用户控制与跨会话记忆</p></header>
+<h2 id="_2">摘要</h2>
+<p>情感陪伴玩偶面向中国大陆高中生活中的日常压力，希望通过短语音对话提供倾听、澄清和自愿的小步骤支持。设计的难点在于，相似的情绪表述可能来自不同处境，用户也未必希望得到建议。系统需要理解当前需求，并在用户拒绝、改变话题或更正信息时及时调整。</p>
+<p>项目围绕这些问题核查了16项研究与官方资料，形成六类支持策略和三段短练习。后端将实时表达、后台策略评议、风险检测和长期记忆分开处理：Talker负责当轮回应，后台角色分析情境并评议支持方向，规则与状态机控制许可、执行和取消。记忆保存用户明确陈述及其来源，支持时间限制、更正和跨会话使用。</p>
+<p>目前已完成152项离线检查、17段固定合成多轮场景的真实模型回放及补测，以及30次普通动态语音测试。文本首句P50为1.258秒，客户端首包P50为3.609秒，后台任务P50为12.611秒；文本和后台时延仍高于原定目标。课程验收使用合成案例，允许成年成员扮演，尚未开展目标用户效果研究或ESP32实际首响测量。本文据此讨论设计选择、实现机制及现有证据的适用范围。</p>
+<h2 id="1">1. 日常压力中的支持需求</h2>
+<h3 id="11">1.1 从情绪表述理解具体处境</h3>
+<p>“想到考试就难受”可能有多种含义：一道题反复做错，被同学比较，担心父母责备，或者已经很疲倦却停不下来。回应前，系统需要知道用户正在困扰什么，也需要知道对方此刻希望怎样被回应。有人想把事情说清楚，有人愿意一起找办法，还有人只是想说一会儿。</p>
+<p>这构成了项目的主要设计问题：语音回应需要及时，支持选择却需要足够的情境和意愿信息。随着对话继续，先前的理解还可能被补充或推翻。系统既要保持交流连续，也要让用户能够拒绝建议、停止练习、纠正记忆，并决定哪些内容可以留到以后再谈。</p>
+<p>玩偶是预期的具身语音载体。简短说话可以减少阅读长文本和操作界面的负担，适合项目所设想的日常使用情境。它是否降低评判感、增加表达意愿，以及用户会怎样理解这种陪伴关系，仍需实际参与者研究。当前已经完成后端与小智语音协议的本机联调；图01中的外形是概念表现，工业设计和真实未成年人试用不在已有成果之内。</p>
+<figure><a href="research-design/assets/fig01-context.png" title="点击查看原图"><img alt="图01 日常压力支持的使用情境" src="research-design/assets/fig01-context.png" /></a><figcaption>图01．目标情境、课程演示与现实支持。人物和玩偶均为生成的概念图；课程演示者为成年人。</figcaption></figure>
+<h3 id="12">1.2 压力来源、共同路径与求助障碍</h3>
+<p>项目用五类压力组织对话信息：学业、社会评价、关系、未来迷茫和自我压力。这些标签可以重叠。例如，“父母因为排名责备我，我晚上还一直想”同时涉及学业、评价和关系。标签帮助系统识别情境，具体支持仍取决于用户最在意的部分。</p>
+<p>反复想、自我批评、睡眠变差和孤独，是另外一组对话线索。它们描述困扰怎样持续或表现，与压力来源处于不同层次。反复想可能发生在学业、关系或未来选择中；同一种压力也可能主要表现为自我批评或睡前难以停下。系统保留这些区别，有原话依据时才记录相应线索。</p>
+<p>求助障碍进一步影响支持方式。怕被评价、担心隐私、怕给别人添负担、不知道找谁，或认为联系人不安全，都可能使“去找人聊聊”成为不合适的建议。选择现实支持前，系统需要了解用户愿不愿意联系、最担心什么，以及是否存在相对安全的入口。</p>
+<p>五类压力是本项目的工作分类。ASQ-CN研究在420名中国中学生中得到的是六因子结构，本文借其理解压力来源的多样性，并未将两者等同。<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/">E01</a> 四条共同路径同样用于理解当前表达，不构成诊断或普遍的致病链。情绪强度、尝试意愿、睡前情境、隐私空间和身体聚焦不适，则作为当次选择的条件另行判断。</p>
+<h3 id="13">1.3 课程原型的范围</h3>
+<p>系统支持短时倾诉、必要澄清、情绪承接、自愿的小步骤、短练习和现实支持入口探索，也处理安静、退出与再次唤醒。跨会话记忆用于保留称呼、明确边界及相关经历。出现风险信号时，普通对话转入独立检测与固定支持通路。</p>
+<p>研究情境与实际验收对象有所区别。已有文献涉及青少年，但课程原型采用合成案例，成年成员可以扮演学生；项目尚无目标用户访谈、共创设计、正式成年用户研究或长期效果研究。心理诊断、完整心理治疗、生涯测评和未经核查的升学决策也不属于当前功能。系统提供现实支持的表达协助，由用户决定是否联系，不自动通知家长、老师或其他人。</p>
+<h2 id="2">2. 研究依据如何影响设计</h2>
+<h3 id="21">2.1 资料选择与研究范围</h3>
+<p>前期工作从《研究链 v3》出发，核对原始论文、作者公开稿、综述和官方手册，登记了16项来源的研究对象、方法、可借鉴内容及限制。它是一项面向设计问题的证据审阅：关注哪些机制适合转成短对话，以及转译时需要保留哪些条件。完整登记见<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md">证据审阅表</a>。</p>
+<p>资料的证据强度和读取范围各不相同。情境研究主要用于理解支持需求，实验研究提供局部机制线索，人工干预提供活动组织方式，对话系统研究则提供策略与语言生成的接口参考。E03、E07和E12主要读取摘要，其余来源的具体范围列在文末。项目没有登记穷尽性检索与预注册筛选流程，因此这份审阅不作为一项新的系统综述。</p>
+<h3 id="22">2.2 混合压力要求保留情境差异</h3>
+<p>压力测量研究呈现了不同生活领域；浙江三波队列进一步报告了学业压力、后续情绪症状与睡眠、孤独之间的统计联系。<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/">E01</a> <a href="https://onlinelibrary.wiley.com/doi/10.1002/jad.12471">E02</a> 这些发现使项目采用多标签情境分析，并区分事件与当前困扰过程。一次输入可以同时涉及家庭期待和反复想，系统再据用户意愿选择一个讨论焦点。</p>
+<p>观察研究中的中介关系受自陈测量、混杂因素和样本地域限制。系统据此记录有来源的线索，而不判断某条病理因果链已经成立。这样也为后续纠正留下空间：用户补充“我不是担心分数，我是不想再被比较”，应当改变分析和候选支持。</p>
+<h3 id="23">2.3 求助研究使用户控制成为设计条件</h3>
+<p>社会评价威胁的实验元分析，将部分不可控且可能受到负面评价的任务与急性应激反应联系起来。<a href="https://pubmed.ncbi.nlm.nih.gov/15122924/">E03</a> 青少年求助调查与综述则反复涉及保密、信任、污名顾虑、自力更生倾向和非正式支持。<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/">E04</a> <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/">E05</a> 两类资料的对象和测量不同，但都提示设计需要认真对待表达的社会成本。</p>
+<p>项目将这一判断落实为可拒绝的邀请、话题边界和有条件的现实支持。父母、老师或朋友的身份并不能说明具体联系人安全；系统需要依据用户提供的情况再决定是否推进。回应也应减少评判和无依据的保证，使用户可以纠正系统而不必为自己的选择辩护。</p>
+<p>求助数据只在原样本与分母下解释。例如，长沙研究中的正式求助13.9%和向心理老师求助10.2%，均为求助者中的渠道比例，且渠道可以重叠。这些数字帮助理解渠道使用，不能用来预测玩偶会提高多少求助率。</p>
+<h3 id="24">2.4 从支持机制到短语音活动</h3>
+<p>具体与抽象加工的实验，为把笼统自我评价转向具体片段提供了线索；EASE中的小问题组织方式，则帮助界定怎样选择可影响的一步。<a href="https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m">E06</a> <a href="https://www.who.int/publications/i/item/9789240082755">E08</a> 这两项依据共同进入S16：先缩小讨论范围，再由用户决定是否行动。</p>
+<p>完美主义研究区分高标准追求与完美主义担忧，青少年自我关怀试验提供了温和自我对话的研究背景。<a href="https://pubmed.ncbi.nlm.nih.gov/37194469/">E07</a> <a href="https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf">E09</a> 因此，kind_self_talk聚焦用户已经说出的苛责，帮助形成更准确的表达，不把所有高目标都看作问题。</p>
+<p>人际干预综述与高中生生涯课程，分别影响了安全表达和方向探索的内容组织。<a href="https://www.nature.com/articles/s41398-021-01406-7.pdf">E10</a> <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/">E11</a> 睡前书写实验启发了担忧暂存：把一件事留到合适时间处理，避免在临睡前继续展开任务。<a href="https://pubmed.ncbi.nlm.nih.gov/29058942/">E12</a> PFA中的倾听、尊重意愿与连接原则用于现实支持设计。<a href="https://iris.who.int/bitstream/handle/10665/44615/9789241548205_eng.pdf?sequence=1">E13</a></p>
+<p>这些改编保留了有限的支持动作，也改变了原活动的形式与剂量。EASE有受训支持者、多次小组活动和照顾者参与；自我关怀与生涯课程持续数周；睡前书写实验来自健康青年成人的五分钟书写与单夜测量。项目中的几句语音需要独立评价。正念项目元分析中随对照条件、随访和研究质量而变化的结果，以及有限的伤害报告，也促使短练习保留自愿入口、身体不适排除和即时停止。<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/">E16</a></p>
+<h3 id="25">2.5 策略选择与语言表达的分工</h3>
+<p>ESConv将支持技能组织为对话策略并用于语料标注；PPDPP展示了将策略动作映射为语言指令的方法。<a href="https://aclanthology.org/2021.acl-long.269/">E14</a> <a href="https://openreview.net/pdf?id=MCNqgUFTHI">E15</a> 项目借鉴了这种分工：先明确支持方向，再约束当前表达。原研究的训练程序和效果数字没有直接用于本系统。</p>
+<p>据此形成的设计要求可以沿图02追溯。文献主要影响情境理解、内容条件和用户控制；前后台隔离、版本发布与清除恢复，还来自语音响应和数据一致性的工程需要。后者需要通过运行行为检验，不能仅靠心理学概念说明其合理性。</p>
+<figure><a href="research-design/assets/fig02-evidence.svg" title="点击查看原图"><img alt="图02 证据到可观察设计的转译" src="research-design/assets/fig02-evidence.svg" /></a><figcaption>图02．研究线索、设计要求和实现之间的对应。箭头表示设计推导，详细对应表见附录A。</figcaption></figure>
+<h2 id="3">3. 支持内容与交互组织</h2>
+<h3 id="31">3.1 一次对话可以停在哪里</h3>
+<p>系统允许用户停留在倾听与澄清阶段。开场、探索、安慰、许可、行动、收尾和安静，规定的是当前回应的范围；用户可以在探索中要求安静，在行动中停止，也可以在收尾后重新提出话题。练习与危机则有各自的运行模式。</p>
+<p>这种交互需要不同模块共同完成。实时通路负责眼前的回应，后台根据新信息形成支持方向，安全通路独立判断风险，记忆服务保存以后仍适用的信息。后台完成一次评议后，结果先接受发布检查，供后续合法回合使用，不直接插播语音。图03给出了这些职责的关系。</p>
+<figure><a href="research-design/assets/fig03-system.svg" title="点击查看原图"><img alt="图03 系统职责与主要数据关系" src="research-design/assets/fig03-system.svg" /></a><figcaption>图03．系统总图。前台读取当轮策略与记忆；后台异步形成候选；风险和取消可以改变输出权限。</figcaption></figure>
+<p>“安静”通常由一句简短确认开始，随后停止推进和追问，连接仍然保留。再次唤醒由适配器传入真实来源，不能从普通文本中的唤醒词推断。重新连接后可以读取适用记忆，旧会话的行动许可则不延续。是否在开场提起过去的事，还取决于来源、时间和用户允许的范围。</p>
+<h3 id="32">3.2 从通用原则到具体内容</h3>
+<p>倾听、准确表达和尊重意愿贯穿所有互动，由persona、阶段提示和输出护栏共同约束。策略卡处理更具体的问题，短练习执行固定脚本，风险响应另走独立通路。图04中这些层次各有用途，普通倾诉无需先选中某张卡。</p>
+<figure><a href="research-design/assets/fig04-content.svg" title="点击查看原图"><img alt="图04 内容层次与策略组织" src="research-design/assets/fig04-content.svg" /></a><figcaption>图04．当前内容包中的六类策略、三段练习及独立风险响应。现实支持由安全表达和入口探索两张卡分别承接。</figcaption></figure>
+<p>策略目录先检查内容是否启用、本会话是否拒绝或已用到上限，以及情绪强度、准备度、必要情境与排除条件，再对合格条目排序。压力与路径只需任一目标侧匹配；中文关键词用于有限排序，最多向Planner提供少量候选。混合情境中仍只选择一个当前焦点，没有合适内容时继续倾听或澄清。</p>
+<p>一次行动执行一张卡。六张卡各自限制每会话最多一次，通常三步，睡前暂存为两步，实际步数还受状态机总上限限制。结束或拒绝后不自动接着换卡；用户后来提出新的需要，可以重新经过资格与许可检查。这使行动保持有限，也给用户留下调整方向的空间。</p>
+<h3 id="33">3.3 邀请与同意之间</h3>
+<p>一个邀请先成为待输出提议，在收到服务端<code>started</code>回调后激活。用户明确同意、提议仍有效且存在合格内容，系统才进入行动。当前回调表示服务端开始执行，设备是否已播放到用户耳中尚无逐段ACK确认。</p>
+<p>有时用户已同意“试一个办法”，后台却还没有选出卡片。系统会保留有期限的等待；若之后选中一段具体练习，还要说明练习并再次征求同意。换题、拒绝、强情绪、提议过期或其他控制变化，都可能终止这次邀请。</p>
+<figure><a href="research-design/assets/fig05-consent.svg" title="点击查看原图"><img alt="图05 交互阶段与许可的关键转移" src="research-design/assets/fig05-consent.svg" /></a><figcaption>图05．邀请激活、明确同意和执行是不同事件。拒绝与中止先在当前状态生效，后台随后重评。</figcaption></figure>
+<h3 id="34">3.4 六类策略的共同约定</h3>
+<p>每张卡保存机制依据、最低必要信息、适用与排除条件、步骤、禁语、退出、跟进及反馈解释。Planner和Critic读取选择所需的摘要；Talker执行时只读取当前一步。Analysis提供有来源的情境，Catalog筛选，状态机决定能否进入行动，角色之间的交接见第4节。</p>
+<p>六卡都排除高情绪强度和低行动准备度。用户说停、表示无用或不适、改为只想倾诉，或者出现安全信号时，系统退出当前行动。后续事项应来自用户明确提出的未来事件或允许再谈的内容，不索取行动承诺；结束任务仍需核对来源，单独一个“明天”不会形成提醒承诺。</p>
+<p>反馈也有共同规则。执行完步骤只记录完成，明确表达的帮助或不适才与实际支持关联。负反馈阻止本会话再次推荐相应内容，并保存有范围的支持经历。下文各卡沿着问题、条件、过程和反馈展开；示例语句均为合成表达。</p>
+<figure><a href="research-design/assets/fig06-strategy-card.png" title="点击查看原图"><img alt="图06 S16策略卡的内部结构" src="research-design/assets/fig06-strategy-card.png" /></a><figcaption>图06．以S16为例，一张卡同时描述支持步骤和使用条件。生成图中的简要标签由正文与配置补充。</figcaption></figure>
+<h3 id="35-s16">3.5 从反复想转向具体的一步（S16）</h3>
+<p>S16用于用户愿意尝试、且能够讨论一个具体片段的学业困扰或反复想。它把“为什么我总是不行”缩小到眼前的事情，再找出自己可以影响的部分。具体加工实验与EASE的小问题组织方式提供了这一改编的依据（E06、E08）。最低信息是一件当前困扰的事，用户已说明时就沿着原话继续，不重新询问整个经过。</p>
+<p>执行从一个片段开始。例如，“只看刚才卡住的那一处就好，暂时不用解决全部。”接着区分一件可以影响的小事，最后由用户决定是否选择最小下一步。个人无法控制的问题应当保留其现实限制，不能转写成“只要努力就能解决”。不安全关系和要求详细回忆创伤的情境排除此卡；“别想了去做就好了”“你又在钻牛角尖”也属于禁语。</p>
+<p>这张卡的局部结果可以是说清一个片段，或选定一个小步骤。用户愿意行动不等于压力已经减轻；“刚才这样问有帮助”则能够关联到实际输出。若用户转而只想说一会儿，系统回到倾听，不紧接着推荐另一张相似卡。</p>
+<h3 id="36-kind_self_talk">3.6 把苛责换成准确温和的一句话（kind_self_talk）</h3>
+<p>kind_self_talk从用户已经说出的苛责内容出发，关注一次表现怎样被扩大成对整个人的评价。它合并了朋友视角、双重标准检查和温和自我对话，依据为完美主义担忧研究与青少年自我关怀试验（E07、E09）。使用前需要确认用户愿不愿意尝试另一种说法。</p>
+<p>系统先承接这句评价，随后邀请用户形成一句对朋友也说得出口、同时符合事实的话。例如：“‘这次没达到目标’，会不会比‘我整个人都不行’更贴近事实？”用户可以改成自己的版本，也可以不用。表达应保持准确，不评价身材或能力高低，不要求接受“你就是最棒的”“你一点问题都没有”之类保证。</p>
+<p>现实威胁、欺凌和不安全关系需要先处理处境，不能被解释成用户想法出了问题。若用户觉得改写空泛、被纠正，或者只是想被听见，系统停止改写。采用一句话只说明本次表达获得接受；拒绝也提供了适配信息，而不是需要争辩的错误。后续使用相关记忆，仍以用户主动谈起或允许跟进为条件。</p>
+<h3 id="37-safe_communication">3.7 练一句安全的表达（safe_communication）</h3>
+<p>这张卡用于用户希望向一个相对安全的人表达感受或请求。内容借鉴人际干预中的沟通分析与角色练习，并结合求助研究中的信任问题（E10、E05）。选择前至少要知道想对谁说什么，以及是否担心报复、泄露或伤害。Catalog要求明确的<code>safe_contact</code>条件；对象的身份本身不能替代这些信息。</p>
+<p>用户同意后，先确认核心意思和合适时机，再根据原话拟一句感受与请求，最后由用户决定保留、改写或不用。例如，“刚才被打断时我有点难受，我想先讲完。”系统不猜对方动机，也不要求对质、原谅或和解。威胁、欺凌、缺少隐私空间和睡前情境排除此卡；补充了不安全信息时也应立即停止。</p>
+<p>草拟、打算使用、已经发送和收到回应，是四种不同的事实。记忆只能在用户明确报告后记录后两者，系统也不能保证对方不会生气。若用户转向寻找其他现实支持，需要另一次判断与许可，不在拟句之后自动追加第二项行动。跟进限于用户愿意再谈的事项。</p>
+<h3 id="38-safe_support">3.8 找到一个现实支持入口（safe_support）</h3>
+<p>safe_support帮助用户考虑愿意联系谁、通过什么方式、透露多少。求助调查、障碍综述与PFA中的连接原则构成其依据（E04、E05、E13）。它与安全表达分开保留，因为用户可能尚无合适联系人，当前任务正是寻找入口。</p>
+<p>系统先确认是否愿意考虑现实支持，再了解一个主要顾虑：评价、隐私、负担或安全。随后由用户选择相对安全的人或渠道，愿意时再拟一句低负担的开口，只包含用户同意透露的内容。例如，“你希望对方先听你说，还是帮你找合适的支持？”渠道是否存在、是否可用仍需核实，尤其不能默认学校一定提供某项服务，也不许诺绝对保密。</p>
+<p>睡前不推进这项行动，明确拒绝联系的人也不反复推荐。若候选对象都不安全，应保持支持，再依据情境讨论其他可信入口；高风险由独立通路处理。选择了入口或写出一句开口，并不代表已经联系。只有用户明确报告联系发生，系统才保存相应事实，后续也不会代发消息或声称已经通知他人。</p>
+<h3 id="39-values_exploration">3.9 找一个暂时想了解的方向（values_exploration）</h3>
+<p>面对未来迷茫，values_exploration帮助用户形成一个可以探索的问题。它借鉴中国高中生生涯课程中的探索与信息获取方式（E11），以压力研究提供情境参照（E01）。起点是用户提到的兴趣或困惑，不知道也可以保留未知。</p>
+<p>执行时先选一件有一点兴趣或在意的事，再将其变成小问题；用户愿意继续时，选择相关从业者、可信老师或官方资料等信息来源。“现在不用决定一辈子，可以先弄清你对这件事好奇什么”，体现了这张卡的尺度。系统不做职业匹配评分，不从一次兴趣推断天赋，也不提供未经核查的政策或录取保证。</p>
+<p>如果用户只想卸下焦虑、准备睡觉或暂时不愿规划，就停止探索。形成问题和决定暂缓都可以是当前选择，不能据此记录生涯困扰已经减轻。后续事项同样区分意图与事实：“想看看有没有讲座”不会被保存为讲座已经确定。</p>
+<h3 id="310-worry_parking">3.10 睡前把一件担心留待明天（worry_parking）</h3>
+<p>worry_parking在用户明确准备休息、又愿意留一句话时使用。睡前书写实验和睡眠关联研究提供了机制启发（E12、E02），具体改编则收缩为两步：确认一件留待以后处理的事，复述用户愿意留下的那句话，然后收尾。</p>
+<p>“这件事先留在这里，今晚不用把它解决完”是合成示例。过程不扩展成待办清单，用户拒绝记录时就直接结束，不再追问明天怎样安排。结构化条件要求睡前情境，排除不安全关系、强情绪和低准备度。</p>
+<p>本卡没有引入睡眠限制、刺激控制或其他失眠治疗规则，也不保证入睡。暂存、拒绝和结束都可能符合用户此刻的意图；是否睡得更好需要另外的反馈或测量。它与固定bedtime练习的区别在于，前者回应用户的一句话，后者播放预先定义的短暂停脚本。</p>
+<h3 id="311">3.11 三段短练习与内容取舍</h3>
+<p>短练习由固定文本和句后停顿组成，播放时不让Talker扩写。它们有独立邀请和明确同意；新输入、中止或风险接管会停止当前执行。中断后即便保留恢复线索，也要重新邀请。</p>
+<p>自然呼吸小暂停（<code>breathing_60s</code>）允许睁眼和选择舒适姿势，只留意一次自然呼吸，不加深、不数拍；身体聚焦不适时不进入或立即停止。它以E16为练习证据背景，当前音频连同停顿为36.25秒，历史ID中的60s并非现版时长。</p>
+<p>“看看身边一样东西”（<code>grounding</code>）将注意力短暂放到安全环境中的普通物件及一种颜色，无需回答。对脚下或椅子支撑的注意可以跳过。现版时长为33.7秒，来源登记为E13的支持原则，具体感官脚本尚无直接效果验证。</p>
+<p>睡前短暂停（<code>bedtime</code>）从舒适姿势和自然呼吸开始，提示担心可以暂不处理，然后结束对话。它要求明确睡前且可以安静休息，排除不安全和身体聚焦不适，现版时长29.9秒。E02、E12提供关联及机制背景。</p>
+<p>三段练习均受90秒总长限制。以上时长来自当前部署音频，重新生成声音后需重测；播放完成与主观帮助分别记录。</p>
+<p>六类策略的形成也包含合并与排除。具体加工和可控小步合入S16，朋友视角与温和自我对话合并，生涯叙事收缩为有限探索。安全表达与现实支持入口因前提不同而分开；社交小尝试纳入后者。完整CBT-I、IPT-A、专业暴露、自动诊断和积极宣言未进入内容目录。早期缺失的“A线策略全文”没有被补写成原文，新语义ID也没有冒充历史S03—S19。</p>
+<p>内容发布与每次运行中的评议分别进行。当前<code>course-1.0</code>登记来源、Codex自动内容核查、文件摘要和行为证据；demo进一步检查内容及提示词摘要、真实回放回执、音频与文本／声音绑定和时长。六卡、三练习与固定危机内容共十项，使用<code>course-release-1</code>回执，本地准备24段固定音频。这是课程内容与工程准入，尚无人工临床审核。修改与准备流程见<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/CONTENT.md">内容说明</a>。</p>
+<h2 id="4">4. 后台协作如何形成支持方向</h2>
+<h3 id="41">4.1 分析、规划与评审</h3>
+<p>一次支持选择可能在几个地方出错：误解用户处境，选择了不合适的内容，遗漏了拒绝或话题边界，或者在表达时增加了未经许可的建议。后台分工让这些判断分别留下结果，便于定位问题。它也使实时Talker能够先回应，而不等待完整分析。</p>
+<p>Analysis读取有限对话、适用记忆、状态与交互事件，形成有来源的情境描述，包括事实、假设、意愿、压力与路径线索、必要条件和待澄清问题。Planner结合分析、原始证据、合格内容摘要、边界及反馈，提出支持方向和表达指引。两者都不能授予行动许可或解除危机。</p>
+<p>完整评议还引入独立Brief和Critic。Brief只看原始历史、状态、记忆与反馈，不看Analysis结论、卡片目录或Planner候选，先提出值得关注的需求和反证。Critic再依据这份Brief、原始证据、分析和合格目录，评审一个确切版本的候选。结果可以是批准、要求修订、拒绝或信息不足，不能直接改写计划或发声。</p>
+<p>这里的“独立”指输入与职责隔离。部分角色使用同一基础模型，仍可能共享错误。项目尚无比较实验说明这套多角色协议优于单模型；目前采用它，是为了使支持选择和检查过程可观察，并把复杂判断放到实时回应之外。</p>
+<h3 id="42">4.2 日常更新与完整评议</h3>
+<p>普通输入并不都启动整套评议。默认每四个用户轮次可以触发一次routine，由Analysis和Planner更新非行动方向，如倾听、澄清、安慰、反映或安静。它不产生行动候选，也不标记为已独立评审。</p>
+<p>明确求助、缺卡、拒绝、纠正、边界变化、可归因反馈、哭声或情绪事件，以及risk watch，可以触发deliberation。Analysis与Brief先并行运行，Planner形成V1，再由Critic评审；只有需要修订时才形成V2，并对V2复核。图07显示了两种流程。哭声只说明需要重新理解情境，不自动使呼吸练习变得合适。</p>
+<figure><a href="research-design/assets/fig07-agents.svg" title="点击查看原图"><img alt="图07 routine与完整评议" src="research-design/assets/fig07-agents.svg" /></a><figcaption>图07．routine的两次基本调用与deliberation的四次或六次基本调用。独立Brief参与首次评审和修订后复核。</figcaption></figure>
+<p>以“我只想说，不要给建议”为例，Brief应关注建议边界，Planner可以选择倾听。如果候选仍带有行动，或者必要问题与<code>no_topic_probe</code>冲突，Critic和本地逻辑检查会要求修订或拒绝。即使Critic批准了一个内部矛盾的候选，本地检查仍能拦截。V2缺少复核、评审返回错误版本，或仍存在阻断问题时，计划均不能发布。</p>
+<h3 id="43">4.3 从角色结果到当轮表达</h3>
+<p>情境分析、计划候选、评审意见和已发布计划是不同产物。系统在发布时补齐身份、时间、版本、核对游标和评审关联，之后才能形成供前台读取的SupportPlan。当轮开始时，Core再冻结允许采用的TurnPolicyFrame，将当前卡的当前一步、必要边界和相关记忆交给Talker。后台稍后完成的新结果不会改写已经开始的这一轮。</p>
+<p>这种分工使观察台能够分别展示Planner建议了什么、Critic批准哪一版、发布是否被新输入阻止，以及下一轮是否实际采用。保存的是结构化结果和简短依据，而非依靠展示长篇推理来说明判断质量。各契约的输入、输出与权限集中列在附录B。</p>
+<p>Memory和End另行整理长期信息。当前真实Analysis调用已通过schema投影去掉可选记忆候选字段，避免重复整理和上下文膨胀；明确边界与姓名仍由Core及时处理。Memory提出记忆候选，End根据固定结束游标整理总结、记忆和有来源的后续事项，再交给程序校验。</p>
+<h3 id="44">4.4 调度与资源限制</h3>
+<p>同一用户最多有一个活动认知任务，任务内部允许Analysis和Brief并行。尚未运行的策略任务合并触发原因，较强任务可以覆盖待执行的routine，避免每句话积压一套旧讨论。不同用户通过有界队列公平分配机会；结束整理、边界或拒绝修复、明确求助、普通周期与记忆整理具有不同优先级。风险检测使用独立资源。</p>
+<p>单任务共用20秒deadline，并受调用次数、输出Token和总Token预算限制。routine最多四次调用，deliberation最多八次，其中包含最多一次共享格式／来源修复和最多一次DeltaGuard；基本流程之外的检查也消耗这份预算。剩余额度不足时就停止请求。同步HTTP如果尚未退出，资源槽保持占用，防止逻辑取消后继续无界发起调用。</p>
+<p>前台模型、风险模型与后台资源分离，后台超时或被拒绝时，当前轮仍可作符合边界的简短回应。任务保留超时、拒绝、取消、过期或部分提交的状态，供观察台和恢复流程使用。当前经Aihubmix调用qwen-plus承担Analysis／Planner，qwen-flash承担Brief／Critic／Delta及Talker／Risk，gpt-4.1-mini承担Memory／End；配置来自接口与延迟探针，未进行多模型排名。</p>
+<h2 id="5">5. 跨会话记忆与反馈</h2>
+<h3 id="51">5.1 哪些信息值得留下</h3>
+<p>记忆主要解决重复说明和边界延续的问题。用户下次回来时，系统可以使用正确称呼、知道一项明确计划仍在等待结果，并遵守“以后不要主动问考试”这样的要求。保存的范围因此取决于信息用途和来源，而非尽量积累对话内容。</p>
+<p>当前有四类记忆。事实与偏好保存明确称呼及有依据的长期偏好；事件记忆记录已发生或明确计划的事情，并保留时间；交互边界约束能问什么、能建议什么以及持续多久；支持经历把实际使用的内容版本、步骤与用户明确反馈联系起来。一次拒绝可以说明当次不适配，不能直接成为长期人格偏好。</p>
+<p>每项候选需引用同一用户可核验的原始输入、有效记忆或交互事件。引用ID存在还不够，提供引文时还要逐字匹配，来源类型也必须正确。例如，输出ID不能替代用户反馈事件ID。契约区分用户陈述、系统观测、假设和未核验旧记录；当前MemoryService拒绝把后两者写成新的长期事实，边界和偏好还要求明确用户证据。旧数据中的未核验标识继续保留。</p>
+<h3 id="52">5.2 时间、范围与提及方式</h3>
+<p>一条记忆可以适用于当轮、当前话题、当前会话、截至某个时间，或长期。事件发生时间、记录时间和有效期分别保存，以免把“上周发生过”误当成“现在仍然如此”。“今天别问考试”按本地日界到期，“以后别主动问考试”则可长期生效，直到用户更改。</p>
+<p>读取时先筛选同一用户、有效状态、时间与范围，再用中文字符二元组和英文词重叠衡量相关性，同时考虑重要性、记录距今的时间和近期重复使用。交互边界单独保留，避免被普通相关性排序挤出。图08展示了写入和读取的先后关系。</p>
+<figure><a href="research-design/assets/fig08-memory.svg" title="点击查看原图"><img alt="图08 记忆的形成、使用与更正" src="research-design/assets/fig08-memory.svg" /></a><figcaption>图08．记忆在写入前核对来源，在使用前核对范围和相关性；更正保留替代关系，并阻止旧候选重新覆盖。</figcaption></figure>
+<p>检索出的内容还受提及规则约束：<code>allowed</code>允许在合适语境使用，<code>only_when_raised</code>要求用户已谈到相关内容，<code>avoid_proactive</code>限制主动提起。敏感信息也要求当前话题已触及。有限Token预算优先保留边界，减少普通记忆和指引；边界过多时采用保守规则并集，投影仍保持完整结构。</p>
+<p>这套检索使用词面匹配，可能漏掉同义表达、含蓄指代和较远关联。边界解析也依赖有限中文模式，目标不清时会保守保护当前情境，既可能漏识别，也可能扩大限制。用户主动谈起一个话题，允许系统在范围内回应，但并不自动撤销长期“不主动追问”的要求。</p>
+<h3 id="53">5.3 更正与局部例外</h3>
+<p>用户更正姓名时，旧值先退出当前使用，新记录引用新的原话，并保存版本与<code>supersedes_id</code>。来源游标使系统能够判断先后：旧会话的结束任务即使晚到，也不能用较早的证据把“小琳”重新写成“小林”。依赖这条记忆的支持计划也要核对版本。</p>
+<p>边界允许较窄例外。例如，长期“不主动问考试”与当天“今天可以问我考试进展”可以共存。系统用同目标的较新例外遮蔽相应限制，例外到期后，长期边界继续生效。原记录因此无需删除，用户也能继续更改它；是否识别为同一目标仍受当前规则能力限制。</p>
+<p>清除信息时，Core先建立用户清除屏障并更新执行代次，取消任务与输出，等待有界在途工作后再事务删除。迟到的模型响应无法重新写回已清除内容。数据库清除、历史备份、开发证据和外部服务保留有不同处理范围，具体操作见运行文档。</p>
+<h3 id="54">5.4 用户反馈怎样影响后续选择</h3>
+<p>服务端记录一次支持已经开始或完成，用户表达是否觉得有帮助，两者来自不同事件。系统优先将明确反馈关联到本会话最近已开始或完成、且早于当前输入的输出，再携带其内容类型、ID、版本和步骤保存支持经历。</p>
+<p>“刚才这样问有帮助”可以提供具体归因；单独一句“好多了”可以作为积极表达保留，但不足以认定某张卡有效。当前方法依赖明确句式和近邻输出，尚不具备全面的指代消解。重复回调以幂等键去重，含糊和缺失反馈均不补成收益。</p>
+<p>明确负反馈把相关卡或练习加入本会话拒绝集合。支持经历可以跨会话保存，默认只在相关话题被提出时使用，不直接形成永久黑名单。近期同一可归因目标在四个用户轮次内出现两次明确失败，会触发更强重评；当前行为在第一次拒绝时已经停止。</p>
+<h2 id="6">6. 对话持续变化时的执行控制</h2>
+<h3 id="61">6.1 分别判断输出、策略和记忆</h3>
+<p>后台需要数秒完成分析，而用户可能继续说话。新输入要求上一轮输出停止，却未必推翻后台已经形成的理解。系统因此分别判断几种产物的有效性：输出绑定当前代次，支持计划绑定已核对的情境与版本，记忆依赖来源与范围，结束总结绑定原会话的结束游标。</p>
+<figure><a href="research-design/assets/fig09-validity.svg" title="点击查看原图"><img alt="图09 按产物分别判断有效性" src="research-design/assets/fig09-validity.svg" /></a><figcaption>图09．一次新输入对不同产物的影响。旧输出取消，其他产物按各自条件决定是否保留。</figcaption></figure>
+<p>每次新输入递增<code>generation</code>，旧文本、播放计划和预取音频失效。若用户只是继续讲同一件事，后台计划可以通过DeltaGuard核对新增输入；若有拒绝、纠正、换题或边界变化，则还需满足相应控制版本。播放计划使用原有<code>active_plan_id</code>，支持方向另用<code>active_support_plan_id</code>保存，避免混用寿命不同的对象。</p>
+<p>DeltaGuard最多核对一次。兼容结果只推进实际检查到的输入游标，不改变计划语义或有效期；不兼容、不确定或超时会阻止发布。核对结束后仍可能有新输入，因此最终发布还在用户锁、会话锁和数据库事务内比较当前输入游标与计划基线版本。CAS不相等时拒绝旧提交，解决检查与写入之间再次变化的竞态。</p>
+<p>计划默认限制为排队起120秒、最多四个新增用户轮次，不因读取或复核续期。普通新输入还未核对时，前台只使用通用倾听方向，暂不沿用旧行动邀请或主动引出敏感旧话题。已经冻结的当轮上下文不受后台新发布结果影响。</p>
+<h3 id="62">6.2 部分提交与结束恢复</h3>
+<p>计划过期时，一条独立、有来源且未被更正的记忆仍可能有效。统一发布机制允许只提交合法记忆，将任务记为partial，并记录拒绝其他产物的原因。当前真实Analysis已收窄记忆输出，主要记忆来自显式交互及Memory／End；分产物判断仍保留在发布协议和测试中。</p>
+<p>SQLite保存任务、角色运行、计划、当轮策略、交互事件、记忆和来源。正式v1→v2升级先做一致备份，再事务迁移，重复启动不重复导入。课程增量字段主要进入已有JSON契约，数据库版本仍为2；一个数据库由一个Core进程持有。</p>
+<p>结束整理使用持久化任务和固定<code>final_turn_id</code>。重启可以恢复未完成任务，明确失败保留状态并支持显式重试。它只整理原会话，不修改新会话的当前策略，也不能覆盖后来的记忆更正。迁移、回滚、结束恢复与清除竞态的检查列在<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/V2_IMPLEMENTATION_STATUS.md">V2验收矩阵</a>。</p>
+<h3 id="63">6.3 风险检测与输出接管</h3>
+<p>风险通路由本地L1词表和独立L2模型组成，不在认知任务队列中等待。Talker可以同时生成，第一段内容则经过有界输出闸门：默认从输入起最多等待600毫秒风险结果，而非每句额外停顿600毫秒。到期后仍允许输出时可以先放行，迟到high继续拥有接管权。</p>
+<figure><a href="research-design/assets/fig10-control.svg" title="点击查看原图"><img alt="图10 风险、许可和取消的控制关系" src="research-design/assets/fig10-control.svg" /></a><figcaption>图10．风险状态、用户许可和输出代次共同约束执行；角色评审通过后仍须满足这些条件。</figcaption></figure>
+<p>high使普通代次失效，取消普通任务并切入固定危机支持。Planner和Critic不能解除危机，后续一句平静表述也不自动解除。风险记录留在观察台，默认没有配置对外通知。由于闸门有等待上限，接管只能停止后续发送，不能撤回已经发出的内容。</p>
+<p>许可与风险分别回答两个问题：用户是否同意这项行动，当前是否允许普通通路继续。已有许可不能覆盖风险接管，risk none也不能替代同意。输出护栏继续检查禁语、越权状态、无依据保证，以及已观察到的未许可建议句式；有限规则之外的措辞问题仍靠真实回放审读发现。</p>
+<h3 id="64">6.4 语音等待与取消</h3>
+<p>小智输入经Opus解码和本地SenseVoice识别进入Core；Talker输出流式分句，再经Aihubmix取得完整WAV，编码为Opus并按节奏发送。第一句文本已经形成时，用户还可能在等待合成和传输。因此测试分别记录首token、首句、TTS开始与完成、编码、首包发送和客户端接收。</p>
+<figure><a href="research-design/assets/fig11-audio.svg" title="点击查看原图"><img alt="图11 普通语音流水与固定音频接管" src="research-design/assets/fig11-audio.svg" /></a><figcaption>图11．当前句发送与下一句准备可以重叠。固定音频绕过动态TTS，两条路径都检查代次和取消。</figcaption></figure>
+<p>现有优化包括直接输出正文、缩短第一句、压缩角色上下文、资源隔离和有界下一句预取。两个动态语音槽允许当前句与下一句的准备重叠，按原序消费，避免无限预生成。当前TTS仍等待完整文件，因此预取主要改善后续句间等待，不能消除第一句合成时间。</p>
+<p>新输入或abort更新generation，取消旧输出和预取。合成前后、编码与发送边界都核对有效性；旧HTTP即使继续运行，返回的音频也不能重新进入发送。预取完成本身不激活邀请。危机与练习片段提前准备，检查文本、声音、文件hash和总时长，接管时无需等待动态TTS。</p>
+<p>当前<code>started</code>与<code>completed</code>来自服务端执行或发送估计；契约预留的<code>device_ack</code>尚未接入逐段设备确认。服务端开始邀请后才激活提议，后续用户明确反馈再用于归因。本机探针已检查abort后无旧binary继续到达，但设备缓冲何时清空、扬声器何时停声仍待真机测量。</p>
+<p>小智保留六处核心hook，将连接、输入、输出、结束、abort和真实wake来源衔接到Core。课程升级另有独立访问凭据补丁，由服务器映射用户身份。公开项目站展示内容与架构，不直接连接携带密钥的后端；联调方式见<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/XIAOZHI_HANDOFF.md">小智交接说明</a>。</p>
+<h2 id="7">7. 三个合成交互过程</h2>
+<p>以下案例将前述机制放在同一次互动中说明。语句是合成示例，不是参与者或实测逐字转录；后台结果仍需按实际时间形成。</p>
+<figure><a href="research-design/assets/fig12-interaction.png" title="点击查看原图"><img alt="图12 用户选择如何改变互动" src="research-design/assets/fig12-interaction.png" /></a><figcaption>图12．自愿尝试、中止与跨会话更正。三个场景展示用户选择带来的控制变化。</figcaption></figure>
+<h3 id="71">7.1 愿意尝试一个小步骤</h3>
+<p>用户说：“刚才那道题一直做错，我反复想，想找个办法。”Core登记输入、取消旧代次，并触发求助评议；风险检测独立运行，前台可以先提出固定许可邀请。Analysis保留学业、反复想和尝试意愿，Catalog据条件筛选S16。缺少联系人安全信息时，人际表达卡不会因此进入行动。</p>
+<p>Brief关注是否把做错题扩大为人格判断。Planner提出S16，Critic核对候选版本，随后程序检查来源、版本和新增输入。邀请已经开始输出，用户又明确同意，合格策略才与当前许可共同进入action；如果候选尚未就绪，则有期限等待。</p>
+<p>Talker此时只读当前步骤。用户已经说明某处计算问题，就从该处继续，不重问整个经过。具体输出关联S16、<code>course-1.0</code>及步骤。用户若说“刚才这样问有帮助，我知道卡在哪里了”，系统将其关联到最近实际输出，写入支持经历。用户决定停在这里后，结束任务整理有来源内容；没有明确未来事项，就不生成跟进。</p>
+<h3 id="72">7.2 觉得无用并要求停下</h3>
+<p>kind_self_talk执行中，用户说：“这个办法没帮助，先停下，我只想说说。”Core先撤回提议、退出行动并更新代次，Interactions记录反馈，将该卡加入本会话拒绝集合。后台合并拒绝与反馈触发，随后重评倾听方向。</p>
+<p>这时旧Talker或预取音频可能才返回，但输出闸门会因代次不匹配丢弃它们。支持经历保留的是某版本某步骤收到负反馈，供后续相关判断使用。对于已被话题边界阻止的邀请，当前实现直接使用<code>boundary_hold</code>确认，避免再生成一条替代建议。</p>
+<p>若中止的是grounding，ExercisePlayer和OutputPort停止后续脚本及旧音频，并记录interrupted。中断本身不说明用户状态变差，也不自动触发呼吸练习。是否重新尝试需要新的具体邀请与意愿。</p>
+<h3 id="73">7.3 下次回来时更正与边界仍然有效</h3>
+<p>会话A中，用户先说“我叫小林”，随后更正为“刚才说错了，我的名字是小琳”。Core使旧称呼退出使用，以新原话建立后继记录。旧后台任务即使晚到，也不能把名字改回去。</p>
+<p>同一会话里，用户说“今天别问考试”，又补充“以后别主动问考试”。前者按本地日界到期，后者长期限制主动追问。一次可归因的“这个办法没帮助”则保存为支持经历，并更新本会话拒绝集合，三种信息各有自己的范围。</p>
+<p>会话B真实唤醒后，系统读取同一用户的适用记忆，可以使用正确称呼，开场不主动问考试，也不恢复旧行动许可。若用户说“今天可以问我考试进展”，当天例外在对应目标上遮蔽长期限制；到期后，长期边界继续适用。用户愿意谈考试，仍需另行决定是否接受某项行动。</p>
+<p>这一组合示例对应姓名更正、范围、例外和跨会话读取等已有机制。其证据来自N07真实回放及独立范围／更正测试，没有把组合后的所有台词当作一段已执行记录。</p>
+<h2 id="8">8. 验证结果与尚待回答的问题</h2>
+<h3 id="81">8.1 工程检查与真实接口</h3>
+<p>现有结果来自2026-11-04课程升级验收。152项离线检查通过，另有三项在线检查未纳入该次离线运行；Ruff与格式检查同时完成。测试使用可控时钟、屏障和故障注入，检查许可、重复、取消、过期、部分提交、来源、迁移、重启与清除等业务结果。V2-01—V2-24的逐项证据可在<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/V2_IMPLEMENTATION_STATUS.md">验收矩阵</a>查阅。</p>
+<p>真实接口验收覆盖Aihubmix各角色、CLI、观察台、小智WebSocket／Opus／ASR，以及隔离环境中的wheel资源和v1迁移。它们确认默认执行链与安装资源能够运行。设备音质、扬声器首响和实际停声尚需硬件联调。此前96项检查和40次语音是历史批次，本文采用<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/VALIDATION.md">最新验证报告</a>及<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/autonomous-upgrade/VALIDATION_SUMMARY.json">合成汇总</a>中的结果。</p>
+<h3 id="82">8.2 多轮回放发现的问题</h3>
+<p>固定场景集<code>course-quality-1</code>包含T01—T09九段目标覆盖，以及N01—N08八段完整目录自然选择。前一组限制候选目录，以确保启用内容获得执行机会；后一组观察系统在完整目录中的选择。回放器模拟服务端执行，不合成音频，因而练习逻辑与音频另行检查。</p>
+<p>两次完整回放各有73个输入。第一批执行了8/9目标，T04未执行；第二批达到9/9，但仍有语言问题及N08结束捕获的驱动错误。第二批共76个后台任务：61 completed、4 partial、8 rejected、2 timed_out、1 expired；205条角色记录中197 completed、6 schema_error、2 timed_out。rejected可能表示候选被有效拦截，需要结合原因判断。之后按问题进行了8+1+2+1段定点补测，原始失败均保留。</p>
+<p>若干问题出在语言理解与状态控制的交界。“不想要办法”曾被求助子串误匹配，后来调整为拒绝优先，N01补测转为倾听；转述“愿不愿意”曾被当作撤回，修正后T04保持当前行动。句后闭引号被单独发声的问题，则通过流式尾部排版字符处理修正，T03补测没有依靠等待下一token来延后首句。</p>
+<p>另一些问题涉及模型表达和来源。T03／T05中出现计划被写成已发生、无依据保证，修复补充了计划与事实的区分及针对已观察问题的护栏。Memory／End曾引用不存在的事件ID，来源校验现在进入同一有界修复预算，错误候选无法入库，T03后续补测结束任务完成。N04中，边界阻止邀请后Talker仍给出泛化建议，修复将该分支改为固定确认；final6实际命中该分支，但仍出现一次后台超时。</p>
+<p>当前仍观察到概括性肯定、重复询问感受、学校支持可用性表述偏确定，以及边界目标不清时保守阻止行动。目标内容全部获得执行机会，与每句表达质量合格是不同结果。逐段记录见<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/autonomous-upgrade/QUALITY_REVIEW.md">质量审读</a>；T01—T06分别承接六卡执行，T02还覆盖退出与负反馈，T04检查版本化反馈，N02观察自然选择，N03／N05涉及不安全与依赖表达，N07检查跨会话记忆。</p>
+<h3 id="83">8.3 动态语音与后台耗时</h3>
+<p>最终批次<code>voice-final2</code>使用单客户端顺序输入，后台正常开启，没有同时运行质量回放。30次普通动态语音均成功，无回退、失败或超时；共生成31句，均未命中固定音频缓存。21/21后台角色和8/8认知任务完成，结束任务为done。</p>
+<figure><a href="research-design/assets/fig13-performance.svg" title="点击查看原图"><img alt="图13 当前性能与证据层级" src="research-design/assets/fig13-performance.svg" /></a><figcaption>图13．最终批次的P50／P90。语音样本n=30，后台任务n=8，真机首响未测。两面板横轴尺度不同。</figcaption></figure>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align: right;">样本数</th>
+<th style="text-align: right;">P50</th>
+<th style="text-align: right;">P90</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文本首token</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1.188秒</td>
+<td style="text-align: right;">1.359秒</td>
+</tr>
+<tr>
+<td>文本首句／闸门放行</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1.258秒</td>
+<td style="text-align: right;">1.421秒</td>
+</tr>
+<tr>
+<td>TTS开始（自输入计）</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1.273秒</td>
+<td style="text-align: right;">1.421秒</td>
+</tr>
+<tr>
+<td>TTS完成（自输入计）</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">3.539秒</td>
+<td style="text-align: right;">3.937秒</td>
+</tr>
+<tr>
+<td>Opus首包ready／sent</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">3.586秒</td>
+<td style="text-align: right;">3.984秒</td>
+</tr>
+<tr>
+<td>客户端首包接收</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">3.609秒</td>
+<td style="text-align: right;">4.015秒</td>
+</tr>
+<tr>
+<td>服务端发送完成</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">9.273秒</td>
+<td style="text-align: right;">11.031秒</td>
+</tr>
+<tr>
+<td>TTS本身（逐请求差值）</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">2.266秒</td>
+<td style="text-align: right;">2.583秒</td>
+</tr>
+<tr>
+<td>编码到ready（逐请求差值）</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.047秒</td>
+<td style="text-align: right;">0.065秒</td>
+</tr>
+<tr>
+<td>后台任务执行</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">12.611秒</td>
+<td style="text-align: right;">15.316秒</td>
+</tr>
+</tbody>
+</table></div>
+<p>文本首句P50为1.258秒、P90为1.421秒，仍高于900毫秒目标；后台任务P50为12.611秒、P90为15.316秒，也未稳定达到常规8秒期望。客户端首包接收P50为3.609秒，不能替代1.8秒真机首响目标的测量。当前首句等待主要受外部文本生成和完整WAV合成影响，下一句预取主要作用于句间等待。</p>
+<p>表中前七项沿用bench经验分位数，派生时长与后台采用插值分位数。TTS和编码时长由逐请求差值统计；不能将两个里程碑的分位数直接相减。不同历史批次同时包含模型、内容和故障修复变化，也不足以作为控制变量实验来估计优化收益。</p>
+<p>该语音批次有81条provider记录，合计输入73521、输出5681 Token；TTS字符费用和账单金额未估计。真实多轮第二批另计442918输入、35880输出Token，含五条保守estimated记录。两批与调试调用分别统计，以保留各自成本和失败分母。</p>
+<p>本机小智探针还验证了唤醒、动态回应、固定危机、abort后无旧音频帧、重连和真实Opus／SenseVoice输入。固定缓存接管的时延单独记录，不混入普通动态结果。设备缓冲清空、麦克风和按钮行为仍待硬件测量。</p>
+<h3 id="84">8.4 研究解释与后续评价</h3>
+<p>现有证据支持系统已实现一套可运行、可检查的支持流程：内容有适用条件，支持选择经过评议，行动需要许可，输出可以取消，记忆保留来源与更正关系。确定性测试覆盖了所设计的竞态和恢复情形，真实回放则揭示了接口及语言层面的具体缺陷。</p>
+<p>用户是否因此更愿意表达、觉得支持恰当，或在压力、睡眠与求助行为上发生变化，目前还没有研究结果。文献转译涉及地区与年龄差异、成人书写到语音的形式变化，以及完整人工课程到短步骤的剂量变化。系统层面也保留有限中文规则、词面检索、近邻反馈归因、多角色共享错误和schema合法但内容不适配等限制。</p>
+<p>后续评价需要直接观察用户怎样理解拒绝与安静控制，什么时候认为记忆恰当或冒犯，现实支持邀请是否清楚且出现得合时，以及语音等待和打断怎样影响使用。正式研究应根据参与者设计流程与测量；若涉及真实未成年人，还需相应的研究与保护安排。当前工程记录可以帮助选定情境和暴露故障，效果判断则应由后续参与者证据回答。</p>
+<h2 id="a">附录A　设计要求与实现对应</h2>
+<p>下表供查阅研究、内容与工程检查之间的关系。D1—D5主要由研究与内容设计共同形成；D6—D8还包含数据一致性、可审计性和资源约束等工程要求。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>设计要求</th>
+<th>研究发现／机制与项目解释</th>
+<th>内容或交互选择</th>
+<th>系统承接</th>
+<th>可观察证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1 区分事实、意愿与推测</td>
+<td>压力和路径具有异质性；同一词语不能决定需求（E01、E02）</td>
+<td>混合标签、未知保留、只澄清必要信息</td>
+<td>Analysis契约、来源校验</td>
+<td>N01混合压力；分类与无匹配检查</td>
+</tr>
+<tr>
+<td>D2 支持可以被拒绝</td>
+<td>求助障碍和尊重意愿原则启发用户控制（E05、E13）</td>
+<td>倾诉、安静、撤回都可成立</td>
+<td>StateMachine、Interactions、OutputRail</td>
+<td>拒绝当轮生效；N01/N04修复与补测</td>
+</tr>
+<tr>
+<td>D3 行动具体且有限</td>
+<td>具体加工与小问题机制（E06、E08）</td>
+<td>一次一个焦点、当前一步</td>
+<td>六策略协议、Talker步骤投影</td>
+<td>T01—T06实际执行及退出</td>
+</tr>
+<tr>
+<td>D4 现实支持需检查对象</td>
+<td>求助来源多样，身份不等于安全（E04、E05）</td>
+<td>区分安全表达和寻找入口</td>
+<td>StrategyCatalog条件、Critic</td>
+<td>unsafe_relationship排除；T03/T04/N03</td>
+</tr>
+<tr>
+<td>D5 内容与选择可追溯</td>
+<td>机制借鉴与产品改编需要区分</td>
+<td>版本、来源ID、排除与反例</td>
+<td>内容准入、SupportReference、看板</td>
+<td>hash过期拒绝；输出关联策略版本</td>
+</tr>
+<tr>
+<td>D6 连续性不能固化误记</td>
+<td>对长期互动的工程要求，而非文献效果结论</td>
+<td>来源、时间、范围、更正</td>
+<td>MemoryService、Store</td>
+<td>N07；更正、过期与清除竞态测试</td>
+</tr>
+<tr>
+<td>D7 复杂分析不阻塞回应</td>
+<td>语音交互与后台职责分离的工程判断</td>
+<td>前台短回应、后台事件触发</td>
+<td>Core、Scheduler、独立执行槽</td>
+<td>阻塞后台仍能回应；分段时延记录</td>
+</tr>
+<tr>
+<td>D8 完成与收益分开</td>
+<td>研究证据层级及可归因性要求</td>
+<td>记录执行、明确反馈、缺测</td>
+<td>InteractionEvent、支持经历</td>
+<td>completed不生成积极收益记忆</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="b">附录B　角色契约与版本说明</h2>
+<h3 id="_3">角色读取与产物</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>角色／服务</th>
+<th>读取的信息</th>
+<th>形成的产物</th>
+<th>交接及权限边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Analysis 情境分析</td>
+<td>有限历史、适用记忆、当前状态和交互事件</td>
+<td>SituationAssessment：事实、假设、意愿、压力／路径、情境条件、必要问题</td>
+<td>引用用户来源；不回应、不批准行动、不解除危机</td>
+</tr>
+<tr>
+<td>Planner 策略规划</td>
+<td>已校验分析、原始证据、过滤后的卡／练习摘要、边界和反馈</td>
+<td>PlanCandidate：目标、表达指引、必要问题、候选及避免行为</td>
+<td>不能造卡或授予许可；修订仅处理必要变化</td>
+</tr>
+<tr>
+<td>独立Brief</td>
+<td>原始历史、状态、记忆和反馈；不含Analysis结论、卡片目录或候选</td>
+<td>ReviewBrief：需检查的关注点与反证</td>
+<td>完整评议中先形成独立检查角度，不提出支持方案</td>
+</tr>
+<tr>
+<td>Critic 评审</td>
+<td>原始证据、Analysis、Brief、确切候选版本及相同合格目录</td>
+<td>ReviewResult：approve／revise／reject／insufficient_information</td>
+<td>绑定候选ID与版本；不能直接改写或发布</td>
+</tr>
+<tr>
+<td>DeltaGuard 增量核对</td>
+<td>待发布计划和分析截止点之后的新输入</td>
+<td>compatible／invalidate／uncertain及依据</td>
+<td>只核对兼容性，不延长计划寿命，不新建许可</td>
+</tr>
+<tr>
+<td>Talker 实时表达</td>
+<td>当前输入、有限对话、本轮冻结策略、记忆、当前卡的当前一步</td>
+<td>简短可说正文，流式分句</td>
+<td>不调度其他角色，不自行转换阶段或添加行动</td>
+</tr>
+<tr>
+<td>Memory 整理</td>
+<td>有限原始证据、已有适用记忆、明确反馈</td>
+<td>Consolidation中的记忆候选</td>
+<td>提议写入，MemoryService校验来源、范围和冲突</td>
+</tr>
+<tr>
+<td>End 结束处理</td>
+<td>固定结束游标内的证据、记忆及反馈</td>
+<td>总结、记忆候选、有依据的后续事项</td>
+<td>由durable end task驱动；不修改新会话的当前计划</td>
+</tr>
+</tbody>
+</table></div>
+<p>SituationAssessment保存情境描述，PlanCandidate保存候选，SupportPlan是经程序补齐身份、版本和游标后的发布对象。ReviewBrief提供评议关注点，ReviewResult绑定候选版本；TurnPolicyFrame冻结当轮允许采用的内容，InteractionEvent记录执行或明确表达的事件，MemoryItem承载范围记忆，CognitiveJob记录任务预算、状态和分产物结果。</p>
+<h3 id="_4">历史材料与当前实现</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>历史表述／容易混淆之处</th>
+<th>当前事实</th>
+<th>对本文的处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单个Reasoner负责后台</td>
+<td>默认development采用Cognition有界多角色协议，旧Reasoner保留兼容／历史</td>
+<td>以新角色交接解释，不把旧消费者写成并行权威</td>
+</tr>
+<tr>
+<td>只有S16夹具、危机与练习draft</td>
+<td>六卡、三练习、固定危机course-1.0已核查并有课程回执</td>
+<td>逐卡展开当前内容，保留改编限制</td>
+</tr>
+<tr>
+<td>必须17张正式卡及人工签字</td>
+<td>新课程任务采用可追溯自动核查与工程／真实回放准入</td>
+<td>不把Codex核查写成人工或临床审核</td>
+</tr>
+<tr>
+<td>Talker必须等待标签输出</td>
+<td>当前默认直接生成正文，兼容旧标签并检查越权</td>
+<td>区分内容表达和服务端状态权威</td>
+</tr>
+<tr>
+<td>Analysis契约包含记忆候选</td>
+<td>当前真实schema投影排除相关输出，Memory／End承担整理</td>
+<td>不以可选字段推断实际角色工作</td>
+</tr>
+<tr>
+<td>“一次一张卡”理解为全会话一张</td>
+<td>一次行动单卡；每卡本会话最多一次；新行动另需许可</td>
+<td>明确不同层级的次数与切换语义</td>
+</tr>
+<tr>
+<td>v2带来的字段都需要新数据库版本</td>
+<td>正式数据库迁移为v1→v2，课程增量主要进入已有JSON契约</td>
+<td>分开数据库结构、内容版本和模型配置</td>
+</tr>
+<tr>
+<td>六处小智补丁等于全部补丁</td>
+<td>六核心hook保留，另有access.patch鉴权</td>
+<td>介绍职责，不把鉴权算作旧六hook之一</td>
+</tr>
+<tr>
+<td>completed等于播放完或有帮助</td>
+<td>当前为服务端执行证据，没有逐段设备ACK</td>
+<td>与设备首响和用户反馈分别表述</td>
+</tr>
+<tr>
+<td>历史96项检查／旧40次语音</td>
+<td>最新已报告152项与最终30次动态语音，其他批次单列</td>
+<td>本文使用最新有效批次，不合并不兼容统计</td>
+</tr>
+</tbody>
+</table></div>
+<p>本说明依据实现基线<code>c33b50b</code>、后端v2和内容包<code>course-1.0</code>。既有源码图固定于<code>38fb8cf</code>，随后<code>c33b50b</code>更新项目站分层展示。DECISIONS及状态文件保留决定沿革，本文采用最新有效决定与当前配置。</p>
+<h2 id="_5">参考文献与项目资料</h2>
+<h3 id="_6">文献</h3>
+<p>编号沿用策略内容包，便于回查。读取范围来自既有证据登记；本说明的文献抽核过程保留在<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/research-design/FACT_CHECK.md">事实核对记录</a>。</p>
+<p><strong>[E01]</strong> Ye等，2019／在线2018，<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6669116/">Evaluation of the Factor Structure of the Adolescent Stress Questionnaire in Chinese Adolescents</a>，10.1177/0033294118792686。中国中学生420人，因子研究；全文相关章节。</p>
+<p><strong>[E02]</strong> Wang等，2025，<a href="https://onlinelibrary.wiley.com/doi/10.1002/jad.12471">Academic Burden and Emotional Problems Among Adolescents</a>，10.1002/jad.12471。浙江初高中生2965人，三波观察队列；全文相关章节。</p>
+<p><strong>[E03]</strong> Dickerson与Kemeny，2004，<a href="https://pubmed.ncbi.nlm.nih.gov/15122924/">Acute stressors and cortisol responses</a>，10.1037/0033-2909.130.3.355。208项急性压力实验元分析；摘要。</p>
+<p><strong>[E04]</strong> Zhao与Hu，2022，<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9478167/">A multilevel model of the help-seeking behaviors among adolescents with mental health problems</a>，10.3389/fnint.2022.946842。长沙初高中生3480人，横断面自陈；全文相关内容。</p>
+<p><strong>[E05]</strong> Gulliver等，2010，<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3022639/">Perceived barriers and facilitators to mental health help-seeking in young people</a>，10.1186/1471-244X-10-113。22项研究系统综述，以澳美研究为主；全文相关内容。</p>
+<p><strong>[E06]</strong> Leigh等，2025，<a href="https://ora.ox.ac.uk/objects/uuid%3A1bfdd831-ddfe-4efb-9dab-7b802d9ff8af/files/rrj430622m">Why is rumination unhelpful in adolescents?</a>，10.1016/j.jad.2025.03.058。英国11—14岁，两项加工实验；全文相关章节。</p>
+<p><strong>[E07]</strong> Lunn等，2023，<a href="https://pubmed.ncbi.nlm.nih.gov/37194469/">Associations between perfectionism and symptoms of anxiety, obsessive-compulsive disorder and depression in young people</a>，10.1080/16506073.2023.2211736。6—24岁、121项研究元分析；摘要。</p>
+<p><strong>[E08]</strong> WHO／UNICEF，2023，<a href="https://www.who.int/publications/i/item/9789240082755">Early Adolescent Skills for Emotions</a>，ISBN 9789240082755。10—15岁逆境社区青少年，受训支持者小组手册；相关全文。</p>
+<p><strong>[E09]</strong> Bluth等，2024，<a href="https://self-compassion.org/wp-content/uploads/2024/06/Bluth2024.pdf">Mindful Self-Compassion for Teens随机试验</a>，10.1002/jad.12277。美国59名亚临床抑郁青少年，八周及延续课程；全文相关章节。</p>
+<p><strong>[E10]</strong> Filia等，2021，<a href="https://www.nature.com/articles/s41398-021-01406-7.pdf">Facilitating improvements in young people’s social relationships to prevent or treat depression</a>，10.1038/s41398-021-01406-7。青少年／青年人际干预叙述性综述；全文相关章节。</p>
+<p><strong>[E11]</strong> Chen等，2022，<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8784529/">An Online Career Intervention for Promoting Chinese High School Students’ Career Readiness</a>，10.3389/fpsyg.2021.815076。江苏高一957人，五周教师主持课程与对照；全文相关章节。</p>
+<p><strong>[E12]</strong> Scullin等，2018，<a href="https://pubmed.ncbi.nlm.nih.gov/29058942/">The effects of bedtime writing on difficulty falling asleep</a>，10.1037/xge0000374。美国健康青年成人57人，单夜书写实验；摘要。</p>
+<p><strong>[E13]</strong> WHO等，2011，<a href="https://iris.who.int/bitstream/handle/10665/44615/9789241548205_eng.pdf?sequence=1">Psychological first aid: Guide for field workers</a>。严重危机后支持手册；范围、倾听连接和儿童章节。</p>
+<p><strong>[E14]</strong> Liu等，2021，<a href="https://aclanthology.org/2021.acl-long.269/">Towards Emotional Support Dialog Systems</a>，10.18653/v1/2021.acl-long.269。支持对话框架／语料／模型评价；论文页及公开PDF相关段落。</p>
+<p><strong>[E15]</strong> Deng等，2024，<a href="https://openreview.net/pdf?id=MCNqgUFTHI">Plug-and-Play Policy Planner for Large Language Model Powered Dialogue Agents</a>。ICLR对话策略规划与训练实验；方法及评价相关全文。</p>
+<p><strong>[E16]</strong> Dunning等，2022，<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9340039/">Do mindfulness-based programmes improve the cognitive skills, behaviour and mental health of children and adolescents?</a>。儿童／青少年随机试验更新元分析；对照、随访及限制相关全文。</p>
+<h3 id="_7">项目资料</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>读者需要</th>
+<th>入口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>研究选择、排除与原始核查</td>
+<td><a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/autonomous-upgrade/research/EVIDENCE_REVIEW.md">证据审阅</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/autonomous-upgrade/STRATEGY_DESIGN.md">策略设计</a></td>
+</tr>
+<tr>
+<td>逐卡原文、练习及角色提示词</td>
+<td><a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/companion/config">内容配置目录</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/companion/config/cards">六张卡</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/companion/config/prompts">角色提示词</a></td>
+</tr>
+<tr>
+<td>架构规格与决定沿革</td>
+<td><a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/ARCHITECTURE_V2.md">ARCHITECTURE_V2</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/DECISIONS.md">DECISIONS</a></td>
+</tr>
+<tr>
+<td>最新结果与逐段质量</td>
+<td><a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/VALIDATION.md">VALIDATION</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/autonomous-upgrade/QUALITY_REVIEW.md">QUALITY_REVIEW</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/autonomous-upgrade/IMPLEMENTATION_STATUS.md">持续状态</a></td>
+</tr>
+<tr>
+<td>安装、运行、迁移与演示</td>
+<td><a href="https://github.com/hhuang999/companion-doll-backend/blob/main/ENGINEERING.md">安装与运行</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/V2_OPERATIONS.md">运行手册</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/autonomous-upgrade/DEMO.md">课程演示</a></td>
+</tr>
+<tr>
+<td>小智接口与真机交接</td>
+<td><a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/XIAOZHI_HANDOFF.md">XIAOZHI_HANDOFF</a></td>
+</tr>
+<tr>
+<td>既有可交互源码图</td>
+<td><a href="https://github.com/hhuang999/companion-doll-backend/blob/main/docs/architecture-course/README.md">图集入口</a>、<a href="https://hhuang999.github.io/companion-doll-backend/">项目站</a></td>
+</tr>
+<tr>
+<td>本说明的论证、图源与复核</td>
+<td><a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/research-design/PLAN.md">PLAN</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/research-design/sources">图源目录</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/research-design/FACT_CHECK.md">FACT_CHECK</a>、<a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/research-design/README.md">资产与重建说明</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>文稿修订版1.1，2026-11-04。图01、06、12由Codex图像生成工具制作，其余为可编辑SVG；图源、提示词和重建说明随文保存。</p></article><footer class="edition">文稿1.1 · 实现基线 c33b50b · <a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/research-design/PROJECT_RESEARCH_AND_SYSTEM_DESIGN.md">Markdown正文</a> · <a href="https://github.com/hhuang999/companion-doll-backend/blob/main/companion/docs/research-design/README.md">图源与核对记录</a> · <a href="showcase.html">交互展示</a> · <a href="architecture-course/overview.html">交互架构图</a></footer></main></body></html>

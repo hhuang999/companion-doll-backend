@@ -1,12 +1,14 @@
 # 项目站点维护
 
-GitHub Pages 从 `main:/docs` 发布，入口是 `index.html`。`assets/project.css`、`project.js` 和 `project-data.json` 提供合成对话分支演示、四通路信号图、策略筛选、协议展开、累计延迟图与来源目录。静态页面不访问运行后端或 API key。设计约定见 [DESIGN.md](DESIGN.md)，界面验证见 [PAGES_VALIDATION.md](PAGES_VALIDATION.md)。
+GitHub Pages 从 `main:/docs` 发布，默认入口 [`index.html`](index.html) 直接显示完整研究与系统设计说明，沿用本地 HTML 的排版、章节目录和全部 13 张配图。仓库根 README 同步呈现完整 Markdown 正文。
+
+原交互展示保留在 [`showcase.html`](showcase.html)。`assets/project.css`、`project.js` 和 `project-data.json` 提供合成对话分支演示、四通路信号图、策略筛选、协议展开、累计延迟图与来源目录。静态页面不访问运行后端或 API key。设计约定见 [DESIGN.md](DESIGN.md)，界面验证见 [PAGES_VALIDATION.md](PAGES_VALIDATION.md)。
 
 ## 当前来源
 
-[`research-design/`](research-design/) 是完整研究与系统设计说明的在线阅读页。正文、排版和图源维护在 [`companion/docs/research-design`](../companion/docs/research-design/README.md)，运行其中的 `sources/build_document.py --pages` 同步网页与 13 张配图；生成文件不单独编辑。首页与仓库 README 均提供在线入口。
+正文、排版和图源维护在 [`companion/docs/research-design`](../companion/docs/research-design/README.md)，运行其中的 `sources/build_document.py --pages` 同步默认首页、根 README、旧地址 [`research-design/`](research-design/) 与配图；生成文件不单独编辑。旧地址仍显示全文并保留章节锚点。安装与运行说明移至 [`ENGINEERING.md`](../ENGINEERING.md)。
 
-首页架构部分的 `assets/layered-multiagent.png` 是经用户反馈重绘的 AI 辅助机制图，突出 L0–L3 内容职责、独立 Brief、Planner/Critic 修订复核和反馈记忆。L0–L3 是解释性分层，不是新增四个服务或固定执行阶段；六类策略也不是六个 Agent。图下提供可访问的文字说明和原图链接；具体源码仍以交互图为准。更新此图时同时核对说明、alt 文本、图片尺寸和窄屏阅读。
+展示页架构部分的 `assets/layered-multiagent.png` 是经用户反馈重绘的 AI 辅助机制图，突出 L0–L3 内容职责、独立 Brief、Planner/Critic 修订复核和反馈记忆。L0–L3 是解释性分层，不是新增四个服务或固定执行阶段；六类策略也不是六个 Agent。图下提供可访问的文字说明和原图链接；具体源码仍以交互图为准。更新此图时同时核对说明、alt 文本、图片尺寸和窄屏阅读。
 
 `architecture-course/` 保存五张架构图的可编辑 JSON 与原始生成 HTML；源码固定到实现提交，详见其中 README。`index-v2.html` / `architecture-v2/` 与 `index-v1.html` / `diagrams/` 为历史，不代表当前内容准入和模型配置。
 

@@ -16,7 +16,7 @@ REPO = ROOT.parents[2]
 
 
 def publish_pages(html):
-    """Export the reading edition, keeping repository links outside Pages."""
+    """Publish the full report at the site root and retain its previous URL."""
     destination = REPO / "docs/research-design"
     destination.mkdir(parents=True, exist_ok=True)
 
@@ -33,6 +33,13 @@ def publish_pages(html):
         return f'href="{target}"'
 
     html = re.sub(r'href="([^"]+)"', public_link, html)
+    homepage = re.sub(r'(href|src)="assets/', r'\1="research-design/assets/', html)
+    homepage = homepage.replace(
+        "</footer>",
+        ' · <a href="showcase.html">交互展示</a>'
+        ' · <a href="architecture-course/overview.html">交互架构图</a></footer>',
+    )
+    (REPO / "docs/index.html").write_text(homepage, encoding="utf-8")
     html = html.replace(
         '<p class="kicker">课程项目研究报告</p>',
         '<p class="kicker"><a href="../">项目首页</a> / 课程项目研究报告</p>',
@@ -45,9 +52,35 @@ def publish_pages(html):
             shutil.copyfile(asset, target)
 
 
+def publish_readme(text):
+    """Rebase Markdown links without changing the report's prose or structure."""
+
+    def repository_link(match):
+        parsed = urlsplit(match.group(2))
+        if parsed.scheme or not parsed.path:
+            return match.group(0)
+        path = (ROOT / unquote(parsed.path)).resolve().relative_to(REPO)
+        target = quote(path.as_posix())
+        if parsed.fragment:
+            target += "#" + parsed.fragment
+        return f"{match.group(1)}({target})"
+
+    text = re.sub(r"(!?\[[^\]]*\])\(([^)]+)\)", repository_link, text)
+    navigation = (
+        "[排版版网页（完整正文与章节目录）](https://hhuang999.github.io/companion-doll-backend/)"
+        " · [交互展示](https://hhuang999.github.io/companion-doll-backend/showcase.html)"
+        " · [交互架构图](https://hhuang999.github.io/companion-doll-backend/architecture-course/overview.html)"
+        " · [安装与运行](ENGINEERING.md)\n\n"
+    )
+    text = text.replace("## 摘要\n", navigation + "## 摘要\n", 1)
+    (REPO / "README.md").write_text(text, encoding="utf-8")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--pages", action="store_true", help="Also export to docs/research-design")
+    parser.add_argument(
+        "--pages", action="store_true", help="Publish Pages homepage and root README"
+    )
     args = parser.parse_args()
     text = SOURCE.read_text(encoding="utf-8")
     errors = []
@@ -97,6 +130,7 @@ def main():
     (ROOT / "index.html").write_text(html, encoding="utf-8")
     if args.pages:
         publish_pages(html)
+        publish_readme(text)
     print(
         json.dumps(
             {
