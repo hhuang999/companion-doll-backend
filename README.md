@@ -12,6 +12,10 @@
 
 [打开项目展示与交互架构](https://hhuang999.github.io/companion-doll-backend/) · [逐项验收状态](companion/docs/V2_IMPLEMENTATION_STATUS.md) · [运行与迁移手册](companion/docs/V2_OPERATIONS.md)
 
+新版首页以日光场景与原创陪伴形象呈现项目；可切换“只想说说 / 想试办法 / 反馈没帮助”三种合成情境，亲自选择同意或拒绝，并点选实时、协作、安全、记忆四条系统通路。还可筛选六类策略、展开研究依据，并切换P50/P90实测时间轴。演示在浏览器本地运行，不调用在线模型；玩偶图片为AI概念视觉，非已验证设备实拍。[网站设计与验证](docs/PAGES_VALIDATION.md)记录界面检查。
+
+[![陪伴场景概念，AI生成](docs/assets/companion-daylight-small.webp)](https://hhuang999.github.io/companion-doll-backend/)
+
 图集包含五个可交互视图：研究与策略执行闭环、实时与安全通路、有限协作与版本发布、长期关系记忆、小智语音流水。点击节点可追溯到固定实现提交的 GitHub 源码；HTML 下载后也可以独立打开。
 
 [v1 历史图集](https://hhuang999.github.io/companion-doll-backend/index-v1.html) 保留供比较，固定于历史提交 `d24f38f`。默认代码基于 v2，项目站增加研究证据、策略筛选和反馈记忆的解释。

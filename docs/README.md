@@ -1,6 +1,6 @@
 # 项目站点维护
 
-GitHub Pages 从 `main:/docs` 发布，入口是 `index.html`。`assets/project.css`、`project.js` 和 `project-data.json` 提供中文项目说明、条件筛选、协议展开和来源目录。静态页面不访问运行后端或 API key。
+GitHub Pages 从 `main:/docs` 发布，入口是 `index.html`。`assets/project.css`、`project.js` 和 `project-data.json` 提供合成对话分支演示、四通路信号图、策略筛选、协议展开、累计延迟图与来源目录。静态页面不访问运行后端或 API key。设计约定见 [DESIGN.md](DESIGN.md)，界面验证见 [PAGES_VALIDATION.md](PAGES_VALIDATION.md)。
 
 ## 当前来源
 
@@ -9,6 +9,10 @@ GitHub Pages 从 `main:/docs` 发布，入口是 `index.html`。`assets/project.
 `architecture-course/` 保存五张架构图的可编辑 JSON 与原始生成 HTML；源码固定到实现提交，详见其中 README。`index-v2.html` / `architecture-v2/` 与 `index-v1.html` / `diagrams/` 为历史，不代表当前内容准入和模型配置。
 
 ## 更新步骤
+
+对话演示使用 `project.js` 中的预设情境；更改时同时核对状态机与后台职责，保留“合成机制示意”说明。系统图选择与手机模块序列共用 `initSystemExplorer()` 的通路定义，完整 SVG 同步维护；后台候选经过 CAS 回到 Core，不直接绕过 Core 执行。P50/P90数值来自既有验证报告，累计节点作差只用于图形展示，不当作一条样本的分段实测。
+
+两张原创概念图片及其小尺寸版本在 `assets/companion-daylight*.webp` 与 `assets/companion-touch*.webp`，精确提示词及生成方式见 [image-provenance.json](assets/image-provenance.json)。仅优化为WebP，不从参考品牌抓取产品图片。Manrope与Noto Sans SC字体自托管于 `assets/fonts/`；更新页面、脚本或目录中文时刷新子集，保留各自OFL许可，步骤见字体目录README。
 
 1. 修改代码和内容后完成检查并提交。运行 `.venv/Scripts/python.exe scripts/build_project_site.py --revision HEAD`，将当前内容映射导出到公开JSON。仅对已提交的内容固定引用。
 2. 修改相应 `architecture-course/*.architecture.json`，更新具体源码依据及固定提交；用 Archify `finalize architecture <JSON> <HTML> --repo-root . --quality showcase --out-dir <新的本地证据目录> --json`。

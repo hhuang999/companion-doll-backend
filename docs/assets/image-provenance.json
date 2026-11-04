@@ -1,0 +1,18 @@
+{
+  "generated": "2026-11-04",
+  "tool": "Codex built-in image_gen",
+  "use": "Conceptual project visuals, not photographs of tested hardware.",
+  "assets": [
+    {
+      "file": "companion-daylight.webp",
+      "small": "companion-daylight-small.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: premium website hero photograph for a Chinese emotional companion research project, landscape 16:9 wide frame. Create a quietly beautiful editorial photograph of a small soft companion object on a pale oak desk in an architect-designed sunlit room. The companion is an original understated rounded pebble-like plush, warm ivory dense short pile wool, two very small rounded ears, two tiny dark espresso inset eyes, no mouth, no screen, no buttons, no branding, about 22cm tall, with a simple gentle silhouette and a subtly weighted base. Product sits on the RIGHT side at around 70% image width, fully visible, turned a little toward the viewer. Desk extends across the lower half. LEFT half is very clean pale warm-grey plaster wall and mostly empty desk, intentional broad quiet negative space for dark typographic overlay, never place any typography in image. Slatted afternoon daylight from upper right creates believable soft diagonal shadow and luminous fur texture. Right edge a soft sheer linen curtain, a slightly out-of-focus muted olive wall background. One closed thin cream notebook near the far right, no other props, no plants, no people. The whole frame feels like a contemporary industrial design studio editorial shot, human, tactile, restrained, expensive, inviting. Natural warm-neutral whites rather than yellow wash. Medium-format photography, detailed natural fibers, physical believable shadows, subtle depth, artistic asymmetrical composition, balanced highlights, no harsh bloom, no vignette, no borders, no graphic overlays, no text, no logos, no watermark. This is a concept visual, not a depiction of an existing commercial product."
+    },
+    {
+      "file": "companion-touch.webp",
+      "small": "companion-touch-small.webp",
+      "reference": "companion-daylight.webp",
+      "prompt": "Use case: identity-preserve. Create a second editorial photograph for the same emotional companion website. Use the reference photograph to preserve EXACTLY this original ivory rounded plush companion's identity: two small rounded ears, two tiny dark eyes, no mouth, same soft wool body silhouette. Change the framing and setting: an intimate vertical 4:5 photograph, close-up of this companion resting on an off-white linen sofa in afternoon daylight, gently touched on its upper left shoulder by one relaxed adult hand with a charcoal knitted sleeve entering from the left. Only one anatomically correct adult hand, no face or person visible. The plush fills about 65% of the frame with beautiful tactile fiber detail, lower third linen folds, background muted green-grey wall softly out of focus. Natural high-end design editorial photography, gentle human connection, soft light and believable shadow, neutral cream rather than yellow, restrained composition. Keep both eyes visible and no additional features. No screen, no branding, no text, no watermarks, no graphics. This is a conceptual illustration of companionship, not a real tested device photo."
+    }
+  ]
+}
