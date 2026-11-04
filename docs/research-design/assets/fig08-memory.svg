@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 840" role="img" aria-labelledby="title desc">
+<title id="title">08  带来源、范围与更正的记忆生命周期</title><desc id="desc">长期连续性来自可核实记录；模型推测与未提供的反馈不能自动变成长期事实。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#718087"/></marker></defs>
+<style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#243538} .edge{fill:none;stroke:#718087;stroke-width:2;marker-end:url(#arrow)}</style>
+<rect width="1440" height="840" fill="#fbfaf6"/>
+<text x="48" y="52" font-size="30" font-weight="700">08  带来源、范围与更正的记忆生命周期</text>
+<text x="48" y="88" font-size="19" font-weight="400">长期连续性来自可核实记录；模型推测与未提供的反馈不能自动变成长期事实。</text>
+<g class="node"><rect x="48" y="155" width="305" height="165" rx="12" fill="#f0f2f2" stroke="#59666b" stroke-width="1.5"/>
+<text x="66" y="188" font-size="23" font-weight="700">来源证据</text>
+<text x="66" y="220" font-size="19" font-weight="400">用户原话／交互事件</text>
+<text x="66" y="248" font-size="19" font-weight="400">明确偏好与边界</text>
+<text x="66" y="276" font-size="19" font-weight="400">实际支持及明确反馈</text>
+</g>
+<g class="node"><rect x="395" y="155" width="305" height="165" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="413" y="188" font-size="23" font-weight="700">Memory／End候选</text>
+<text x="413" y="220" font-size="19" font-weight="400">事实偏好、情境事件</text>
+<text x="413" y="248" font-size="19" font-weight="400">交互边界、支持经历</text>
+<text x="413" y="276" font-size="19" font-weight="400">与原会话游标绑定</text>
+</g>
+<g class="node"><rect x="742" y="155" width="305" height="165" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="760" y="188" font-size="23" font-weight="700">写入校验</text>
+<text x="760" y="220" font-size="19" font-weight="400">来源ID与认识状态</text>
+<text x="760" y="248" font-size="19" font-weight="400">时间范围、主体与版本</text>
+<text x="760" y="276" font-size="19" font-weight="400">纠正和supersedes</text>
+</g>
+<g class="node"><rect x="1089" y="155" width="305" height="165" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="1107" y="188" font-size="23" font-weight="700">Store事务</text>
+<text x="1107" y="220" font-size="19" font-weight="400">采用或拒绝原因</text>
+<text x="1107" y="248" font-size="19" font-weight="400">清除epoch屏障</text>
+<text x="1107" y="276" font-size="19" font-weight="400">旧来源不可覆盖新更正</text>
+</g>
+<polyline class="edge" points="353,235 395,235"/>
+<polyline class="edge" points="700,235 742,235"/>
+<polyline class="edge" points="1047,235 1089,235"/>
+<g class="node"><rect x="742" y="430" width="652" height="160" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="760" y="463" font-size="23" font-weight="700">读取投影：先过滤，再排序</text>
+<text x="760" y="495" font-size="19" font-weight="400">用户隔离 → 有效状态／时间／范围 → 中文词面相关性</text>
+<text x="760" y="523" font-size="19" font-weight="400">重要性、近期与重复线索参与排序；边界单独纳入</text>
+<text x="760" y="551" font-size="19" font-weight="400">allowed／only_when_raised／avoid_proactive约束提及</text>
+</g>
+<polyline class="edge" points="1240,320 1240,430"/>
+<g class="node"><rect x="48" y="430" width="605" height="160" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="66" y="463" font-size="23" font-weight="700">后续互动：使用与更新</text>
+<text x="66" y="495" font-size="19" font-weight="400">Talker只读符合本轮情境的记忆投影</text>
+<text x="66" y="523" font-size="19" font-weight="400">“名字是小琳” → 更正小林，保留新旧来源</text>
+<text x="66" y="551" font-size="19" font-weight="400">“今天不谈学校”到期；不扩大为永久拒绝</text>
+</g>
+<polyline class="edge" points="742,510 653,510"/>
+<polyline class="edge" points="95,430 95,320" stroke-dasharray="7 5"/>
+<g class="node"><rect x="48" y="660" width="1346" height="90" rx="12" fill="#fbf2df" stroke="#a37428" stroke-width="1.5"/>
+<text x="66" y="693" font-size="23" font-weight="700">明确反馈与缺失反馈</text>
+<text x="66" y="725" font-size="19" font-weight="400">支持执行完成只记录执行；有帮助／无帮助需用户表达并关联实际支持。一次负面反馈不永久定性。</text>
+</g>
+<text x="48" y="813" font-size="17" font-weight="400">检索为中文二元片段／词面匹配，不是语义向量检索；图中姓名与边界均为合成示例。</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 780" role="img" aria-labelledby="title desc">
+<title id="title">05  许可、行动与退出的关键状态</title><desc id="desc">评议通过只产生合格候选；用户控制仍由当前状态和输出事件决定。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#718087"/></marker></defs>
+<style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#243538} .edge{fill:none;stroke:#718087;stroke-width:2;marker-end:url(#arrow)}</style>
+<rect width="1440" height="780" fill="#fbfaf6"/>
+<text x="48" y="52" font-size="30" font-weight="700">05  许可、行动与退出的关键状态</text>
+<text x="48" y="88" font-size="19" font-weight="400">评议通过只产生合格候选；用户控制仍由当前状态和输出事件决定。</text>
+<g class="node"><rect x="48" y="160" width="285" height="140" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="66" y="193" font-size="23" font-weight="700">倾听／澄清</text>
+<text x="66" y="225" font-size="19" font-weight="400">理解当前需求</text>
+<text x="66" y="253" font-size="19" font-weight="400">允许只说、不做</text>
+<text x="66" y="281" font-size="19" font-weight="400">可留在当前阶段</text>
+</g>
+<g class="node"><rect x="395" y="160" width="300" height="140" rx="12" fill="#fbf2df" stroke="#a37428" stroke-width="1.5"/>
+<text x="413" y="193" font-size="23" font-weight="700">支持邀请</text>
+<text x="413" y="225" font-size="19" font-weight="400">当前边界允许邀请</text>
+<text x="413" y="253" font-size="19" font-weight="400">邀请开始输出才激活</text>
+<text x="413" y="281" font-size="19" font-weight="400">pending offer</text>
+</g>
+<g class="node"><rect x="760" y="160" width="300" height="140" rx="12" fill="#fbf2df" stroke="#a37428" stroke-width="1.5"/>
+<text x="778" y="193" font-size="23" font-weight="700">明确同意</text>
+<text x="778" y="225" font-size="19" font-weight="400">绑定有效邀请与当轮状态</text>
+<text x="778" y="253" font-size="19" font-weight="400">若候选未就绪，有界等待</text>
+<text x="778" y="281" font-size="19" font-weight="400">再次检查资格与版本</text>
+</g>
+<g class="node"><rect x="1120" y="160" width="270" height="140" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="1138" y="193" font-size="23" font-weight="700">行动／练习</text>
+<text x="1138" y="225" font-size="19" font-weight="400">一次一个焦点</text>
+<text x="1138" y="253" font-size="19" font-weight="400">具体练习另需许可</text>
+<text x="1138" y="281" font-size="19" font-weight="400">步数与时长有上限</text>
+</g>
+<polyline class="edge" points="333,230 395,230"/>
+<polyline class="edge" points="695,230 760,230"/>
+<polyline class="edge" points="1060,230 1120,230"/>
+<g class="node"><rect x="395" y="430" width="360" height="150" rx="12" fill="#f9ebea" stroke="#a24a4b" stroke-width="1.5"/>
+<text x="413" y="463" font-size="23" font-weight="700">拒绝／中止／话题边界</text>
+<text x="413" y="495" font-size="19" font-weight="400">立即停止当前推进</text>
+<text x="413" y="523" font-size="19" font-weight="400">取消旧代次与预取</text>
+<text x="413" y="551" font-size="19" font-weight="400">记录拒绝；转倾听或安静</text>
+</g>
+<g class="node"><rect x="850" y="430" width="450" height="150" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="868" y="463" font-size="23" font-weight="700">收尾、安静与再次互动</text>
+<text x="868" y="495" font-size="19" font-weight="400">不把沉默当作同意</text>
+<text x="868" y="523" font-size="19" font-weight="400">真实wake来源参与重新唤醒</text>
+<text x="868" y="551" font-size="19" font-weight="400">新行动重新满足许可与资格</text>
+</g>
+<polyline class="edge" points="540,300 540,430"/>
+<polyline class="edge" points="900,300 900,355 650,355 650,430"/>
+<polyline class="edge" points="1240,300 1240,430"/>
+<polyline class="edge" points="1120,265 1090,265 1090,390 710,390 710,430" stroke-dasharray="7 5"/>
+<polyline class="edge" points="395,505 190,505 190,300"/>
+<polyline class="edge" points="850,550 800,550 800,655 95,655 95,300" stroke-dasharray="7 5"/>
+<text x="48" y="753" font-size="17" font-weight="400">邀请送达的当前证据是服务端started；没有逐段设备播放ACK，不能据此认定用户已经听到。</text>
+</svg>

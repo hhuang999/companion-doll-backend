@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 970" role="img" aria-labelledby="title desc">
+<title id="title">07  有限协作：routine 与 deliberation</title><desc id="desc">独立Brief看原始情境与边界，不读取Analysis结论、策略卡或Planner候选。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#718087"/></marker></defs>
+<style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#243538} .edge{fill:none;stroke:#718087;stroke-width:2;marker-end:url(#arrow)}</style>
+<rect width="1440" height="970" fill="#fbfaf6"/>
+<text x="48" y="52" font-size="30" font-weight="700">07  有限协作：routine 与 deliberation</text>
+<text x="48" y="88" font-size="19" font-weight="400">独立Brief看原始情境与边界，不读取Analysis结论、策略卡或Planner候选。</text>
+<text x="48" y="140" font-size="23" font-weight="700">ROUTINE · 非行动方向 · 2次基本调用</text>
+<g class="node"><rect x="48" y="165" width="340" height="105" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="66" y="198" font-size="23" font-weight="700">Analysis</text>
+<text x="66" y="230" font-size="19" font-weight="400">事实、情境、意愿</text>
+</g>
+<g class="node"><rect x="450" y="165" width="340" height="105" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="468" y="198" font-size="23" font-weight="700">Planner</text>
+<text x="468" y="230" font-size="19" font-weight="400">倾听／澄清／安慰等</text>
+</g>
+<g class="node"><rect x="900" y="165" width="340" height="105" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="918" y="198" font-size="23" font-weight="700">发布检查</text>
+<text x="918" y="230" font-size="19" font-weight="400">不生成行动候选</text>
+</g>
+<polyline class="edge" points="388,215 450,215"/>
+<polyline class="edge" points="790,215 900,215"/>
+<text x="48" y="330" font-size="23" font-weight="700">DELIBERATION · 完整评议 · 4次或6次基本调用</text>
+<g class="node"><rect x="48" y="375" width="300" height="125" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="66" y="408" font-size="23" font-weight="700">Analysis</text>
+<text x="66" y="440" font-size="19" font-weight="400">SituationAssessment</text>
+<text x="66" y="468" font-size="19" font-weight="400">情境、证据、必要条件</text>
+</g>
+<g class="node"><rect x="48" y="560" width="300" height="125" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="66" y="593" font-size="23" font-weight="700">独立 Brief</text>
+<text x="66" y="625" font-size="19" font-weight="400">ReviewBrief</text>
+<text x="66" y="653" font-size="19" font-weight="400">用户需求与评议约束</text>
+</g>
+<g class="node"><rect x="425" y="375" width="330" height="125" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="443" y="408" font-size="23" font-weight="700">Planner V1</text>
+<text x="443" y="440" font-size="19" font-weight="400">SupportPlan候选</text>
+<text x="443" y="468" font-size="19" font-weight="400">单一支持方向与条件</text>
+</g>
+<g class="node"><rect x="835" y="375" width="330" height="125" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="853" y="408" font-size="23" font-weight="700">Critic V1</text>
+<text x="853" y="440" font-size="19" font-weight="400">核对候选ID与版本</text>
+<text x="853" y="468" font-size="19" font-weight="400">approve／revise／reject</text>
+</g>
+<polyline class="edge" points="348,435 425,435"/>
+<polyline class="edge" points="755,435 835,435"/>
+<polyline class="edge" points="348,620 795,620 795,470 835,470"/>
+<g class="node"><rect x="425" y="735" width="330" height="110" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="443" y="768" font-size="23" font-weight="700">Planner V2</text>
+<text x="443" y="800" font-size="19" font-weight="400">仅一次修订</text>
+</g>
+<g class="node"><rect x="835" y="735" width="330" height="110" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="853" y="768" font-size="23" font-weight="700">Critic V2</text>
+<text x="853" y="800" font-size="19" font-weight="400">修订后复核；不再循环</text>
+</g>
+<polyline class="edge" points="995,500 995,660 590,660 590,735"/>
+<text x="610" y="649" font-size="18" font-weight="400">revise／本地冲突</text>
+<polyline class="edge" points="755,790 835,790"/>
+<polyline class="edge" points="348,650 380,650 380,895 1010,895 1010,845"/>
+<text x="450" y="885" font-size="18" font-weight="400">同一独立Brief继续用于修订后复核</text>
+<g class="node"><rect x="1225" y="375" width="170" height="470" rx="12" fill="#fbf2df" stroke="#a37428" stroke-width="1.5"/>
+<text x="1243" y="408" font-size="23" font-weight="700">规则发布</text>
+<text x="1243" y="440" font-size="19" font-weight="400">批准后仍查</text>
+<text x="1243" y="468" font-size="19" font-weight="400">来源与范围</text>
+<text x="1243" y="496" font-size="19" font-weight="400">DeltaGuard</text>
+<text x="1243" y="524" font-size="19" font-weight="400">最终CAS</text>
+<text x="1243" y="552" font-size="19" font-weight="400">有效期／版本</text>
+<text x="1243" y="608" font-size="19" font-weight="400">拒绝有原因</text>
+<text x="1243" y="636" font-size="19" font-weight="400">不会自动执行</text>
+</g>
+<polyline class="edge" points="1165,435 1225,435"/>
+<polyline class="edge" points="1165,790 1225,790"/>
+<text x="1167" y="420" font-size="13" font-weight="400">approve</text>
+<text x="1167" y="775" font-size="13" font-weight="400">approve</text>
+<text x="48" y="943" font-size="17" font-weight="400">同一任务共享20秒deadline；routine最多4次、deliberation最多8次调用，含共享修复与最多一次DeltaGuard。</text>
+</svg>

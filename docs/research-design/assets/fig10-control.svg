@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 800" role="img" aria-labelledby="title desc">
+<title id="title">10  规则控制如何约束模型与输出</title><desc id="desc">风险、许可、版本与取消是执行条件；角色评审不能代替这些条件。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#718087"/></marker></defs>
+<style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#243538} .edge{fill:none;stroke:#718087;stroke-width:2;marker-end:url(#arrow)}</style>
+<rect width="1440" height="800" fill="#fbfaf6"/>
+<text x="48" y="52" font-size="30" font-weight="700">10  规则控制如何约束模型与输出</text>
+<text x="48" y="88" font-size="19" font-weight="400">风险、许可、版本与取消是执行条件；角色评审不能代替这些条件。</text>
+<g class="node"><rect x="48" y="150" width="370" height="170" rx="12" fill="#f9ebea" stroke="#a24a4b" stroke-width="1.5"/>
+<text x="66" y="183" font-size="23" font-weight="700">独立风险 L1／L2</text>
+<text x="66" y="215" font-size="19" font-weight="400">与普通认知任务资源隔离</text>
+<text x="66" y="243" font-size="19" font-weight="400">输入起算的有界输出闸门</text>
+<text x="66" y="271" font-size="19" font-weight="400">迟到high仍可接管</text>
+<text x="66" y="299" font-size="19" font-weight="400">high不能被普通模型解除</text>
+</g>
+<g class="node"><rect x="535" y="150" width="370" height="170" rx="12" fill="#fbf2df" stroke="#a37428" stroke-width="1.5"/>
+<text x="553" y="183" font-size="23" font-weight="700">用户许可与边界</text>
+<text x="553" y="215" font-size="19" font-weight="400">邀请激活＋明确同意</text>
+<text x="553" y="243" font-size="19" font-weight="400">拒绝／中止先于继续行动</text>
+<text x="553" y="271" font-size="19" font-weight="400">边界变化即时影响本轮</text>
+<text x="553" y="299" font-size="19" font-weight="400">Critic批准不授予许可</text>
+</g>
+<g class="node"><rect x="1025" y="150" width="370" height="170" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="1043" y="183" font-size="23" font-weight="700">版本与generation</text>
+<text x="1043" y="215" font-size="19" font-weight="400">候选经最终发布检查</text>
+<text x="1043" y="243" font-size="19" font-weight="400">TurnPolicyFrame冻结当轮</text>
+<text x="1043" y="271" font-size="19" font-weight="400">旧代次输出／预取失效</text>
+<text x="1043" y="299" font-size="19" font-weight="400">每次发送仍检查当前代次</text>
+</g>
+<g class="node"><rect x="535" y="430" width="370" height="125" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="553" y="463" font-size="23" font-weight="700">普通输出闸门</text>
+<text x="553" y="495" font-size="19" font-weight="400">所有当前执行条件成立</text>
+<text x="553" y="523" font-size="19" font-weight="400">Talker或确定性步骤</text>
+</g>
+<polyline class="edge" points="720,320 720,430"/>
+<polyline class="edge" points="1210,320 1210,390 875,390 875,430"/>
+<polyline class="edge" points="418,255 475,255 475,490 535,490"/>
+<text x="380" y="370" font-size="19" font-weight="400">风险状态</text>
+<g class="node"><rect x="48" y="600" width="370" height="110" rx="12" fill="#f9ebea" stroke="#a24a4b" stroke-width="1.5"/>
+<text x="66" y="633" font-size="23" font-weight="700">固定危机支持</text>
+<text x="66" y="665" font-size="19" font-weight="400">取消普通输出并接管音频</text>
+</g>
+<g class="node"><rect x="1025" y="600" width="370" height="110" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="1043" y="633" font-size="23" font-weight="700">适配器发送</text>
+<text x="1043" y="665" font-size="19" font-weight="400">小智／CLI：按当前代次执行</text>
+</g>
+<polyline class="edge" points="233,320 233,600"/>
+<polyline class="edge" points="905,490 1210,490 1210,600"/>
+<polyline class="edge" points="418,655 1025,655"/>
+<text x="475" y="638" font-size="19" font-weight="400">high取消普通代次；固定内容也遵守输出控制</text>
+<text x="48" y="773" font-size="17" font-weight="400">闸门是有界等待：尚未判为high的内容可能先放行，迟到风险接管不能撤回已发出的内容。</text>
+</svg>

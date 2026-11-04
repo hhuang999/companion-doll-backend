@@ -2,6 +2,7 @@
 
 完整材料面向课程老师、研究者与项目成员，按问题、证据、设计转译、内容、协作、记忆、控制及验证连续展开。
 
+- [在线阅读新版说明（GitHub Pages）](https://hhuang999.github.io/companion-doll-backend/research-design/)
 - [阅读完整正文（Markdown）](PROJECT_RESEARCH_AND_SYSTEM_DESIGN.md)
 - [打开排版阅读版（HTML）](index.html)：下载本目录后双击打开；支持目录、窄屏与浏览器打印，点击配图可查看原图。图片采用相对路径，分享时保留整个目录。
 - [论证与图示计划](PLAN.md)
@@ -26,6 +27,8 @@ $env:PYTHONPATH = (Join-Path (Get-Location) 'artifacts/research-design/deps')
 ./.venv/Scripts/python.exe companion/docs/research-design/sources/build_figures.py
 ./.venv/Scripts/python.exe companion/docs/research-design/sources/build_document.py
 ```
+
+发布阅读版时，在最后一条命令加上 `--pages`，同步生成 `docs/research-design/index.html` 与 13 张配图。导出会将工程文档及 Markdown 链接改为 GitHub 地址，保留站内图像与章节锚点，并加入返回项目首页的入口。更新后将正文、生成页和资产一并提交到 `main`，沿用现有 GitHub Pages 发布。
 
 图源优先使用Windows微软雅黑；其他平台需要安装Noto Sans CJK SC。三张生成图作为已交付资产保留，重建不触发付费图像生成。HTML无外部脚本或字体依赖；外部文献与工程链接需访问相应来源。
 

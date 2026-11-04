@@ -1,18 +1,54 @@
 """Build a local, offline HTML reading edition and validate document assets."""
 
+import argparse
 import json
 import re
+import shutil
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import quote, unquote, urlsplit
 
 import markdown
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "PROJECT_RESEARCH_AND_SYSTEM_DESIGN.md"
+REPO = ROOT.parents[2]
+
+
+def publish_pages(html):
+    """Export the reading edition, keeping repository links outside Pages."""
+    destination = REPO / "docs/research-design"
+    destination.mkdir(parents=True, exist_ok=True)
+
+    def public_link(match):
+        link = match.group(1)
+        parsed = urlsplit(link)
+        if parsed.scheme or not parsed.path or parsed.path.startswith("assets/"):
+            return match.group(0)
+        path = (ROOT / unquote(parsed.path)).resolve().relative_to(REPO)
+        target = "https://github.com/hhuang999/companion-doll-backend/blob/main/"
+        target += quote(path.as_posix())
+        if parsed.fragment:
+            target += "#" + parsed.fragment
+        return f'href="{target}"'
+
+    html = re.sub(r'href="([^"]+)"', public_link, html)
+    html = html.replace(
+        '<p class="kicker">课程项目研究报告</p>',
+        '<p class="kicker"><a href="../">项目首页</a> / 课程项目研究报告</p>',
+    )
+    (destination / "index.html").write_text(html, encoding="utf-8")
+    for asset in (ROOT / "assets").iterdir():
+        if asset.suffix in {".svg", ".png"}:
+            target = destination / "assets" / asset.name
+            target.parent.mkdir(exist_ok=True)
+            shutil.copyfile(asset, target)
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--pages", action="store_true", help="Also export to docs/research-design")
+    args = parser.parse_args()
     text = SOURCE.read_text(encoding="utf-8")
     errors = []
     links = re.findall(r"!?\[[^\]]*\]\(([^)]+)\)", text)
@@ -59,6 +95,8 @@ def main():
     css = (ROOT / "sources/reading.css").read_text(encoding="utf-8")
     html = f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>情感陪伴玩偶的研究与系统设计</title><style>{css}</style></head><body><nav class="side-toc" aria-label="章节目录"><p>情感陪伴玩偶<br>研究与系统设计</p>{md.toc}</nav><details class="mobile-toc"><summary>章节目录</summary>{md.toc}</details><main><article>{body}</article><footer class="edition">文稿1.1 · 实现基线 c33b50b · <a href="PROJECT_RESEARCH_AND_SYSTEM_DESIGN.md">Markdown正文</a> · <a href="README.md">图源与核对记录</a></footer></main></body></html>"""
     (ROOT / "index.html").write_text(html, encoding="utf-8")
+    if args.pages:
+        publish_pages(html)
     print(
         json.dumps(
             {

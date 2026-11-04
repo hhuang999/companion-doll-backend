@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 920" role="img" aria-labelledby="title desc">
+<title id="title">03  四条通路共享状态，但承担不同责任</title><desc id="desc">后台形成方向，前台组织当轮表达；状态与输出控制保留最终执行权。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#718087"/></marker></defs>
+<style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#243538} .edge{fill:none;stroke:#718087;stroke-width:2;marker-end:url(#arrow)}</style>
+<rect width="1440" height="920" fill="#fbfaf6"/>
+<text x="48" y="52" font-size="30" font-weight="700">03  四条通路共享状态，但承担不同责任</text>
+<text x="48" y="88" font-size="19" font-weight="400">后台形成方向，前台组织当轮表达；状态与输出控制保留最终执行权。</text>
+<g class="node"><rect x="48" y="135" width="260" height="140" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="66" y="168" font-size="23" font-weight="700">入口与用户</text>
+<text x="66" y="200" font-size="19" font-weight="400">CLI／小智语音</text>
+<text x="66" y="228" font-size="19" font-weight="400">ASR文本、wake来源</text>
+<text x="66" y="256" font-size="19" font-weight="400">拒绝、反馈、清除</text>
+</g>
+<g class="node"><rect x="375" y="135" width="460" height="140" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="393" y="168" font-size="23" font-weight="700">实时 Core ＋ 状态机</text>
+<text x="393" y="200" font-size="19" font-weight="400">输入索引、generation、许可与阶段</text>
+<text x="393" y="228" font-size="19" font-weight="400">冻结 TurnPolicyFrame 和相关记忆</text>
+<text x="393" y="256" font-size="19" font-weight="400">Talker只负责本轮受约束表达</text>
+</g>
+<g class="node"><rect x="920" y="135" width="465" height="140" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="938" y="168" font-size="23" font-weight="700">输出控制与适配</text>
+<text x="938" y="200" font-size="19" font-weight="400">OutputRail → 小智／CLI</text>
+<text x="938" y="228" font-size="19" font-weight="400">代次检查、分句、下一句预取</text>
+<text x="938" y="256" font-size="19" font-weight="400">started／completed事件</text>
+</g>
+<polyline class="edge" points="308,205 375,205"/>
+<polyline class="edge" points="835,205 920,205"/>
+<g class="node"><rect x="48" y="360" width="320" height="180" rx="12" fill="#f9ebea" stroke="#a24a4b" stroke-width="1.5"/>
+<text x="66" y="393" font-size="23" font-weight="700">独立安全通路</text>
+<text x="66" y="425" font-size="19" font-weight="400">L1规则＋L2风险模型</text>
+<text x="66" y="453" font-size="19" font-weight="400">独立资源；不排认知队列</text>
+<text x="66" y="481" font-size="19" font-weight="400">high → 取消普通输出</text>
+<text x="66" y="509" font-size="19" font-weight="400">固定危机文本／音频</text>
+</g>
+<g class="node"><rect x="425" y="360" width="470" height="180" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="443" y="393" font-size="23" font-weight="700">后台 Cognition</text>
+<text x="443" y="425" font-size="19" font-weight="400">触发与合并 → 每用户隔离／公平调度</text>
+<text x="443" y="453" font-size="19" font-weight="400">Analysis／Planner／Brief／Critic</text>
+<text x="443" y="481" font-size="19" font-weight="400">预算、deadline、失败与取消</text>
+<text x="443" y="509" font-size="19" font-weight="400">经 DeltaGuard＋CAS 发布策略</text>
+</g>
+<g class="node"><rect x="950" y="360" width="435" height="180" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="968" y="393" font-size="23" font-weight="700">长期关系记忆</text>
+<text x="968" y="425" font-size="19" font-weight="400">Memory／End整理候选</text>
+<text x="968" y="453" font-size="19" font-weight="400">来源、范围、时间、更正校验</text>
+<text x="968" y="481" font-size="19" font-weight="400">相关性检索＋主动提及限制</text>
+<text x="968" y="509" font-size="19" font-weight="400">持久化结束任务与重试</text>
+</g>
+<polyline class="edge" points="180,275 180,360"/>
+<polyline class="edge" points="605,275 605,360" stroke-dasharray="7 5"/>
+<polyline class="edge" points="470,360 470,315 415,315 415,275" stroke-dasharray="7 5"/>
+<polyline class="edge" points="1165,360 1165,320 805,320 805,275" stroke-dasharray="7 5"/>
+<polyline class="edge" points="368,450 395,450 395,300 1397,300 1397,205 1385,205" stroke-dasharray="7 5"/>
+<g class="node"><rect x="48" y="650" width="1337" height="155" rx="12" fill="#f0f2f2" stroke="#59666b" stroke-width="1.5"/>
+<text x="66" y="683" font-size="23" font-weight="700">Store ＋ InteractionEvent ＋ 观察台</text>
+<text x="66" y="715" font-size="19" font-weight="400">SQLite事务与正式v1→v2迁移；策略版本、会话游标、输出关联与支持反馈分开保存</text>
+<text x="66" y="743" font-size="19" font-weight="400">四类记忆与supersedes；结束恢复；清除epoch阻止在途旧任务回写</text>
+<text x="66" y="771" font-size="19" font-weight="400">观察台展示触发、角色结果、评审、发布／拒绝原因、记忆范围和采用结果</text>
+</g>
+<polyline class="edge" points="208,540 208,650"/>
+<polyline class="edge" points="660,540 660,650"/>
+<polyline class="edge" points="1165,540 1165,650"/>
+<text x="48" y="893" font-size="17" font-weight="400">实线：主要数据／执行流；虚线：异步结果或控制。所有模型调用经 Aihubmix。</text>
+</svg>
