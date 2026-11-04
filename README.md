@@ -6,6 +6,8 @@
 
 ## 研究、策略与架构
 
+[完整项目研究与系统设计说明](companion/docs/research-design/PROJECT_RESEARCH_AND_SYSTEM_DESIGN.md) 从研究依据展开到六类策略、Multi-agent协作、长期记忆及验证局限，配有13张说明图；另附[本地HTML阅读版与图源](companion/docs/research-design/README.md)。
+
 [![课程后端模块总图](docs/architecture-course/preview.png)](https://hhuang999.github.io/companion-doll-backend/)
 
 [打开项目展示与交互架构](https://hhuang999.github.io/companion-doll-backend/) · [逐项验收状态](companion/docs/V2_IMPLEMENTATION_STATUS.md) · [运行与迁移手册](companion/docs/V2_OPERATIONS.md)

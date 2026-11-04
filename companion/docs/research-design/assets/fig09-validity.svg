@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+<title id="title">09  新输入到来：按产物判断，不一律丢弃</title><desc id="desc">不同产物的使用时机与证据不同；最终状态通过事务中的比较交换（CAS）保护。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#718087"/></marker></defs>
+<style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#243538} .edge{fill:none;stroke:#718087;stroke-width:2;marker-end:url(#arrow)}</style>
+<rect width="1440" height="860" fill="#fbfaf6"/>
+<text x="48" y="52" font-size="30" font-weight="700">09  新输入到来：按产物判断，不一律丢弃</text>
+<text x="48" y="88" font-size="19" font-weight="400">不同产物的使用时机与证据不同；最终状态通过事务中的比较交换（CAS）保护。</text>
+<g class="node"><rect x="48" y="130" width="1345" height="90" rx="12" fill="#f0f2f2" stroke="#59666b" stroke-width="1.5"/>
+<text x="66" y="163" font-size="23" font-weight="700">新输入／纠正／取消</text>
+<text x="66" y="195" font-size="19" font-weight="400">按事件更新输入游标／输出代次；下面四个分支分别判断有效性。</text>
+</g>
+<g class="node"><rect x="48" y="260" width="320" height="105" rx="12" fill="#f9ebea" stroke="#a24a4b" stroke-width="1.5"/>
+<text x="66" y="293" font-size="23" font-weight="700">当轮输出／播放</text>
+</g>
+<g class="node"><rect x="425" y="260" width="565" height="105" rx="12" fill="#f9ebea" stroke="#a24a4b" stroke-width="1.5"/>
+<text x="443" y="293" font-size="23" font-weight="700">独立检查</text>
+<text x="443" y="325" font-size="19" font-weight="400">旧generation立即失效</text>
+<text x="443" y="353" font-size="19" font-weight="400">未发送文本与预取音频停止</text>
+</g>
+<g class="node"><rect x="1045" y="260" width="348" height="105" rx="12" fill="#f9ebea" stroke="#a24a4b" stroke-width="1.5"/>
+<text x="1063" y="293" font-size="23" font-weight="700">采用结果</text>
+<text x="1063" y="325" font-size="19" font-weight="400">当前代次重新组织表达</text>
+</g>
+<polyline class="edge" points="368,313 425,313"/>
+<polyline class="edge" points="990,313 1045,313"/>
+<g class="node"><rect x="48" y="390" width="320" height="105" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="66" y="423" font-size="23" font-weight="700">SupportPlan策略</text>
+</g>
+<g class="node"><rect x="425" y="390" width="565" height="105" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="443" y="423" font-size="23" font-weight="700">独立检查</text>
+<text x="443" y="455" font-size="19" font-weight="400">检查时间、增量、来源及基准版本</text>
+<text x="443" y="483" font-size="19" font-weight="400">有新输入时最多一次DeltaGuard</text>
+</g>
+<g class="node"><rect x="1045" y="390" width="348" height="105" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="1063" y="423" font-size="23" font-weight="700">采用结果</text>
+<text x="1063" y="455" font-size="19" font-weight="400">最终CAS → 后续合法回合可采用</text>
+</g>
+<polyline class="edge" points="368,443 425,443"/>
+<polyline class="edge" points="990,443 1045,443"/>
+<g class="node"><rect x="48" y="520" width="320" height="105" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="66" y="553" font-size="23" font-weight="700">MemoryItem记忆</text>
+</g>
+<g class="node"><rect x="425" y="520" width="565" height="105" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="443" y="553" font-size="23" font-weight="700">独立检查</text>
+<text x="443" y="585" font-size="19" font-weight="400">检查来源、范围、后续更正与清除epoch</text>
+<text x="443" y="613" font-size="19" font-weight="400">策略被拒不必连带丢弃有效记忆</text>
+</g>
+<g class="node"><rect x="1045" y="520" width="348" height="105" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="1063" y="553" font-size="23" font-weight="700">采用结果</text>
+<text x="1063" y="585" font-size="19" font-weight="400">合法候选可部分提交</text>
+</g>
+<polyline class="edge" points="368,573 425,573"/>
+<polyline class="edge" points="990,573 1045,573"/>
+<g class="node"><rect x="48" y="650" width="320" height="105" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="66" y="683" font-size="23" font-weight="700">End结束总结</text>
+</g>
+<g class="node"><rect x="425" y="650" width="565" height="105" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="443" y="683" font-size="23" font-weight="700">独立检查</text>
+<text x="443" y="715" font-size="19" font-weight="400">绑定原会话和结束游标</text>
+<text x="443" y="743" font-size="19" font-weight="400">持久化任务、幂等恢复、来源更正</text>
+</g>
+<g class="node"><rect x="1045" y="650" width="348" height="105" rx="12" fill="#f2ecf6" stroke="#805b96" stroke-width="1.5"/>
+<text x="1063" y="683" font-size="23" font-weight="700">采用结果</text>
+<text x="1063" y="715" font-size="19" font-weight="400">更新原会话；不能覆盖新事实</text>
+</g>
+<polyline class="edge" points="368,703 425,703"/>
+<polyline class="edge" points="990,703 1045,703"/>
+<text x="48" y="833" font-size="17" font-weight="400">策略TTL从排队时刻计算，不因复核刷新；检查后又来新输入，CAS仍会拒绝过时发布。</text>
+</svg>

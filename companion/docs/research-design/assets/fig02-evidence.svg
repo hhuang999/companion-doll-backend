@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 830" role="img" aria-labelledby="title desc">
+<title id="title">02  研究线索如何成为可检查的设计</title><desc id="desc">每行是一条设计推导；文献机制与本项目的产品改编分别呈现。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#718087"/></marker></defs>
+<style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#243538} .edge{fill:none;stroke:#718087;stroke-width:2;marker-end:url(#arrow)}</style>
+<rect width="1440" height="830" fill="#fbfaf6"/>
+<text x="48" y="52" font-size="30" font-weight="700">02  研究线索如何成为可检查的设计</text>
+<text x="48" y="88" font-size="19" font-weight="400">每行是一条设计推导；文献机制与本项目的产品改编分别呈现。</text>
+<text x="48" y="140" font-size="23" font-weight="700">研究／机制</text>
+<text x="395" y="140" font-size="23" font-weight="700">用户需要与要求</text>
+<text x="742" y="140" font-size="23" font-weight="700">策略／交互</text>
+<text x="1089" y="140" font-size="23" font-weight="700">系统承接与观察</text>
+<g class="node"><rect x="48" y="165" width="305" height="125" rx="12" fill="#f0f2f2" stroke="#59666b" stroke-width="1.5"/>
+<text x="66" y="198" font-size="23" font-weight="700">压力来源多样</text>
+<text x="66" y="230" font-size="19" font-weight="400">E01／E02</text>
+<text x="66" y="258" font-size="19" font-weight="400">混合压力与路径线索</text>
+</g>
+<polyline class="edge" points="353,227 388,227"/>
+<g class="node"><rect x="395" y="165" width="305" height="125" rx="12" fill="#fbf2df" stroke="#a37428" stroke-width="1.5"/>
+<text x="413" y="198" font-size="23" font-weight="700">保留未知</text>
+<text x="413" y="230" font-size="19" font-weight="400">不靠单一词语选行动</text>
+<text x="413" y="258" font-size="19" font-weight="400">澄清最低必要信息</text>
+</g>
+<polyline class="edge" points="700,227 735,227"/>
+<g class="node"><rect x="742" y="165" width="305" height="125" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="760" y="198" font-size="23" font-weight="700">情境与意愿分开</text>
+<text x="760" y="230" font-size="19" font-weight="400">可只倾诉；允许无匹配</text>
+<text x="760" y="258" font-size="19" font-weight="400">多标签不等于多项建议</text>
+</g>
+<polyline class="edge" points="1047,227 1082,227"/>
+<g class="node"><rect x="1089" y="165" width="305" height="125" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="1107" y="198" font-size="23" font-weight="700">Analysis → Catalog</text>
+<text x="1107" y="230" font-size="19" font-weight="400">来源与资格检查</text>
+<text x="1107" y="258" font-size="19" font-weight="400">N01及混合情境回放</text>
+</g>
+<g class="node"><rect x="48" y="316" width="305" height="125" rx="12" fill="#f0f2f2" stroke="#59666b" stroke-width="1.5"/>
+<text x="66" y="349" font-size="23" font-weight="700">求助障碍与尊重</text>
+<text x="66" y="381" font-size="19" font-weight="400">E04／E05／E13</text>
+<text x="66" y="409" font-size="19" font-weight="400">隐私、评价与信任</text>
+</g>
+<polyline class="edge" points="353,378 388,378"/>
+<g class="node"><rect x="395" y="316" width="305" height="125" rx="12" fill="#fbf2df" stroke="#a37428" stroke-width="1.5"/>
+<text x="413" y="349" font-size="23" font-weight="700">自主控制</text>
+<text x="413" y="381" font-size="19" font-weight="400">先询问；可拒绝</text>
+<text x="413" y="409" font-size="19" font-weight="400">联系人需具体判断</text>
+</g>
+<polyline class="edge" points="700,378 735,378"/>
+<g class="node"><rect x="742" y="316" width="305" height="125" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="760" y="349" font-size="23" font-weight="700">邀请与安全入口</text>
+<text x="760" y="381" font-size="19" font-weight="400">安全表达／现实支持</text>
+<text x="760" y="409" font-size="19" font-weight="400">安静、撤回、退出</text>
+</g>
+<polyline class="edge" points="1047,378 1082,378"/>
+<g class="node"><rect x="1089" y="316" width="305" height="125" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="1107" y="349" font-size="23" font-weight="700">状态机＋输出闸门</text>
+<text x="1107" y="381" font-size="19" font-weight="400">拒绝立即生效</text>
+<text x="1107" y="409" font-size="19" font-weight="400">许可与取消业务检查</text>
+</g>
+<g class="node"><rect x="48" y="467" width="305" height="125" rx="12" fill="#f0f2f2" stroke="#59666b" stroke-width="1.5"/>
+<text x="66" y="500" font-size="23" font-weight="700">具体加工与小问题</text>
+<text x="66" y="532" font-size="19" font-weight="400">E06／E08</text>
+<text x="66" y="560" font-size="19" font-weight="400">从笼统转向可操作片段</text>
+</g>
+<polyline class="edge" points="353,529 388,529"/>
+<g class="node"><rect x="395" y="467" width="305" height="125" rx="12" fill="#fbf2df" stroke="#a37428" stroke-width="1.5"/>
+<text x="413" y="500" font-size="23" font-weight="700">有限认知负担</text>
+<text x="413" y="532" font-size="19" font-weight="400">一次一个焦点</text>
+<text x="413" y="560" font-size="19" font-weight="400">不要求立刻解决全部</text>
+</g>
+<polyline class="edge" points="700,529 735,529"/>
+<g class="node"><rect x="742" y="467" width="305" height="125" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="760" y="500" font-size="23" font-weight="700">S16三步改编</text>
+<text x="760" y="532" font-size="19" font-weight="400">具体片段 → 可控一步</text>
+<text x="760" y="560" font-size="19" font-weight="400">短步骤需重新验证</text>
+</g>
+<polyline class="edge" points="1047,529 1082,529"/>
+<g class="node"><rect x="1089" y="467" width="305" height="125" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="1107" y="500" font-size="23" font-weight="700">Planner → Talker</text>
+<text x="1107" y="532" font-size="19" font-weight="400">当前步骤投影</text>
+<text x="1107" y="560" font-size="19" font-weight="400">执行记录与质量审读</text>
+</g>
+<g class="node"><rect x="48" y="618" width="305" height="125" rx="12" fill="#f0f2f2" stroke="#59666b" stroke-width="1.5"/>
+<text x="66" y="651" font-size="23" font-weight="700">证据层级与归因</text>
+<text x="66" y="683" font-size="19" font-weight="400">设计／工程方法要求</text>
+<text x="66" y="711" font-size="19" font-weight="400">完成不等于收益</text>
+</g>
+<polyline class="edge" points="353,680 388,680"/>
+<g class="node"><rect x="395" y="618" width="305" height="125" rx="12" fill="#fbf2df" stroke="#a37428" stroke-width="1.5"/>
+<text x="413" y="651" font-size="23" font-weight="700">可追溯、可更正</text>
+<text x="413" y="683" font-size="19" font-weight="400">事实、推测、反馈分开</text>
+<text x="413" y="711" font-size="19" font-weight="400">范围和时间不被扩大</text>
+</g>
+<polyline class="edge" points="700,680 735,680"/>
+<g class="node"><rect x="742" y="618" width="305" height="125" rx="12" fill="#e8f3ef" stroke="#24746c" stroke-width="1.5"/>
+<text x="760" y="651" font-size="23" font-weight="700">四类来源记忆</text>
+<text x="760" y="683" font-size="19" font-weight="400">明确反馈关联实际支持</text>
+<text x="760" y="711" font-size="19" font-weight="400">无反馈保留为缺失</text>
+</g>
+<polyline class="edge" points="1047,680 1082,680"/>
+<g class="node"><rect x="1089" y="618" width="305" height="125" rx="12" fill="#edf0fa" stroke="#465aa0" stroke-width="1.5"/>
+<text x="1107" y="651" font-size="23" font-weight="700">Memory＋Store</text>
+<text x="1107" y="683" font-size="19" font-weight="400">supersedes／过期／清除</text>
+<text x="1107" y="711" font-size="19" font-weight="400">来源及并发检查</text>
+</g>
+<text x="48" y="803" font-size="17" font-weight="400">设计转译的可追溯性已实现；用户效果尚需相应参与者研究。</text>
+</svg>
