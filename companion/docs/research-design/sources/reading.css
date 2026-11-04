@@ -1,0 +1,89 @@
+:root {
+  color-scheme: light;
+  --ink: #252c2b;
+  --muted: #6a7470;
+  --accent: #28685f;
+  --rule: #dce0da;
+  --sans: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 32px; }
+body { margin: 0; background: #fdfcf9; color: var(--ink); }
+main {
+  width: min(840px, calc(100% - 56px));
+  margin: 0 auto;
+  padding: 80px 0 100px;
+  font: 18px/1.95 "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+}
+.report-header { margin: 0 0 56px; }
+.kicker { color: var(--muted); font: 12px/1.6 var(--sans); letter-spacing: .12em; margin-bottom: 24px; }
+h1 { font: 700 39px/1.45 var(--sans); letter-spacing: -.035em; margin: 0 0 20px; }
+.subtitle { font: 18px/1.8 var(--sans); color: var(--muted); margin: 0; }
+h2 { font: 600 27px/1.5 var(--sans); margin: 74px 0 28px; letter-spacing: -.02em; }
+h3 { font: 600 20px/1.65 var(--sans); margin: 38px 0 16px; }
+p { margin: 0 0 20px; text-align: justify; overflow-wrap: break-word; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+code { font: .82em Consolas, monospace; overflow-wrap: anywhere; }
+figure { margin: 36px -40px 38px; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font: 13px/1.8 var(--sans); color: var(--muted); margin: 14px 40px 0; }
+.table-scroll { margin: 26px 0 32px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font: 13px/1.8 var(--sans); }
+th, td { padding: 12px 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { border-top: 1px solid #6a7470; border-bottom-color: #a2aca5; font-weight: 600; }
+td:first-child { font-weight: 500; }
+blockquote { border-left: 2px solid var(--rule); margin: 24px 0; padding-left: 24px; }
+.side-toc { position: fixed; left: 30px; top: 80px; bottom: 32px; width: 205px; overflow-y: auto; font: 12px/1.8 var(--sans); }
+.side-toc p { text-align: left; color: var(--muted); margin-bottom: 16px; }
+.toc ul { list-style: none; padding: 0; margin: 0; }
+.toc li { margin: 0 0 13px; }
+.toc a { color: #606a65; text-decoration: none; }
+.toc a:hover, .toc a:focus-visible { color: var(--accent); text-decoration: underline; }
+.mobile-toc { display: none; }
+.edition { border-top: 1px solid var(--rule); margin-top: 52px; padding-top: 18px; font: 12px/1.8 var(--sans); color: var(--muted); }
+@media (min-width: 1280px) and (max-width: 1500px) {
+  main { margin-left: 290px; }
+  figure { margin-left: -20px; margin-right: -20px; }
+  figcaption { margin-left: 20px; margin-right: 20px; }
+}
+@media (max-width: 1279px) {
+  .side-toc { display: none; }
+  .mobile-toc { display: block; border-bottom: 1px solid var(--rule); padding: 14px 28px; font: 13px/1.7 var(--sans); }
+  .mobile-toc summary { cursor: pointer; color: var(--muted); }
+  .mobile-toc .toc { padding: 18px 0 4px; columns: 2; }
+  main { padding-top: 48px; }
+  figure { margin-left: 0; margin-right: 0; }
+  figcaption { margin-left: 0; margin-right: 0; }
+}
+@media (max-width: 600px) {
+  main { width: calc(100% - 40px); font-size: 17px; line-height: 1.9; padding-top: 36px; }
+  h1 { font-size: 30px; }
+  h2 { font-size: 24px; margin-top: 54px; }
+  h3 { font-size: 19px; margin-top: 30px; }
+  .report-header { margin-bottom: 40px; }
+  .subtitle { font-size: 16px; }
+  .mobile-toc { padding: 12px 20px; }
+  .mobile-toc .toc { columns: 1; }
+  .table-scroll table { min-width: 640px; }
+  figure { margin: 28px -10px; }
+  figcaption { margin-left: 10px; margin-right: 10px; }
+}
+@media print {
+  @page { size: A4; margin: 18mm 16mm; }
+  body { background: white; }
+  .side-toc, .mobile-toc, .edition { display: none; }
+  main { width: auto; max-width: none; margin: 0; padding: 0; font-size: 10pt; line-height: 1.75; }
+  .report-header { margin-bottom: 24pt; }
+  h1 { font-size: 23pt; }
+  h2 { font-size: 16pt; margin-top: 24pt; break-after: avoid; }
+  h3 { font-size: 12pt; break-after: avoid; }
+  p { orphans: 3; widows: 3; margin-bottom: 10pt; }
+  figure { margin: 16pt 0; break-inside: avoid; }
+  figure img { max-height: 220mm; object-fit: contain; }
+  figcaption { font-size: 8pt; margin: 7pt 0 0; }
+  .table-scroll { overflow: visible; }
+  .table-scroll table { min-width: 0; font-size: 8pt; }
+  tr { break-inside: avoid; }
+  thead { display: table-header-group; }
+  a { color: inherit; text-decoration: none; }
+}
