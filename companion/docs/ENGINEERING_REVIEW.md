@@ -41,7 +41,7 @@
 
 本地证据：`artifacts/backend-cleanup/offline-tests.xml`、`wheel-check/report.json`、`handoff-audit.json`；wheel 在该目录的 `wheel/` 下，隔离环境为 `wheel-env/`。统一入口为 `./scripts/run.ps1 test`，隔离 wheel 检查使用 `scripts/check_v2_wheel.py`。
 
-本轮为离线工程 review，既有在线质量与时延记录见 [VALIDATION](VALIDATION.md)。外部模型响应和 ESP32 实际播放需要分别验证；本次检查不产生新的在线或设备测量。
+上述为离线工程 review。后续已完成 [2026-11-09 真实模型与语音回归](ONLINE_VALIDATION_20261109.md)：3 项在线测试、120 条风险样本、小智协议与 ASR 探针、10 次动态语音均通过。既有完整在线质量与时延记录见 [VALIDATION](VALIDATION.md)；ESP32 实际播放仍需设备测量。
 
 ## 接手顺序
 

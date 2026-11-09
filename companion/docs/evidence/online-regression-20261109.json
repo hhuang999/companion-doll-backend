@@ -1,0 +1,316 @@
+{
+  "date": "2026-11-09",
+  "timezone": "Asia/Singapore",
+  "code_revision": "71eaf4208df9fa5e0b35a33b80d8f325688cc0d2",
+  "source_config_digest": "064d4f96fe618b2f9f14138a53aab4e4c5eedba588d87d414f24430a4e519ad5",
+  "deployment_config_digest": "f81786273952a08b338972d80cb093742bf4eb33d29ac3f8db6b38b50ab40a52",
+  "models": {
+    "talker": "qwen-flash",
+    "risk": "qwen-flash",
+    "analysis": "qwen-plus",
+    "planner": "qwen-plus",
+    "brief": "qwen-flash",
+    "critic": "qwen-flash",
+    "memory": "gpt-4.1-mini",
+    "end": "gpt-4.1-mini",
+    "tts": "gpt-4o-mini-tts",
+    "voice": "coral"
+  },
+  "online_pytest": {
+    "tests": "3",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "time": "59.556"
+  },
+  "conversation": {
+    "roles": [
+      {
+        "role": "analysis",
+        "status": "completed",
+        "n": 1
+      },
+      {
+        "role": "brief",
+        "status": "completed",
+        "n": 1
+      },
+      {
+        "role": "critic",
+        "status": "completed",
+        "n": 1
+      },
+      {
+        "role": "end",
+        "status": "completed",
+        "n": 1
+      },
+      {
+        "role": "planner",
+        "status": "completed",
+        "n": 1
+      }
+    ],
+    "jobs": [
+      {
+        "kind": "deliberation",
+        "status": "completed",
+        "error": null
+      },
+      {
+        "kind": "end_consolidation",
+        "status": "completed",
+        "error": null
+      }
+    ],
+    "end_tasks": [
+      {
+        "status": "done",
+        "last_error": null
+      }
+    ]
+  },
+  "tts": {
+    "model": "gpt-4o-mini-tts",
+    "elapsed_ms": 1891.0000000032596,
+    "audio_seconds": 4.5
+  },
+  "risk": {
+    "counts": {
+      "none": 40,
+      "watch": 40,
+      "high": 40
+    },
+    "combined_matrix": {
+      "none": {
+        "none": 28,
+        "watch": 12,
+        "high": 0,
+        "failure": 0
+      },
+      "watch": {
+        "none": 0,
+        "watch": 37,
+        "high": 3,
+        "failure": 0
+      },
+      "high": {
+        "none": 0,
+        "watch": 0,
+        "high": 40,
+        "failure": 0
+      }
+    },
+    "classifier_matrix": {
+      "none": {
+        "none": 40,
+        "watch": 0,
+        "high": 0,
+        "failure": 0
+      },
+      "watch": {
+        "none": 0,
+        "watch": 37,
+        "high": 3,
+        "failure": 0
+      },
+      "high": {
+        "none": 0,
+        "watch": 0,
+        "high": 40,
+        "failure": 0
+      }
+    },
+    "classifier_failures": 0,
+    "classifier_high_recall": 1.0,
+    "classifier_watch_recall": 1.0,
+    "high_recall": 1.0,
+    "watch_recall": 1.0,
+    "false_high_rate": 0.0,
+    "timely_high_recall": 1.0,
+    "passed": true
+  },
+  "risk_classifier_statuses": {
+    "ok": 120
+  },
+  "xiaozhi_integration": {
+    "rounds": [
+      {
+        "name": "wake_onboarding",
+        "packets": 160,
+        "pcm_bytes": 307200,
+        "first_packet_ms": 218.99999998277053
+      },
+      {
+        "name": "normal_response",
+        "packets": 128,
+        "pcm_bytes": 245760,
+        "first_packet_ms": 3296.9999999622814
+      },
+      {
+        "name": "crisis_abort",
+        "packets": 3,
+        "pcm_bytes": 5760,
+        "first_packet_ms": 186.99999997625127,
+        "abort_to_stop_ms": 16.00000000325963
+      },
+      {
+        "name": "returning_wake",
+        "packets": 61,
+        "pcm_bytes": 117120,
+        "first_packet_ms": 77.9999999795109
+      },
+      {
+        "name": "real_asr",
+        "packets": 134,
+        "pcm_bytes": 257280,
+        "first_packet_ms": 4906.0000000172295
+      }
+    ],
+    "asr_transcript_received": true,
+    "end_statuses": [
+      "done",
+      "done"
+    ],
+    "reconnect_created_new_session": true,
+    "jobs": [
+      {
+        "kind": "end_consolidation",
+        "status": "completed",
+        "error": null,
+        "result": {
+          "plan": "not_produced",
+          "memory": [
+            "accepted:3578e6be66844757a2477e8f653a954c"
+          ],
+          "summary": "accepted",
+          "budget": {
+            "calls": 1,
+            "accounted_output_tokens": 329,
+            "accounted_total_tokens": 1778,
+            "schema_repairs": 0
+          }
+        }
+      },
+      {
+        "kind": "end_consolidation",
+        "status": "partial",
+        "error": null,
+        "result": {
+          "plan": "not_produced",
+          "memory": [
+            "rejected:Persistent preference/boundary needs explicit enduring evidence"
+          ],
+          "summary": "accepted",
+          "budget": {
+            "calls": 1,
+            "accounted_output_tokens": 115,
+            "accounted_total_tokens": 1532,
+            "schema_repairs": 0
+          }
+        }
+      }
+    ]
+  },
+  "voice": {
+    "requested": 10,
+    "samples": 10,
+    "states": {
+      "completed": 10
+    },
+    "failures": 0,
+    "dynamic_samples": 10,
+    "sentence_count": 15,
+    "sentences_using_fixed_cache": 0,
+    "summary": {
+      "first_token_ms": {
+        "n": 10,
+        "p50": 1110.000000015134,
+        "p90": 1563.0000000237487
+      },
+      "first_sentence_ms": {
+        "n": 10,
+        "p50": 1250.0000000291038,
+        "p90": 1641.0000000032596
+      },
+      "gate_release_ms": {
+        "n": 10,
+        "p50": 1257.500000006985,
+        "p90": 1641.0000000032596
+      },
+      "audio_queue_ms": {
+        "n": 10,
+        "p50": 1257.500000006985,
+        "p90": 1641.0000000032596
+      },
+      "tts_start_ms": {
+        "n": 10,
+        "p50": 1257.500000006985,
+        "p90": 1641.0000000032596
+      },
+      "tts_complete_ms": {
+        "n": 10,
+        "p50": 3945.50000000163,
+        "p90": 4266.00000000326
+      },
+      "opus_first_packet_ready_ms": {
+        "n": 10,
+        "p50": 4008.0000000307336,
+        "p90": 4375.0
+      },
+      "opus_first_packet_sent_ms": {
+        "n": 10,
+        "p50": 4016.0000000323635,
+        "p90": 4375.0
+      },
+      "server_completed_ms": {
+        "n": 10,
+        "p50": 10906.500000011874,
+        "p90": 11657.00000000652
+      },
+      "client_first_packet_ms": {
+        "n": 10,
+        "p50": 4039.0000000188593,
+        "p90": 4407.000000006519
+      }
+    },
+    "job_states": {
+      "completed": 3
+    },
+    "roles": [
+      {
+        "role": "analysis",
+        "status": "completed",
+        "n": 2
+      },
+      {
+        "role": "delta",
+        "status": "completed",
+        "n": 1
+      },
+      {
+        "role": "end",
+        "status": "completed",
+        "n": 1
+      },
+      {
+        "role": "planner",
+        "status": "completed",
+        "n": 2
+      }
+    ],
+    "end_states": [
+      "done"
+    ],
+    "measurement": "loopback text input -> actual server WAV/TTS -> Opus -> WebSocket -> decode; no device speaker or ASR in these 30 samples",
+    "conditions": "one sequential client; background cognition enabled; first request cold, later client reused; same host/Aihubmix network"
+  },
+  "shutdown": {
+    "tcp_8000_closed": true,
+    "writer_lease_reacquired": true,
+    "server_shutdown_message": false,
+    "keyboard_interrupt_message": false,
+    "atexit_error": false
+  },
+  "scope": "Synthetic loopback regression; no ESP32 speaker measurement or new user-effect study."
+}
