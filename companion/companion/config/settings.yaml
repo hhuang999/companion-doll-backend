@@ -35,7 +35,7 @@ cognition:
   analysis_model: qwen-plus
   brief_model: qwen-flash
   planner_model: qwen-plus
-  critic_model: qwen-flash
+  critic_model: qwen-flash  # Plan critique and source-entailment review.
   delta_model: qwen-flash
   memory_model: gpt-4.1-mini
   end_model: gpt-4.1-mini

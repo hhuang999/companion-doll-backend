@@ -172,8 +172,19 @@ class DeltaResult(Contract):
 
 class Consolidation(Contract):
     memory_candidates: tuple[MemoryCandidate, ...] = Field(default=(), max_length=6)
-    summary: str | None = Field(default=None, max_length=400)
+    summary_evidence: tuple[EvidenceRef, ...] = Field(default=(), max_length=3)
     followups: tuple["FollowupCandidate", ...] = Field(default=(), max_length=2)
+
+
+class GroundingDecision(Contract):
+    kind: Literal["memory", "followup"]
+    index: int = Field(ge=0)
+    verdict: Literal["entailed", "contradicted", "not_enough_information"]
+    reason: str = Field(min_length=1, max_length=240)
+
+
+class GroundingReview(Contract):
+    decisions: tuple[GroundingDecision, ...] = Field(max_length=8)
 
 
 class FollowupCandidate(Contract):

@@ -31,7 +31,11 @@ class Agents:
 
     def call(self, job, role, schema, payload, budget, *, candidate_version=None, validate=None):
         config = self.config.settings.cognition
-        model = getattr(config, f"{role}_model")
+        model = (
+            config.critic_model
+            if payload.get("phase") == "grounding"
+            else getattr(config, f"{role}_model")
+        )
         output_limit = {
             "analysis": 900,
             "brief": 350,
@@ -41,6 +45,8 @@ class Agents:
             "memory": 1800,
             "end": 1800,
         }[role]
+        if payload.get("phase") == "grounding":
+            output_limit = min(output_limit, 800)
         role_schema = compact_schema(schema.model_json_schema())
         if role == "analysis":
             # Keep the persisted contract backward compatible. Online assessment
@@ -79,11 +85,12 @@ class Agents:
                 )
             )
         prompt = self.templates.get_template(f"{role}.j2").render(
+            phase=payload.get("phase", "extract"),
             schema=json.dumps(
                 role_schema,
                 ensure_ascii=False,
                 separators=(",", ":"),
-            )
+            ),
         )
         messages = [
             {
@@ -125,7 +132,7 @@ class Agents:
                     messages,
                     schema,
                     budget.deadline,
-                    temperature=0.2,
+                    temperature=0 if payload.get("phase") == "grounding" else 0.2,
                     max_tokens=reserved_output,
                     usage_callback=usage_values.append,
                 )

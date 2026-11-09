@@ -168,9 +168,19 @@ def test_end_evidence_repair_keeps_invalid_memory_out_of_store(engine):
                         ],
                     }
                 ],
-                "summary": "错误",
+                "summary_evidence": [],
             },
-            {"memory_candidates": [], "summary": "用户想聊考试。"},
+            lambda p: {
+                "memory_candidates": [],
+                "summary_evidence": [
+                    {
+                        "kind": "user_turn",
+                        "id": p["final_turn_id"],
+                        "claim": "原话",
+                        "quote": "今天想聊聊考试",
+                    }
+                ],
+            },
         ]
     )
     core.on_session_end("s", "test")

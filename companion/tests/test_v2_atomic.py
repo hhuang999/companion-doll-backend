@@ -79,13 +79,25 @@ def test_v2_20_end_followup_recovery_is_idempotent(config, store):
         roles={
             "end": [
                 lambda p: {
-                    "summary": "用户提到明天考试",
+                    "summary_evidence": [
+                        {
+                            "kind": "user_turn",
+                            "id": identifier,
+                            "claim": "用户原话",
+                            "quote": "明天有考试",
+                        }
+                    ],
                     "followups": [
                         {
                             "content": "考试进展",
                             "due_date": p["today"],
                             "evidence": [
-                                {"kind": "user_turn", "id": identifier, "claim": "明确事件"}
+                                {
+                                    "kind": "user_turn",
+                                    "id": identifier,
+                                    "claim": "明确事件",
+                                    "quote": "明天有考试",
+                                }
                             ],
                         }
                     ],

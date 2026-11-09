@@ -85,6 +85,7 @@ class FakeLLM:
         from companion.cognition.models import (
             Consolidation,
             DeltaResult,
+            GroundingReview,
             PlanCandidate,
             ReviewBrief,
             ReviewResult,
@@ -98,6 +99,7 @@ class FakeLLM:
             ReviewResult: "critic",
             DeltaResult: "delta",
             Consolidation: "memory",
+            GroundingReview: "memory",
         }.get(schema)
         if role:
             payload = json.loads(messages[1]["content"])
@@ -186,7 +188,19 @@ class FakeLLM:
                 if latest
                 else None
             )
-            if role == "analysis":
+            if payload.get("phase") == "grounding":
+                value = {
+                    "decisions": [
+                        {
+                            "kind": claim["kind"],
+                            "index": claim["index"],
+                            "verdict": "entailed",
+                            "reason": "合成校验夹具",
+                        }
+                        for claim in payload["claims"]
+                    ]
+                }
+            elif role == "analysis":
                 value = {
                     "facts": [{"statement": latest["text"][:240], "evidence": [ref]}]
                     if ref
@@ -260,7 +274,7 @@ class FakeLLM:
                 }
             else:
                 value = {
-                    "summary": self.content["summary"] if role == "end" else None,
+                    "summary_evidence": [ref] if role == "end" and ref else [],
                     "memory_candidates": [],
                 }
         result = schema.model_validate(value)

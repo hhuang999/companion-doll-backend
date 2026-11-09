@@ -427,7 +427,9 @@ Snapshot 可作为有效 SupportPlan 与 MemoryBundle 的兼容投影，供现�
 
 `MemoryItem` 至少包含：`memory_id`、`user_key`、`kind`、`key`、`value`、`epistemic_status: stated|observed|hypothesized|legacy_unverified`、`source_refs`、`event_time`、`recorded_at`、`scope`、`scope_ref`、`valid_from`、`expires_at`、`status`、`version`、`supersedes_id`、`sensitivity`、`mention_policy`。
 
-scope 为 `turn|topic|session|until_time|persistent`。topic/session 记录绑定对应 ID；跨会话不把上次 topic 编号误认作当前话题。提取不出范围时使用 session，必要时澄清；不自动升级为永久偏好。
+scope 为 `turn|topic|session|until_time|persistent`。topic/session 记录绑定对应 ID；跨会话不把上次 topic 编号误认作当前话题。persistent 表示跨会话适用，不要求特定长期关键词；普通明确背景与习惯可保存，变化通过更正更新。局部安排和交互边界保留原话范围，范围不明确时使用 session。
+
+2026-11-09 的事实来源改进见 [GROUNDED_MEMORY](GROUNDED_MEMORY.md)：候选转换为完整事实句，由现有 Critic 模型判断原始来源是否蕴含该句，避免只比对值而忽略归属/活动。核对与格式修复共享原有预算。`Consolidation` 输出 `summary_evidence`，程序从用户原文摘录生成摘要，替代未经验证的自由摘要字符串；无需新增数据库 schema。
 
 ### 9.2 边界请求
 

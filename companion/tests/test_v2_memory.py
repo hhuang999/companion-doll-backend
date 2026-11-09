@@ -105,17 +105,17 @@ def test_v2_11_older_memory_cannot_override_correction_and_supersedes_preserved(
     )
 
 
-def test_v2_07_memory_quote_and_persistent_scope_need_user_evidence(store):
-    state = state_and_turn(store, "这次先别给建议")
+def test_v2_07_memory_quote_needs_user_evidence_without_keyword_gate(store):
+    state = state_and_turn(store, "我在广州读高中")
     memory = MemoryService(store)
     candidate = MemoryCandidate(
         kind="fact_preference",
-        key="style",
-        value="从不喜欢建议",
+        key="school",
+        value="在广州读高中",
         scope="persistent",
         source_refs=ref(state),
     )
-    assert memory.commit((candidate,), state, state.latest_turn_id)[0].startswith("rejected")
+    assert memory.commit((candidate,), state, state.latest_turn_id)[0].startswith("accepted")
     forged = candidate.model_copy(
         update={
             "scope": "session",

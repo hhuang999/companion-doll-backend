@@ -112,25 +112,6 @@ class MemoryService:
                     and not any(ref.kind == "user_turn" for ref in candidate.source_refs)
                 ):
                     raise ValueError("Support benefit requires user evidence")
-                if candidate.scope == "persistent" and candidate.kind in (
-                    "fact_preference",
-                    "interaction_boundary",
-                ):
-                    texts = [
-                        db.execute("SELECT text FROM turns WHERE id=?", (ref.id,)).fetchone()[0]
-                        for ref in candidate.source_refs
-                        if ref.kind == "user_turn"
-                    ]
-                    if not any(
-                        re.search(
-                            r"以后|一直|长期|每次|总是|我叫|叫我|我的名字|我喜欢|我不喜欢|取消.*限制|撤销",
-                            t,
-                        )
-                        for t in texts
-                    ):
-                        raise ValueError(
-                            "Persistent preference/boundary needs explicit enduring evidence"
-                        )
                 corrected = db.execute(
                     "SELECT source_turn_id FROM memory_corrections WHERE user_key=? AND kind=? AND key=?",
                     (state.user_key, candidate.kind, candidate.key),

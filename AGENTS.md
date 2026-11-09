@@ -40,6 +40,7 @@
 - 危机检测、实时表达与后台协作使用独立资源；取消以 generation 和实际任务占用为依据。
 - 同一数据库只允许一个活动 Core；离线清除、结束任务重试与迁移遵循 writer lease。看板独立只读连接，唯一写操作是风险处理标记。
 - 数据库 schema 当前为 v2；保留 v1→v2 事务迁移及一致备份。持久化契约与迁移不是可随意删除的旧代码。
+- 记忆不再使用长期关键词门槛。End/Memory 候选经完整事实句的来源蕴含核对，复用 `critic_model`，共享原两次调用/20秒预算；会话摘要由 `summary_evidence` 的用户原文生成。实现和状态见 `companion/docs/GROUNDED_MEMORY.md`。
 - 内容或角色提示词变化会影响准入摘要；按 CONTENT 更新对应证据，音频按实测资源单独绑定。
 - 小智上游固定于 `92337881a7b6553614b47e137a774d02bf40512f`。provider 源码维护在 `xiaozhi_patch/files/`，补丁检查和应用由 `xiaozhi_patch/apply.py` 完成。
 - API key、设备凭据、数据库和实际音频保存在忽略路径；可提交的验证汇总只使用合成数据。

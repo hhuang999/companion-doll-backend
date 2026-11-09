@@ -27,6 +27,12 @@ from companion.memory.service import MemoryService
 from .agents import Agents
 from .base import EvidenceRef, utcnow
 from .budget import Budget, BudgetExceeded, JobCancelled
+from .consolidation import (
+    ConsolidationGrounder,
+    bind_quotes,
+    extractive_summary,
+    validate_summary_sources,
+)
 from .models import (
     CognitiveJob,
     Consolidation,
@@ -60,6 +66,7 @@ class Cognition:
         factory = getattr(core.llm, "background_client", None)
         self.llm = factory() if factory else core.llm
         self.agents = Agents(core.config, core.store, self.llm)
+        self.grounder = ConsolidationGrounder(self.agents)
         self.catalog = StrategyCatalog(self.config)
         self.brief_pool = ThreadPoolExecutor(
             max_workers=core.config.settings.pools.reasoner_workers,
@@ -177,6 +184,8 @@ class Cognition:
 
     def _validate(self, job, value, allowed):
         self.store.validate_refs(job.user_key, tuple(evidence_in(value)), allowed)
+        if isinstance(value, Consolidation):
+            validate_summary_sources(value)
 
     def run(self, job, cancel):
         rt = self.core.sessions.get(job.session_id)
@@ -193,6 +202,7 @@ class Cognition:
         plan = None
         summary = None
         followups = ()
+        consolidation_review = None
         plan_reason = "not_produced"
         try:
             with self.core.user_lock(job.user_key), rt.lock:
@@ -237,8 +247,13 @@ class Cognition:
                         validate=lambda value: self._validate(job, value, allowed),
                     )
                     self._validate(job, result, allowed)
-                    candidates, summary = result.memory_candidates, result.summary
-                    followups = result.followups
+                    candidates, followups, consolidation_review = self.grounder.filter(
+                        job, result.memory_candidates, result.followups, payload, budget
+                    )
+                    if job.kind == "end_consolidation":
+                        summary = extractive_summary(
+                            bind_quotes(result.summary_evidence, payload["history"])
+                        )
                 else:
                     summary = ""
             else:
@@ -256,6 +271,10 @@ class Cognition:
                     if analysis.risk_review_requested:
                         self.core.request_risk_review(job.session_id, job.source_turn_id)
                     candidates = (*analysis.memory_candidates, *analysis.boundary_candidates)
+                    if candidates:
+                        candidates, _, consolidation_review = self.grounder.filter(
+                            job, candidates, (), payload, budget
+                        )
                     brief = None
                     if brief_future:
                         brief, _ = brief_future.result(
@@ -409,7 +428,10 @@ class Cognition:
                     if brief_future and not brief_future.done():
                         # Keep the per-user slot occupied until an actual HTTP call exits.
                         brief_future.result()
-            budget.check()
+            if not consolidation_review or consolidation_review["status"] != "unavailable":
+                budget.check()
+            elif cancel.is_set():
+                raise JobCancelled("Job cancelled")
             self.publish(
                 job,
                 state,
@@ -421,6 +443,7 @@ class Cognition:
                 plan_reason,
                 budget,
                 followups=followups,
+                consolidation_review=consolidation_review,
             )
             if (
                 job.kind in ("routine", "deliberation")
@@ -454,6 +477,7 @@ class Cognition:
                     type(error).__name__ + ":" + str(error)[:240],
                     budget,
                     failure_status=status,
+                    consolidation_review=consolidation_review,
                 )
             else:
                 self.store.finish_job(
@@ -513,6 +537,7 @@ class Cognition:
         budget,
         failure_status=None,
         followups=(),
+        consolidation_review=None,
     ):
         rt = self.core.sessions.get(job.session_id)
         if rt is None:
@@ -709,6 +734,10 @@ class Cognition:
                     r.startswith(("accepted:", "duplicate:")) for r in memory_results
                 )
                 rejected_memory = any(r.startswith("rejected:") for r in memory_results)
+                rejected_claims = consolidation_review and consolidation_review["status"] in (
+                    "filtered",
+                    "unavailable",
+                )
                 goal = (
                     bool(plan)
                     if job.kind in ("routine", "deliberation")
@@ -718,7 +747,7 @@ class Cognition:
                 )
                 status = (
                     "completed"
-                    if goal and not rejected_memory
+                    if goal and not rejected_memory and not rejected_claims
                     else "partial"
                     if goal or accepted_memory
                     else failure_status or "superseded"
@@ -733,6 +762,7 @@ class Cognition:
                         "plan": plan_reason,
                         "memory": memory_results,
                         "summary": summary_result,
+                        "consolidation_review": consolidation_review,
                         "budget": budget.report(),
                     },
                     db=db,
