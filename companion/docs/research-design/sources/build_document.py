@@ -16,7 +16,7 @@ REPO = ROOT.parents[2]
 
 
 def publish_pages(html):
-    """Publish the full report at the site root and retain its previous URL."""
+    """Publish the interactive introduction above the report at the site root."""
     destination = REPO / "docs/research-design"
     destination.mkdir(parents=True, exist_ok=True)
 
@@ -38,6 +38,16 @@ def publish_pages(html):
         "</footer>",
         ' · <a href="showcase.html">交互展示</a>'
         ' · <a href="architecture-course/overview.html">交互架构图</a></footer>',
+    )
+    intro = (ROOT / "sources/home-intro.html").read_text(encoding="utf-8")
+    homepage = (
+        homepage.replace("</head>", '<link rel="stylesheet" href="assets/home.css"></head>', 1)
+        .replace(
+            "<body>",
+            '<body class="project-home">' + intro + '<div id="research-report">',
+            1,
+        )
+        .replace("</body>", "</div></body>", 1)
     )
     (REPO / "docs/index.html").write_text(homepage, encoding="utf-8")
     html = html.replace(
