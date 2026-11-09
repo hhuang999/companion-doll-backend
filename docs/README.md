@@ -6,6 +6,8 @@ GitHub Pages 从 `main:/docs` 发布，默认入口 [`index.html`](index.html) �
 
 ## 当前来源
 
+仓库根 README 在标题与简介后展示可点击的 `assets/showcase-preview.png` 截图及“打开交互展示”链接，下方保留报告全文。截图来自实际 `showcase.html` 首屏；更新页面视觉后重新截图。入口由 `build_document.py` 的 `publish_readme()` 生成。
+
 首页展示区由 `companion/docs/research-design/sources/home-intro.html` 维护，布局在 `assets/home.css`。修改模板后执行下述 `build_document.py --pages` 重建，避免下次导出覆盖首页结构。展示页中的报告链接使用 `target="_top"` 跳到首页 `#research-report`，避免在嵌入区内重复打开首页。
 
 正文、排版和图源维护在 [`companion/docs/research-design`](../companion/docs/research-design/README.md)，运行其中的 `sources/build_document.py --pages` 同步默认首页、根 README、旧地址 [`research-design/`](research-design/) 与配图；生成文件不单独编辑。旧地址仍显示全文并保留章节锚点。安装与运行说明移至 [`ENGINEERING.md`](../ENGINEERING.md)。
