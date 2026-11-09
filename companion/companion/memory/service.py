@@ -66,6 +66,7 @@ class MemoryService:
         changed = boundary_changed = False
         for candidate in candidates:
             try:
+                feedback_ids = set()
                 candidate = self.scope_candidate(candidate, state)
                 self.store.validate_refs(state.user_key, candidate.source_refs, allowed, db)
                 if candidate.support or candidate.feedback_valence != "unknown":
@@ -88,6 +89,15 @@ class MemoryService:
                         for event in events
                     ):
                         raise ValueError("Support attribution requires matching explicit feedback")
+                    feedback_ids = {
+                        event["event_id"]
+                        for event in events
+                        if event["event_type"] == "explicit_feedback"
+                        and event["payload"]["attribution"] == "explicit"
+                        and event["payload"]["valence"] == candidate.feedback_valence
+                        and event["payload"].get("support")
+                        == (candidate.support.model_dump() if candidate.support else None)
+                    }
                 for ref in candidate.source_refs:
                     if (
                         ref.kind == "memory"
@@ -130,6 +140,28 @@ class MemoryService:
                     previous is None or candidate.expected_version != previous.version
                 ):
                     raise ValueError("Memory dependency conflict")
+                # Core and consolidation may describe the same explicit feedback
+                # using different keys. Its event identity, not wording, owns it.
+                if candidate.kind == "support_experience" and feedback_ids:
+                    duplicate = next(
+                        (
+                            item
+                            for item in active
+                            if item.status == "active"
+                            and item.kind == "support_experience"
+                            and item.support == candidate.support
+                            and item.feedback_valence == candidate.feedback_valence
+                            and feedback_ids.intersection(
+                                str(ref.id)
+                                for ref in item.source_refs
+                                if ref.kind == "interaction_event"
+                            )
+                        ),
+                        None,
+                    )
+                    if duplicate:
+                        results.append("duplicate:" + duplicate.memory_id)
+                        continue
                 same = [
                     m
                     for m in active
@@ -263,6 +295,8 @@ class MemoryService:
             "mention": item.mention_policy,
             "support": item.support.model_dump() if item.support else None,
             "feedback_valence": item.feedback_valence,
+            "recorded_at": item.recorded_at.isoformat(),
+            "event_time": item.event_time.isoformat() if item.event_time else None,
         }
 
     def explicit_boundary(self, text, state, turn_id):

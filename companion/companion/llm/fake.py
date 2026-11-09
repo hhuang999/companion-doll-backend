@@ -195,6 +195,7 @@ class FakeLLM:
                             "kind": claim["kind"],
                             "index": claim["index"],
                             "verdict": "entailed",
+                            "memory_type": "profile" if claim["kind"] == "memory" else None,
                             "reason": "合成校验夹具",
                         }
                         for claim in payload["claims"]

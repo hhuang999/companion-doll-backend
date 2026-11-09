@@ -1,0 +1,523 @@
+{
+  "date": "2026-11-09",
+  "synthetic_only": true,
+  "package_digest": "2bcb1cbf619dbdfb878144902111f8c729566f02010706e7ce7a4af1aa0d792d",
+  "offline": {
+    "passed": 201,
+    "online_deselected": 3,
+    "ruff": "passed",
+    "format": "passed",
+    "path": "artifacts/grounded-memory/check-quoted-final.log"
+  },
+  "online": {
+    "passed": 2,
+    "tests": [
+      "test_live_conversation_and_summary",
+      "test_live_tts_returns_playable_wav"
+    ],
+    "risk_corpus": "unchanged; prior 120-case evidence retained in ONLINE_VALIDATION_20261109.md"
+  },
+  "extraction_cases": [
+    {
+      "case": "fragment",
+      "input": "早上9点至下午5点。",
+      "summary": "用户原话：“早上9点至下午5点。”",
+      "end_done": true,
+      "memory_scopes": []
+    },
+    {
+      "case": "unrelated_forever",
+      "input": "早上9点至下午5点。以后再聊。",
+      "summary": "用户原话：“早上9点至下午5点。以后再聊。”",
+      "end_done": true,
+      "memory_scopes": []
+    },
+    {
+      "case": "school",
+      "input": "我在广州读高中。",
+      "summary": "用户原话：“我在广州读高中。”",
+      "end_done": true,
+      "memory_scopes": [
+        {
+          "kind": "fact_preference",
+          "scope": "persistent"
+        }
+      ]
+    },
+    {
+      "case": "working_hours",
+      "input": "我的工作时间是早上9点至下午5点。",
+      "summary": "用户原话：“我的工作时间是早上9点至下午5点。”",
+      "end_done": true,
+      "memory_scopes": [
+        {
+          "kind": "fact_preference",
+          "scope": "persistent"
+        }
+      ]
+    },
+    {
+      "case": "temporary_refusal",
+      "input": "这次先别给建议。",
+      "summary": "用户原话：“这次先别给建议。”",
+      "end_done": true,
+      "memory_scopes": [
+        {
+          "kind": "interaction_boundary",
+          "scope": "session"
+        }
+      ]
+    },
+    {
+      "case": "current_need",
+      "input": "我现在只想有人听，不想继续换说法。",
+      "summary": "用户原话：“我现在只想有人听，不想继续换说法。”",
+      "end_done": true,
+      "memory_scopes": [
+        {
+          "kind": "fact_preference",
+          "scope": "session"
+        }
+      ]
+    },
+    {
+      "case": "current_distress",
+      "input": "我最难受的是一直拿自己跟别人比。",
+      "summary": "用户原话：“我最难受的是一直拿自己跟别人比。”",
+      "end_done": true,
+      "memory_scopes": [
+        {
+          "kind": "episodic_event",
+          "scope": "session"
+        }
+      ]
+    },
+    {
+      "case": "unsettled_plan",
+      "input": "我以后想试试早上9点至下午5点的兼职，还没确定。",
+      "summary": "用户原话：“我以后想试试早上9点至下午5点的兼职，还没确定。”",
+      "end_done": true,
+      "memory_scopes": [
+        {
+          "kind": "episodic_event",
+          "scope": "session"
+        }
+      ]
+    }
+  ],
+  "forced_reviews": [
+    {
+      "case": "bad_persistent",
+      "source": "早上9点至下午5点。",
+      "expected_accept": false,
+      "accepted": false,
+      "review": {
+        "status": "filtered",
+        "decisions": [
+          {
+            "kind": "memory",
+            "index": 0,
+            "verdict": "not_enough_information",
+            "memory_type": null,
+            "reason": "前提未指明时间所属的主体和活动，无法确定是用户的工作时间。"
+          }
+        ]
+      }
+    },
+    {
+      "case": "bad_session",
+      "source": "早上9点至下午5点。",
+      "expected_accept": false,
+      "accepted": false,
+      "review": {
+        "status": "filtered",
+        "decisions": [
+          {
+            "kind": "memory",
+            "index": 0,
+            "verdict": "not_enough_information",
+            "memory_type": null,
+            "reason": "前提未指明主体和活动，仅说明时间范围，无法确定是用户的工作时间。"
+          }
+        ]
+      }
+    },
+    {
+      "case": "irrelevant_word",
+      "source": "早上9点至下午5点。以后再聊。",
+      "expected_accept": false,
+      "accepted": false,
+      "review": {
+        "status": "filtered",
+        "decisions": [
+          {
+            "kind": "memory",
+            "index": 0,
+            "verdict": "not_enough_information",
+            "memory_type": null,
+            "reason": "Premise lacks explicit subject and activity context; '早上9点至下午5点。' alone does not entail the user's work time without confirming ownership and activity."
+          }
+        ]
+      }
+    },
+    {
+      "case": "valid_school",
+      "source": "我在广州读高中。",
+      "expected_accept": true,
+      "accepted": true,
+      "review": {
+        "status": "passed",
+        "decisions": [
+          {
+            "kind": "memory",
+            "index": 0,
+            "verdict": "entailed",
+            "memory_type": "profile",
+            "reason": "用户明确陈述'我在广州读高中'，直接支持'用户的就读情况是在广州读高中'这一完整假设。"
+          }
+        ]
+      }
+    },
+    {
+      "case": "valid_work",
+      "source": "我的工作时间是早上9点至下午5点。",
+      "expected_accept": true,
+      "accepted": true,
+      "review": {
+        "status": "passed",
+        "decisions": [
+          {
+            "kind": "memory",
+            "index": 0,
+            "verdict": "entailed",
+            "memory_type": "profile",
+            "reason": "用户在历史中明确陈述了工作时间，与假设完全一致。"
+          }
+        ]
+      }
+    },
+    {
+      "case": "scope_expansion",
+      "source": "这次先别给建议。",
+      "expected_accept": false,
+      "accepted": false,
+      "review": {
+        "status": "filtered",
+        "decisions": [
+          {
+            "kind": "memory",
+            "index": 0,
+            "verdict": "not_enough_information",
+            "memory_type": "session_context",
+            "reason": "仅一次拒绝建议的表达不足以证明用户从不喜欢建议，缺乏足够证据支持该普遍性偏好。"
+          }
+        ]
+      }
+    }
+  ],
+  "course_replay": [
+    {
+      "scenario": "T01",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": true,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 2,
+        "rejected": 1,
+        "partial": 1
+      },
+      "role_statuses": {
+        "completed": 12
+      }
+    },
+    {
+      "scenario": "T02",
+      "evidence": "artifacts/grounded-memory/course-provenance-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": true,
+        "end_done": true
+      },
+      "job_statuses": {
+        "timed_out": 1,
+        "completed": 4,
+        "rejected": 1,
+        "partial": 1
+      },
+      "role_statuses": {
+        "completed": 25,
+        "timed_out": 1
+      }
+    },
+    {
+      "scenario": "T03",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": true,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 2,
+        "rejected": 1,
+        "partial": 1
+      },
+      "role_statuses": {
+        "completed": 12
+      }
+    },
+    {
+      "scenario": "T04",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": true,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 2,
+        "partial": 2
+      },
+      "role_statuses": {
+        "completed": 12,
+        "schema_error": 1
+      }
+    },
+    {
+      "scenario": "T05",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": true,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 3,
+        "partial": 1
+      },
+      "role_statuses": {
+        "completed": 12
+      }
+    },
+    {
+      "scenario": "T06",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": true,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 4
+      },
+      "role_statuses": {
+        "completed": 12
+      }
+    },
+    {
+      "scenario": "T07",
+      "evidence": "artifacts/grounded-memory/course-provenance-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": true,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 4
+      },
+      "role_statuses": {
+        "completed": 12
+      }
+    },
+    {
+      "scenario": "T08",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": true,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 3,
+        "partial": 1
+      },
+      "role_statuses": {
+        "completed": 12
+      }
+    },
+    {
+      "scenario": "T09",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": true,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 3,
+        "rejected": 1
+      },
+      "role_statuses": {
+        "completed": 12
+      }
+    },
+    {
+      "scenario": "N01",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": null,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 3,
+        "timed_out": 1
+      },
+      "role_statuses": {
+        "completed": 10,
+        "schema_error": 1,
+        "timed_out": 1
+      }
+    },
+    {
+      "scenario": "N02",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": null,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 3,
+        "rejected": 1,
+        "partial": 1
+      },
+      "role_statuses": {
+        "completed": 16
+      }
+    },
+    {
+      "scenario": "N03",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": null,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 5,
+        "timed_out": 1
+      },
+      "role_statuses": {
+        "completed": 19,
+        "timed_out": 1
+      }
+    },
+    {
+      "scenario": "N04",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": null,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 4,
+        "partial": 1
+      },
+      "role_statuses": {
+        "completed": 16
+      }
+    },
+    {
+      "scenario": "N05",
+      "evidence": "artifacts/grounded-memory/course-quoted-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": null,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 1,
+        "partial": 1
+      },
+      "role_statuses": {
+        "completed": 6
+      }
+    },
+    {
+      "scenario": "N06",
+      "evidence": "artifacts/grounded-memory/course-quoted-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": null,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 4
+      },
+      "role_statuses": {
+        "completed": 14
+      }
+    },
+    {
+      "scenario": "N07",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": null,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 6,
+        "expired": 1,
+        "partial": 2
+      },
+      "role_statuses": {
+        "completed": 24,
+        "schema_error": 2
+      }
+    },
+    {
+      "scenario": "N08",
+      "evidence": "artifacts/grounded-memory/course-classified-final/report.json",
+      "automatic_checks": {
+        "no_driver_error": true,
+        "background_drained": true,
+        "target_executed": null,
+        "end_done": true
+      },
+      "job_statuses": {
+        "completed": 2
+      },
+      "role_statuses": {
+        "completed": 6
+      }
+    }
+  ],
+  "limits": [
+    "Recording port is synthetic server playback, not hardware playback.",
+    "Automatic checks do not establish all generated statements are correct.",
+    "Existing N04 restriction overgeneralization is reproduced before and after this change.",
+    "Model/API timeouts remain observable; no deadline or quality threshold was relaxed."
+  ]
+}

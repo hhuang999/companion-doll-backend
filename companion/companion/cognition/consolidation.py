@@ -4,6 +4,7 @@ import logging
 
 from openai import APIError
 
+from .base import EvidenceRef
 from .budget import BudgetExceeded, JobCancelled
 from .models import GroundingReview
 
@@ -62,7 +63,11 @@ class ConsolidationGrounder:
             {
                 "kind": "memory",
                 "index": index,
-                "hypothesis": f"用户的{candidate.key}是{candidate.value}。",
+                "hypothesis": (
+                    f"用户的{candidate.key}是{candidate.value}。"
+                    if candidate.kind == "fact_preference"
+                    else candidate.value
+                ),
                 "source_ids": [{"kind": ref.kind, "id": ref.id} for ref in candidate.source_refs],
             }
             for index, candidate in enumerate(candidates)
@@ -85,6 +90,11 @@ class ConsolidationGrounder:
             actual = [(item.kind, item.index) for item in review.decisions]
             if len(actual) != len(expected) or set(actual) != expected:
                 raise ValueError("Grounding decisions must cover each exact candidate once")
+            if any(
+                item.kind == "memory" and item.verdict == "entailed" and item.memory_type is None
+                for item in review.decisions
+            ):
+                raise ValueError("Memory decisions require a semantic memory type")
 
         try:
             review, _ = self.agents.call(
@@ -133,8 +143,73 @@ class ConsolidationGrounder:
         accepted = {
             (item.kind, item.index) for item in review.decisions if item.verdict == "entailed"
         }
+        classified = {
+            item.index: item.memory_type for item in review.decisions if item.kind == "memory"
+        }
+
+        def normalize(index, candidate):
+            # Typed controls and attributed feedback retain their existing contracts.
+            if (
+                candidate.kind == "interaction_boundary"
+                or candidate.support
+                or candidate.feedback_valence != "unknown"
+            ):
+                return candidate
+            category = classified[index]
+            excerpts = tuple(ref for ref in candidate.source_refs if ref.kind == "user_turn")
+            quoted = (
+                {
+                    "value": extractive_summary(excerpts),
+                    "key": "user_turn:" + ",".join(str(ref.id) for ref in excerpts),
+                }
+                if excerpts
+                else {}
+            )
+            if category == "session_context":
+                changes = {"kind": "fact_preference", **quoted}
+                if candidate.scope == "persistent":
+                    changes.update(scope="session", scope_ref=None)
+                return candidate.model_copy(update=changes)
+            if candidate.kind == "support_experience" or category == "support_feedback":
+                turn_ids = {str(ref.id) for ref in candidate.source_refs if ref.kind == "user_turn"}
+                events = [
+                    event
+                    for event in payload["feedback"]
+                    if event["event_type"] == "explicit_feedback"
+                    and event["payload"]["attribution"] == "explicit"
+                    and str(event["turn_id"]) in turn_ids
+                ]
+                if len(events) == 1:
+                    event = events[0]
+                    # Core owns attribution. Recover its identity even when the
+                    # extractor omitted the event reference or renamed the key.
+                    return type(candidate).model_validate(
+                        {
+                            **candidate.model_dump(),
+                            "kind": "support_experience",
+                            "support": event["payload"].get("support"),
+                            "feedback_valence": event["payload"]["valence"],
+                            "value": event["payload"]["text"] or candidate.value,
+                            "source_refs": candidate.source_refs
+                            + (
+                                EvidenceRef(
+                                    kind="interaction_event",
+                                    id=event["event_id"],
+                                    claim="Core 明确反馈归因",
+                                ),
+                            ),
+                        }
+                    )
+            if category == "episode":
+                return candidate.model_copy(update={"kind": "episodic_event", **quoted})
+            return candidate
+
         return (
-            tuple(item for index, item in enumerate(candidates) if ("memory", index) in accepted),
+            tuple(
+                normalize(index, item)
+                for index, item in enumerate(candidates)
+                if ("memory", index) in accepted
+            ),
             tuple(item for index, item in enumerate(followups) if ("followup", index) in accepted),
             {
                 "status": "passed" if accepted == expected else "filtered",

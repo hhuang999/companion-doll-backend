@@ -26,7 +26,7 @@
 
 `--mode demo` 要求全部启用条目有完整协议，来源引用一致、自动核查hash匹配、固定音频存在且脚本/声音/时长一致，以及当前整包摘要对应的真实验收回执。回执逐项覆盖适用、排除、许可/拒绝、退出和反馈，分开列确定性检查与真实回放。缺失、失败、重复或过期回执均拒绝启动。
 
-当前course-release-1回执已绑定10个条目，实际部署副本在24段固定音频核验后通过demo准入。公开wheel包含回执，音频在使用机器上准备。逐条证据见 [质量审读](autonomous-upgrade/QUALITY_REVIEW.md)。
+当前 `course-grounded-memory-1` 回执绑定10个条目，已按记忆提示词改动更新多轮回放与行为检查；证据见 [记忆修复](GROUNDED_MEMORY.md)。原 `course-release-1` 的逐条证据保留在 [质量审读](autonomous-upgrade/QUALITY_REVIEW.md)。公开 wheel 包含回执，实际音频在使用机器上准备并单独校验。
 
 当前状态以 [持续实施状态](autonomous-upgrade/IMPLEMENTATION_STATUS.md) 和 [验证报告](VALIDATION.md) 为准。准备音频不自动生成通过回执；FakeLLM不替代真实模型结果。来源研究只支持机制借鉴，不替代系统行为检查。
 

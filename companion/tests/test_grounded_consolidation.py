@@ -6,6 +6,7 @@ from companion.adapters.output import RecordingOutputPort
 from companion.core.api import CompanionCore
 from companion.core.models import TurnSignals
 from companion.llm.fake import FakeLLM
+from companion.memory.service import MemoryService
 
 
 @pytest.fixture
@@ -44,13 +45,14 @@ def proposal(key="工作时间", value="早上9点至下午5点", scope="persist
     return make
 
 
-def decisions(verdict):
+def decisions(verdict, memory_type="profile"):
     return lambda p: {
         "decisions": [
             {
                 "kind": item["kind"],
                 "index": item["index"],
                 "verdict": verdict,
+                "memory_type": memory_type if item["kind"] == "memory" else None,
                 "reason": "测试语义支持结论",
             }
             for item in p["claims"]
@@ -101,6 +103,110 @@ def test_temporary_refusal_is_not_promoted_to_a_persistent_preference(engine):
     assert not any(item.scope == "persistent" for item in store.memory_items("u"))
 
 
+@pytest.mark.parametrize(
+    "text,category,expected_kind,expected_scope",
+    [
+        ("我现在只想有人听", "session_context", "fact_preference", "session"),
+        ("我最难受的是一直拿自己跟别人比", "episode", "episodic_event", "persistent"),
+        ("以后想试试兼职，还没确定", "episode", "episodic_event", "persistent"),
+    ],
+)
+def test_entailed_content_keeps_its_semantic_type(
+    engine, text, category, expected_kind, expected_scope
+):
+    _, fake, store = engine
+    fake.roles["end"] = deque([proposal(key="近况", value=text)])
+    fake.roles["memory"] = deque([decisions("entailed", category)])
+    finish(engine, text)
+    item = store.memory_items("u")[0]
+    assert (item.kind, item.scope) == (expected_kind, expected_scope)
+    assert MemoryService.project(item)["recorded_at"]
+
+
+def test_episode_uses_raw_user_question_even_when_reviewer_accepts_added_assent(engine):
+    _, fake, store = engine
+    fake.roles["end"] = deque(
+        [proposal(key="接受AI局限", value="希望持续陪伴，但接受AI不能永远只陪他")]
+    )
+    fake.roles["memory"] = deque([decisions("entailed", "episode")])
+    finish(engine, "你能永远只陪我一个人吗？")
+    item = store.memory_items("u")[0]
+    assert item.kind == "episodic_event"
+    assert item.value == "用户原话：“你能永远只陪我一个人吗？”"
+    assert item.key.startswith("user_turn:") and "接受" not in item.key + item.value
+
+
+def test_support_feedback_hypothesis_excludes_internal_identifier(engine):
+    _, fake, _ = engine
+
+    def extraction(payload):
+        result = proposal(key="feedback:internal-event-id", value="刚才这样问有帮助")(payload)
+        result["memory_candidates"][0]["kind"] = "support_experience"
+        return result
+
+    def review(payload):
+        assert payload["claims"][0]["hypothesis"] == "刚才这样问有帮助"
+        return decisions("entailed", "support_feedback")(payload)
+
+    fake.roles["end"] = deque([extraction])
+    fake.roles["memory"] = deque([review])
+    finish(engine, "刚才这样问有帮助")
+
+
+def test_negative_feedback_identity_survives_episode_misclassification(engine):
+    from companion.cognition.base import EvidenceRef
+    from companion.cognition.models import EventPayload, InteractionEvent
+    from companion.memory.models import MemoryCandidate
+
+    core, fake, store = engine
+    text = "刚才这个练习不舒服，不愿意继续。"
+    turn = core.on_input("s", "1", text, TurnSignals())
+    state = core.sessions["s"].state
+    store.record_interaction(
+        InteractionEvent(
+            event_id="negative-feedback",
+            idempotency_key="negative-feedback",
+            user_key="u",
+            session_id="s",
+            turn_id=turn,
+            event_type="explicit_feedback",
+            origin="user_explicit",
+            payload=EventPayload(text=text, attribution="explicit", valence="negative"),
+        )
+    )
+    MemoryService(store).commit(
+        (
+            MemoryCandidate(
+                kind="support_experience",
+                key="core-feedback",
+                value=text,
+                scope="persistent",
+                feedback_valence="negative",
+                source_refs=(
+                    EvidenceRef(kind="user_turn", id=turn, claim="原话", quote=text),
+                    EvidenceRef(
+                        kind="interaction_event", id="negative-feedback", claim="Core 反馈"
+                    ),
+                ),
+            ),
+        ),
+        state,
+        turn,
+    )
+
+    def extraction(payload):
+        result = proposal(key="model-alias", value=text)(payload)
+        result["memory_candidates"][0]["kind"] = "support_experience"
+        return result
+
+    fake.roles["end"] = deque([extraction])
+    fake.roles["memory"] = deque([decisions("entailed", "episode")])
+    core.on_session_end("s", "test")
+    assert core.wait_idle()
+    items = store.memory_items("u")
+    assert len(items) == 1 and items[0].key == "core-feedback"
+
+
 @pytest.mark.parametrize("error", [TimeoutError("review timeout"), ValueError("invalid review")])
 def test_unavailable_review_closes_with_quotes_and_no_unverified_claims(engine, error):
     _, fake, store = engine
@@ -114,13 +220,29 @@ def test_unavailable_review_closes_with_quotes_and_no_unverified_claims(engine, 
     assert result["budget"]["calls"] <= 2
 
 
+def test_unsupported_claim_does_not_require_a_storage_classification(engine):
+    _, fake, store = engine
+    fake.roles["end"] = deque([proposal()])
+    fake.roles["memory"] = deque([decisions("not_enough_information", None)])
+    finish(engine, "早上9点至下午5点。")
+    result = json.loads(store.query("SELECT result FROM cognitive_jobs")[0]["result"])
+    assert result["consolidation_review"]["status"] == "filtered"
+    assert result["budget"]["calls"] == 2
+
+
 @pytest.mark.parametrize(
     "review",
     [
         {"decisions": []},
         {
             "decisions": [
-                {"kind": "memory", "index": 1, "verdict": "entailed", "reason": "错位候选"}
+                {
+                    "kind": "memory",
+                    "index": 1,
+                    "verdict": "entailed",
+                    "memory_type": "profile",
+                    "reason": "错位候选",
+                }
             ]
         },
     ],

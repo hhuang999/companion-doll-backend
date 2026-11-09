@@ -155,3 +155,59 @@ def test_v2_15_execution_does_not_create_positive_memory(store):
     )
     assert memory.commit((candidate,), state, state.latest_turn_id)[0].startswith("rejected")
     assert not store.memory_items("u")
+
+
+def test_same_feedback_event_is_idempotent_across_model_keys(store):
+    from companion.cognition.models import EventPayload, InteractionEvent
+    from companion.content.models import SupportReference
+    from companion.core.models import OutputEvent
+
+    state = state_and_turn(store, "刚才那个练习有帮助")
+    memory = MemoryService(store)
+    support = SupportReference(identifier="breathing_60s", version="1", kind="exercise", step=1)
+    store.add_output(
+        OutputEvent(
+            output_id="support-output",
+            session_id="s",
+            turn_id=state.latest_turn_id,
+            generation=0,
+            support=support,
+        )
+    )
+    for event_id in ("feedback-one", "feedback-two"):
+        store.record_interaction(
+            InteractionEvent(
+                event_id=event_id,
+                idempotency_key=event_id,
+                user_key="u",
+                session_id="s",
+                turn_id=state.latest_turn_id,
+                output_id="support-output",
+                event_type="explicit_feedback",
+                origin="user_explicit",
+                payload=EventPayload(attribution="explicit", valence="positive", support=support),
+            )
+        )
+
+    def candidate(key, event_id):
+        return MemoryCandidate(
+            kind="support_experience",
+            key=key,
+            value="练习有帮助",
+            scope="persistent",
+            support=support,
+            feedback_valence="positive",
+            source_refs=ref(state)
+            + (EvidenceRef(kind="interaction_event", id=event_id, claim="明确反馈"),),
+        )
+
+    assert memory.commit((candidate("core-key", "feedback-one"),), state, state.latest_turn_id)[
+        0
+    ].startswith("accepted:")
+    assert memory.commit((candidate("model-alias", "feedback-one"),), state, state.latest_turn_id)[
+        0
+    ].startswith("duplicate:")
+    assert memory.commit(
+        (candidate("other-occasion", "feedback-two"),), state, state.latest_turn_id
+    )[0].startswith("accepted:")
+    assert len(store.memory_items("u")) == 2

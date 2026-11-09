@@ -180,6 +180,9 @@ class GroundingDecision(Contract):
     kind: Literal["memory", "followup"]
     index: int = Field(ge=0)
     verdict: Literal["entailed", "contradicted", "not_enough_information"]
+    memory_type: (
+        Literal["profile", "session_context", "episode", "support_feedback", "boundary"] | None
+    )
     reason: str = Field(min_length=1, max_length=240)
 
 
