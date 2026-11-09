@@ -31,17 +31,17 @@ def get_core(options):
         if key not in _instances:
             load_dotenv(root / ".env", override=False)
             config = Config(directory)
-            core = build_core(config, root / config.settings.storage.db_path)
-            core.device_tts = TTSClient(config)
-            core.audio_cache_dir = root / "data/fixed_audio"
             # Check actual bytes, text/voice binding and pauses before accepting connections.
+            cache_dir = root / "data/fixed_audio"
+            validate_audio_manifest(config, cache_dir / "manifest.json")
+            tts = TTSClient(config)
             try:
-                validate_audio_manifest(config, core.audio_cache_dir / "manifest.json")
-            except (ValueError, OSError):
-                core.close()
-                core.store.close()
-                core.device_tts.close()
+                core = build_core(config, root / config.settings.storage.db_path)
+            except BaseException:
+                tts.close()
                 raise
+            core.device_tts = tts
+            core.audio_cache_dir = cache_dir
             _instances[key] = core
         return _instances[key]
 

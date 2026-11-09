@@ -169,7 +169,9 @@ class Config:
         self.directory = (directory or Path(__file__).parents[1] / "config").resolve()
         self.settings = Settings.model_validate(self.read("settings.yaml"))
         if mode:
-            self.settings.runtime = RuntimeSettings(mode=mode)
+            self.settings.runtime = RuntimeSettings(
+                **{**self.settings.runtime.model_dump(), "mode": mode}
+            )
         self.persona = self.read("persona.yaml")
         self.rules = self.read("rules.yaml")
         self.stages = self.read("stages.yaml")

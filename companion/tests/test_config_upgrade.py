@@ -53,3 +53,27 @@ def test_settings_merge_adopts_new_defaults_only_for_unchanged_fields():
     assert merge_settings(
         {"a": 1, "b": {"x": 1}}, {"a": 7, "b": {"x": 1}}, {"a": 2, "b": {"x": 3, "y": 4}}
     ) == {"a": 7, "b": {"x": 3, "y": 4}}
+
+
+def test_mode_override_preserves_the_configured_timezone(tmp_path):
+    directory = tmp_path / "deployed"
+    upgrade(directory)
+    path = directory / "settings.yaml"
+    settings = yaml.safe_load(path.read_text(encoding="utf-8"))
+    settings["runtime"]["timezone"] = "Pacific/Auckland"
+    path.write_text(yaml.safe_dump(settings), encoding="utf-8")
+    assert Config(directory, mode="development").settings.runtime.timezone == "Pacific/Auckland"
+
+
+@pytest.mark.parametrize("location", ["same", "parent", "child"])
+def test_upgrade_rejects_overlapping_source_and_deployment(tmp_path, location):
+    source = tmp_path / "source"
+    source.mkdir()
+    destination = {
+        "same": source,
+        "parent": tmp_path,
+        "child": source / "deployed",
+    }[location]
+    with pytest.raises(ValueError, match="separate deployment"):
+        upgrade(destination, source)
+    assert not list(source.iterdir())

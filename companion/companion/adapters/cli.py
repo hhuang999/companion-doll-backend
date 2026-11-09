@@ -16,12 +16,22 @@ from companion.store import Store
 from .output import ConsoleOutputPort
 
 
-def build_core(config: Config, db_path: Path | None = None, fake: bool = False) -> CompanionCore:
+def build_core(
+    config: Config, db_path: Path | None = None, fake: bool = False, *, recover: bool = True
+) -> CompanionCore:
     store = Store(
         db_path or config.settings.storage.db_path, config.settings.storage.busy_timeout_ms
     )
-    llm = FakeLLM() if fake else AihubmixClient(config.settings.llm)
-    return CompanionCore(config, store, llm)
+    llm = None
+    try:
+        llm = FakeLLM() if fake else AihubmixClient(config.settings.llm)
+        return CompanionCore(config, store, llm, recover=recover)
+    except BaseException:
+        close = getattr(llm, "close", None)
+        if close:
+            close()
+        store.close()
+        raise
 
 
 def main() -> None:

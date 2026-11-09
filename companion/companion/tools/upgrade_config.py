@@ -31,7 +31,7 @@ def merge_settings(old, current, new):
 def upgrade(directory: Path, source: Path | None = None):
     directory = directory.resolve()
     source = (source or Path(__file__).parents[1] / "config").resolve()
-    if directory == source or source.is_relative_to(directory):
+    if directory.is_relative_to(source) or source.is_relative_to(directory):
         raise ValueError("Use a separate deployment directory, not the packaged source")
     previous = directory / BASELINE
     if not previous.is_file():

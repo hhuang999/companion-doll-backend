@@ -1,7 +1,9 @@
 import argparse
+from contextlib import closing
 from pathlib import Path
 
 from companion.store import Store
+from companion.store.lease import WriterLease
 
 
 def main() -> None:
@@ -11,8 +13,7 @@ def main() -> None:
     parser.add_argument("user_key")
     parser.add_argument("--db", type=Path, default=Path("data/companion.db"))
     args = parser.parse_args()
-    store = Store(args.db)
-    try:
+    with closing(Store(args.db)) as store, closing(WriterLease(store.path)):
         active = store.query(
             "SELECT 1 FROM sessions WHERE user_key=? AND lifecycle IN ('active','ending')",
             (args.user_key,),
@@ -23,8 +24,6 @@ def main() -> None:
             )
         store.purge_user(args.user_key)
         print("User data removed.")
-    finally:
-        store.close()
 
 
 if __name__ == "__main__":

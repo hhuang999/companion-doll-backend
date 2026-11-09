@@ -8,6 +8,7 @@ import uuid
 from collections.abc import Iterator
 from concurrent.futures import Future, ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FutureTimeout
+from contextlib import ExitStack
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Protocol
@@ -79,33 +80,44 @@ class CompanionCore:
 
         from companion.store.lease import WriterLease
 
-        self.writer_lease = WriterLease(store.path)
         self.user_locks = defaultdict(threading.RLock)
         self.user_epochs = {}
-        self._notifications = (
-            ThreadPoolExecutor(max_workers=1, thread_name_prefix="risk-notify")
-            if config.settings.alert_webhook
-            else None
-        )
-        self.machine = StateMachine(config)
-        self.talker = Talker(config, llm)
-        self.validator = Validator(config)
-        self.exercise = ExercisePlayer(config)
-        self.risk = RiskDetector(config, llm)
         from companion.cognition.interaction import Interactions
         from companion.cognition.orchestrator import Cognition
 
-        self.cognition = Cognition(self)
-        self.reasoner = self.cognition.scheduler
-        self.interactions = Interactions(self, self.cognition.memory)
-        if recover:
-            for row in store.recover():
-                state = SessionState.model_validate_json(row["state"])
-                state.lifecycle = "ending"
-                state.latest_turn_id = row["final_turn_id"] or 0
-                snapshot = Snapshot(session_id=state.session_id, user_key=state.user_key)
-                self.sessions[state.session_id] = SessionRuntime(state, snapshot, None)
-                self.reasoner.submit(state.user_key, state.session_id, "process_restart", "end")
+        with ExitStack() as cleanup:
+            self.writer_lease = WriterLease(store.path)
+            cleanup.callback(self.writer_lease.close)
+            self._notifications = (
+                ThreadPoolExecutor(max_workers=1, thread_name_prefix="risk-notify")
+                if config.settings.alert_webhook
+                else None
+            )
+            if self._notifications:
+                cleanup.callback(self._notifications.shutdown, wait=True)
+            self.machine = StateMachine(config)
+            self.talker = Talker(config, llm)
+            self.validator = Validator(config)
+            self.exercise = ExercisePlayer(config)
+            self.risk = RiskDetector(config, llm)
+            cleanup.callback(self.risk.close)
+            self.cognition = Cognition(self)
+            cleanup.callback(self.cognition.close)
+            self.reasoner = self.cognition.scheduler
+            self.interactions = Interactions(self, self.cognition.memory)
+            if recover:
+                self.recover()
+            cleanup.pop_all()
+
+    def recover(self) -> None:
+        """Recover durable sessions at startup while this Core owns the writer lease."""
+        for row in self.store.recover():
+            state = SessionState.model_validate_json(row["state"])
+            state.lifecycle = "ending"
+            state.latest_turn_id = row["final_turn_id"] or 0
+            snapshot = Snapshot(session_id=state.session_id, user_key=state.user_key)
+            self.sessions[state.session_id] = SessionRuntime(state, snapshot, None)
+            self.reasoner.submit(state.user_key, state.session_id, "process_restart", "end")
 
     def user_lock(self, user_key):
         return self.user_locks[user_key]
