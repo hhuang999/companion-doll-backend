@@ -519,5 +519,85 @@
     "Automatic checks do not establish all generated statements are correct.",
     "Existing N04 restriction overgeneralization is reproduced before and after this change.",
     "Model/API timeouts remain observable; no deadline or quality threshold was relaxed."
-  ]
+  ],
+  "xiaozhi": {
+    "rounds": [
+      {
+        "name": "wake_onboarding",
+        "packets": 160,
+        "first_packet_ms": 141.00000000325963,
+        "transcript": null
+      },
+      {
+        "name": "normal_response",
+        "packets": 125,
+        "first_packet_ms": 5577.999999979511,
+        "transcript": "今天写作业有点累，想和你说说"
+      },
+      {
+        "name": "crisis_abort",
+        "packets": 3,
+        "first_packet_ms": 171.99999996228144,
+        "transcript": "我现在要跳楼"
+      },
+      {
+        "name": "returning_wake",
+        "packets": 61,
+        "first_packet_ms": 93.99999998277053,
+        "transcript": null
+      },
+      {
+        "name": "real_asr",
+        "packets": 172,
+        "first_packet_ms": 6141.00000000326,
+        "transcript": "早上9点至下午5点"
+      }
+    ],
+    "end_task_states": [
+      "done",
+      "done"
+    ],
+    "summaries": [
+      {
+        "summary": "用户原话：“我现在要跳楼”"
+      },
+      {
+        "summary": "用户原话：“早上9点至下午5点。”"
+      }
+    ],
+    "unsupported_work_hours": false,
+    "initial_probe_attempt": "connection refused while ASR was still loading; rerun after server listening passed"
+  },
+  "deployment": {
+    "demo": "admitted",
+    "fixed_audio_entries": 24,
+    "cache": "existing audio reused",
+    "package_digest": "2bcb1cbf619dbdfb878144902111f8c729566f02010706e7ce7a4af1aa0d792d"
+  },
+  "wheel": {
+    "isolated_check": "passed",
+    "source_and_prompts_match": true,
+    "evidence": "artifacts/grounded-memory/wheel-check-current/report.json"
+  },
+  "final_source_binding_regression": {
+    "passed": 28,
+    "scope": "grounded consolidation and memory; canonical feedback uses the matching user turn and Core event"
+  },
+  "voice": {
+    "completed": 10,
+    "failures": 0,
+    "client_first_packet_ms": {
+      "n": 10,
+      "p50": 3319.999999977881,
+      "p90": 3750.0
+    },
+    "evidence": "artifacts/grounded-memory/voice-final/voice.json"
+  },
+  "shutdown": {
+    "method": "terminal Ctrl+C; OS process exit confirmed",
+    "ports_8000_8003": "closed",
+    "writer_lease": "released",
+    "database_integrity": "ok",
+    "graceful_application_shutdown": "not established by terminal exit"
+  }
 }

@@ -190,8 +190,13 @@ class ConsolidationGrounder:
                             "support": event["payload"].get("support"),
                             "feedback_valence": event["payload"]["valence"],
                             "value": event["payload"]["text"] or candidate.value,
-                            "source_refs": candidate.source_refs
-                            + (
+                            "source_refs": (
+                                next(
+                                    ref
+                                    for ref in candidate.source_refs
+                                    if ref.kind == "user_turn"
+                                    and str(ref.id) == str(event["turn_id"])
+                                ),
                                 EvidenceRef(
                                     kind="interaction_event",
                                     id=event["event_id"],
