@@ -1,6 +1,6 @@
 # v2 运行、迁移与复核
 
-默认 development 已使用 v2 协作链路。`core/reasoner.py` 和旧 `reasoner_runs` 留作 v1 兼容与历史记录，默认 Core 不再启动旧消费者。
+默认 development 使用 `cognition/` 的协作链路。未调用的 v1 调度器已移除；`reasoner_runs` 作为既有数据库契约保留，当前角色执行写入 `agent_runs` / `cognitive_jobs`。最新工程检查见 [ENGINEERING_REVIEW](ENGINEERING_REVIEW.md)。
 
 ## 开发入口
 
@@ -41,13 +41,15 @@
 .venv/Scripts/python.exe -m companion.tools.retry_end SESSION_ID --env-file .env --db data/companion.db
 ```
 
-先停用持有该库的服务，再执行重试。新执行保留旧失败证据；相同来源记忆/跟进幂等，更晚的更正优先。shutdown grace 到期会取消任务并停止调度、报告 TimeoutError；已发出的同步 HTTP 仍占用线程直到实际返回，不能同时重开同库写入者。服务退出后，下次启动收敛 durable 任务。
+先停用持有该库的服务，再执行重试。工具先验证配置和模型客户端、取得 Core 的独占 writer lease，再重置失败任务并恢复执行；配置、凭据或写锁检查失败时，原失败任务保持不变。新执行保留旧失败证据；相同来源记忆/跟进幂等，更晚的更正优先。shutdown grace 到期会取消任务并停止调度、报告 TimeoutError；已发出的同步 HTTP 仍占用线程直到实际返回，不能同时重开同库写入者。服务退出后，下次启动收敛 durable 任务。
 
 运行中使用 `core.purge_user(user_key)`：注册 purging/epoch → 取消输出和任务 → 有界等待 → 原子删除新旧表 → 移除会话。等待超时会明确失败并保留屏障，应等待请求退出后重试；不会假报删除完成。停服时可以使用：
 
 ```powershell
 .venv/Scripts/python.exe -m companion.tools.purge cli-local --db data/companion.db
 ```
+
+离线清除工具同样取得 writer lease；即使目标用户已结束会话，只要服务仍持有数据库，就拒绝离线删除。请使用运行中 Core 的清除接口或正常停服后重试。
 
 数据库清除不删除历史备份、本地验收文件或外部 API 服务中的数据；这些文件按各自用途另行管理。
 

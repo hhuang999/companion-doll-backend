@@ -15,8 +15,8 @@ htmlcov/
 build/
 dist/
 vendor/
-# Local v2 diagram build receipts; portable HTML and editable sources are committed.
-/.archify/architecture-v2-20261103-231500/
+# Local diagram build receipts; published HTML and editable JSON live in docs/.
+/.archify/
 /docs/architecture-v2/*.delivery.json
 /docs/architecture-v2/*.finalize.json
 /docs/architecture-v2/*.finalize-summary.json

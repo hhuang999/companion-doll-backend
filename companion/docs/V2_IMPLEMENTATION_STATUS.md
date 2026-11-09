@@ -1,6 +1,6 @@
 # v2 实施与验收状态（历史基线与当前增量）
 
-2026-11-04更新：当前研究驱动升级见 [持续状态](autonomous-upgrade/IMPLEMENTATION_STATUS.md)；本文件M0～M6与V2-01～V2-24保留为已实现基线，其自动检查随当前152项离线套件通过。下文旧实测数据为2026-11-03历史。课程内容规则已由最新TASK替代。
+2026-11-09说明：本文件保留历史规格验收矩阵；当前维护、修复与验证见 [ENGINEERING_REVIEW](ENGINEERING_REVIEW.md)。研究驱动升级见 [持续状态](autonomous-upgrade/IMPLEMENTATION_STATUS.md)；本文件M0～M6与V2-01～V2-24保留为已实现基线，其自动检查随当前152项离线套件通过。下文旧实测数据为2026-11-03历史。课程内容规则已由最新TASK替代。
 
 主规格：[ARCHITECTURE_V2](ARCHITECTURE_V2.md)。分支：`codex/backend-v2`。实际起点 `43253fe9719b1f96e41d40948b6a805211dc8adc`；未重置、未覆盖无关改动。后续按用户授权同步至 GitHub `main` 并发布 v2 Pages。
 

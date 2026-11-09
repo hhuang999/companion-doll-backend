@@ -2,6 +2,8 @@
 
 本文保留原根 README 的工程使用说明。完整研究与系统设计现可直接在 [仓库首页](README.md) 或 [排版版网页](https://hhuang999.github.io/companion-doll-backend/) 阅读。
 
+接手当前后端先读 [AGENTS.md](AGENTS.md) 和 [2026-11-09 工程 review](companion/docs/ENGINEERING_REVIEW.md)。升级任务已完成，当前进入维护阶段；详细的 [当前状态](companion/docs/autonomous-upgrade/IMPLEMENTATION_STATUS.md) 与既有研究、性能测量分开维护。
+
 依据 [v2 主规格](companion/docs/ARCHITECTURE_V2.md) 升级的 Python 3.10 模块化后端。默认 development 已接入实时 Talker、后台 Analysis / Planner / 独立 Critic、版本化策略、四类关系记忆、独立风险接管与小智语音流水。
 
 当前内容版本为 `course-1.0`：六类支持策略、三段可中止短练习、固定危机支持文本，已接入默认 development 路径。研究情境是中国大陆高中生日常压力；课程演示仅用合成案例或成年成员扮演。来源核查、自动内容审查、真实回放和音频资源分别验收，课程回执已绑定当前版本，准备本机固定音频后可使用 `--mode demo`。当前升级进度见 [实施状态](companion/docs/autonomous-upgrade/IMPLEMENTATION_STATUS.md)，实测与未达项见 [验证报告](companion/docs/VALIDATION.md)。
@@ -72,7 +74,9 @@ Windows 上解释器路径为 `.venv/Scripts/python.exe`。锁文件对应此次
 
 ## 验证
 
-当前离线 **152 passed / 3 online deselected**。预固定17段真实多轮及定点修复均留有证据；最终30次动态语音全部成功，文本首句P50 1.26秒、客户端首包P50 3.61秒。900ms文本首句和常规后台8秒未稳定达到，真机首响交由硬件同学测量。完整分母、失败和语言限制见[验证报告](companion/docs/VALIDATION.md)，现场步骤见[课程展示脚本](companion/docs/autonomous-upgrade/DEMO.md)。
+最新离线检查见 [工程 review](companion/docs/ENGINEERING_REVIEW.md)，统一入口覆盖 Ruff、格式和完整离线 pytest。
+
+以下为 2026-11-04 的既有在线测量：预固定17段真实多轮及定点修复均留有证据；最终30次动态语音全部成功，文本首句P50 1.26秒、客户端首包P50 3.61秒。900ms文本首句和常规后台8秒未稳定达到，真机首响交由硬件同学测量。完整分母、失败和语言限制见[验证报告](companion/docs/VALIDATION.md)，现场步骤见[课程展示脚本](companion/docs/autonomous-upgrade/DEMO.md)。
 
 ```powershell
 # Ruff、格式检查和全部离线 pytest；不访问网络

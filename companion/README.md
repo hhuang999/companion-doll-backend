@@ -2,6 +2,8 @@
 
 Python 3.10 情感陪伴玩偶后端。包含独立 CLI、实时 Talker、后台有界多角色协作、确定性许可状态、风险接管、练习计划、四类有来源和范围的 SQLite 关系记忆和 Streamlit 看板。
 
+当前维护与验证见 [工程 review](docs/ENGINEERING_REVIEW.md)。完整仓库的接手入口为根 AGENTS.md 与 [ENGINEERING.md](../ENGINEERING.md)；以下升级材料中的原始任务已经完成。
+
 ```sh
 python -m pip install -e '.[test]'
 companion --fake

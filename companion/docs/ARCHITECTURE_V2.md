@@ -5,7 +5,7 @@
 读者：负责后端、模型调用、小智适配、测试和维护的开发者。  
 核对基线：Git `43253fe9719b1f96e41d40948b6a805211dc8adc`。实施时以实际工作区为准，保留后来发生的有效改动。
 
-配套文件：[Codex 完整开发执行 Prompt](CODEX_UPGRADE_V2_PROMPT.md)。
+本规格对应的升级已完成。当前接手入口为根 [AGENTS.md](../../AGENTS.md) 与 [工程 review](ENGINEERING_REVIEW.md)；课程内容增量见 [CONTENT](CONTENT.md)。
 
 ## 1. 目标、范围与文档优先级
 
@@ -39,7 +39,7 @@
 
 本规格替代 v1.1 中关于单个 Reasoner、统一过期判断和旧核心记忆选择的相应设计；其余要求继续适用。参考：
 
-- [后端设计 v1.1](../../情感陪伴玩偶%20·%20后端技术设计文档%20v1.1.md)
+- [后端设计 v1.1（历史参考）](history/BACKEND_DESIGN_V1_1.md)
 - [实现决定](DECISIONS.md)
 - [现有验证记录](VALIDATION.md)
 - [内容与审核说明](CONTENT.md)

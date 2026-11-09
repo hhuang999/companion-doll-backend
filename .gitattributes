@@ -1,7 +1,4 @@
 *.patch text eol=lf whitespace=-blank-at-eol
-# Preserve generated artifact bytes so their verification hashes survive checkout.
-.archify/** -text whitespace=cr-at-eol
-.archify/**/*.html whitespace=cr-at-eol,-blank-at-eol
 # Keep the published copy identical to the validated Archify artifact.
 docs/index.html -text whitespace=cr-at-eol,-blank-at-eol
 docs/diagrams/*.html -text whitespace=cr-at-eol,-blank-at-eol
