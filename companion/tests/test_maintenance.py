@@ -82,3 +82,35 @@ def test_failed_client_initialization_closes_the_database(config, tmp_path, monk
         build_core(config, store.path)
     with pytest.raises(sqlite3.ProgrammingError, match="closed database"):
         connection.execute("SELECT 1")
+
+
+@pytest.mark.parametrize("factory", [False, True])
+def test_failed_recovery_retains_resources_when_shutdown_cannot_finish(
+    config, store, monkeypatch, factory
+):
+    original_close = CompanionCore.close
+    captured = []
+
+    def fail_recovery(_):
+        raise sqlite3.OperationalError("recovery failed")
+
+    def blocked_close(core):
+        captured.append(core)
+        raise TimeoutError("workers still occupied")
+
+    monkeypatch.setattr(Store, "recover", fail_recovery)
+    monkeypatch.setattr(CompanionCore, "close", blocked_close)
+    try:
+        with pytest.raises(TimeoutError, match="still occupied"):
+            if factory:
+                build_core(config, store.path, fake=True)
+            else:
+                CompanionCore(config, store, FakeLLM())
+        assert captured[0].store.query("SELECT 1 AS n") == [{"n": 1}]
+        with pytest.raises(RuntimeError, match="active Core"):
+            WriterLease(store.path)
+    finally:
+        for core in captured:
+            original_close(core)
+            if factory:
+                core.store.close()

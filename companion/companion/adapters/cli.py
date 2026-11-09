@@ -25,13 +25,21 @@ def build_core(
     llm = None
     try:
         llm = FakeLLM() if fake else AihubmixClient(config.settings.llm)
-        return CompanionCore(config, store, llm, recover=recover)
+        core = CompanionCore(config, store, llm, recover=False)
     except BaseException:
         close = getattr(llm, "close", None)
         if close:
             close()
         store.close()
         raise
+    if recover:
+        try:
+            core.recover()
+        except BaseException:
+            core.close()
+            store.close()
+            raise
+    return core
 
 
 def main() -> None:

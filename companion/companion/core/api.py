@@ -105,9 +105,15 @@ class CompanionCore:
             cleanup.callback(self.cognition.close)
             self.reasoner = self.cognition.scheduler
             self.interactions = Interactions(self, self.cognition.memory)
-            if recover:
-                self.recover()
             cleanup.pop_all()
+        if recover:
+            try:
+                self.recover()
+            except BaseException:
+                # Recovery can already have dispatched durable tasks. Normal close
+                # retains the lease if they cannot stop within the shutdown grace.
+                self.close()
+                raise
 
     def recover(self) -> None:
         """Recover durable sessions at startup while this Core owns the writer lease."""
