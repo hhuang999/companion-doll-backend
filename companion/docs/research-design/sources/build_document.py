@@ -16,7 +16,7 @@ REPO = ROOT.parents[2]
 
 
 def publish_pages(html):
-    """Publish the full report at the site root and retain its previous URL."""
+    """Publish the interactive introduction above the report at the site root."""
     destination = REPO / "docs/research-design"
     destination.mkdir(parents=True, exist_ok=True)
 
@@ -38,6 +38,16 @@ def publish_pages(html):
         "</footer>",
         ' · <a href="showcase.html">交互展示</a>'
         ' · <a href="architecture-course/overview.html">交互架构图</a></footer>',
+    )
+    intro = (ROOT / "sources/home-intro.html").read_text(encoding="utf-8")
+    homepage = (
+        homepage.replace("</head>", '<link rel="stylesheet" href="assets/home.css"></head>', 1)
+        .replace(
+            "<body>",
+            '<body class="project-home">' + intro + '<div id="research-report">',
+            1,
+        )
+        .replace("</body>", "</div></body>", 1)
     )
     (REPO / "docs/index.html").write_text(homepage, encoding="utf-8")
     html = html.replace(
@@ -66,13 +76,19 @@ def publish_readme(text):
         return f"{match.group(1)}({target})"
 
     text = re.sub(r"(!?\[[^\]]*\])\(([^)]+)\)", repository_link, text)
+    showcase = "https://hhuang999.github.io/companion-doll-backend/showcase.html"
+    preview = (
+        "[![Companion 交互展示页面预览，点击打开在线体验]"
+        f"(docs/assets/showcase-preview.png)]({showcase})\n\n"
+        f"**[打开交互展示]({showcase})**"
+        " — 体验合成对话、切换支持情境，探索系统架构。\n\n"
+    )
     navigation = (
         "[排版版网页（完整正文与章节目录）](https://hhuang999.github.io/companion-doll-backend/)"
-        " · [交互展示](https://hhuang999.github.io/companion-doll-backend/showcase.html)"
         " · [交互架构图](https://hhuang999.github.io/companion-doll-backend/architecture-course/overview.html)"
         " · [安装与运行](ENGINEERING.md)\n\n"
     )
-    text = text.replace("## 摘要\n", navigation + "## 摘要\n", 1)
+    text = text.replace("## 摘要\n", preview + navigation + "## 摘要\n", 1)
     (REPO / "README.md").write_text(text, encoding="utf-8")
 
 

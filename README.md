@@ -2,7 +2,11 @@
 
 日常压力支持中的内容选择、用户控制与跨会话记忆
 
-[排版版网页（完整正文与章节目录）](https://hhuang999.github.io/companion-doll-backend/) · [交互展示](https://hhuang999.github.io/companion-doll-backend/showcase.html) · [交互架构图](https://hhuang999.github.io/companion-doll-backend/architecture-course/overview.html) · [安装与运行](ENGINEERING.md)
+[![Companion 交互展示页面预览，点击打开在线体验](docs/assets/showcase-preview.png)](https://hhuang999.github.io/companion-doll-backend/showcase.html)
+
+**[打开交互展示](https://hhuang999.github.io/companion-doll-backend/showcase.html)** — 体验合成对话、切换支持情境，探索系统架构。
+
+[排版版网页（完整正文与章节目录）](https://hhuang999.github.io/companion-doll-backend/) · [交互架构图](https://hhuang999.github.io/companion-doll-backend/architecture-course/overview.html) · [安装与运行](ENGINEERING.md)
 
 ## 摘要
 

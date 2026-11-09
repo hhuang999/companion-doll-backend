@@ -1,10 +1,14 @@
 # 项目站点维护
 
-GitHub Pages 从 `main:/docs` 发布，默认入口 [`index.html`](index.html) 直接显示完整研究与系统设计说明，沿用本地 HTML 的排版、章节目录和全部 13 张配图。仓库根 README 同步呈现完整 Markdown 正文。
+GitHub Pages 从 `main:/docs` 发布，默认入口 [`index.html`](index.html) 顶部嵌入可操作的交互展示，提供单独打开链接；下方 `#research-report` 保留完整研究与系统设计说明、章节目录和全部 13 张配图。报告侧栏随正文滚动，不覆盖顶部展示；打印时仅输出报告。仓库根 README 同步呈现完整 Markdown 正文。
 
 原交互展示保留在 [`showcase.html`](showcase.html)。`assets/project.css`、`project.js` 和 `project-data.json` 提供合成对话分支演示、四通路信号图、策略筛选、协议展开、累计延迟图与来源目录。静态页面不访问运行后端或 API key。设计约定见 [DESIGN.md](DESIGN.md)，界面验证见 [PAGES_VALIDATION.md](PAGES_VALIDATION.md)。
 
 ## 当前来源
+
+仓库根 README 在标题与简介后展示可点击的 `assets/showcase-preview.png` 截图及“打开交互展示”链接，下方保留报告全文。截图来自实际 `showcase.html` 首屏；更新页面视觉后重新截图。入口由 `build_document.py` 的 `publish_readme()` 生成。
+
+首页展示区由 `companion/docs/research-design/sources/home-intro.html` 维护，布局在 `assets/home.css`。修改模板后执行下述 `build_document.py --pages` 重建，避免下次导出覆盖首页结构。展示页中的报告链接使用 `target="_top"` 跳到首页 `#research-report`，避免在嵌入区内重复打开首页。
 
 正文、排版和图源维护在 [`companion/docs/research-design`](../companion/docs/research-design/README.md)，运行其中的 `sources/build_document.py --pages` 同步默认首页、根 README、旧地址 [`research-design/`](research-design/) 与配图；生成文件不单独编辑。旧地址仍显示全文并保留章节锚点。安装与运行说明移至 [`ENGINEERING.md`](../ENGINEERING.md)。
 

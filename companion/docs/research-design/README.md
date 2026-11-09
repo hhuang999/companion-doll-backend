@@ -31,7 +31,7 @@ $env:PYTHONPATH = (Join-Path (Get-Location) 'artifacts/research-design/deps')
 
 发布阅读版时，在最后一条命令加上 `--pages`，同步生成默认首页 `docs/index.html`、保留旧地址的 `docs/research-design/index.html`、13 张配图和根目录 `README.md`。根 README 保留完整正文并调整相对链接，顶部提供排版版网页入口；网页沿用本地版排版、目录和图注。工程文档链接指向 GitHub，图片和章节锚点留在站内。
 
-原交互展示保存在 `docs/showcase.html`，原根 README 的安装与运行内容保存在 `ENGINEERING.md`；两者通过阅读版辅助链接访问。正文、生成文件与配图一并提交到 `main` 后，沿用现有 GitHub Pages 发布。生成的根 README 和网页不单独编辑。
+交互展示保存在 `docs/showcase.html`，同时嵌入默认首页的完整报告之前，并提供单独打开链接。顶部入口模板为 `sources/home-intro.html`，首页专用布局为 `docs/assets/home.css`；`--pages` 会保留这一结构。独立阅读版和 `/research-design/` 仍只呈现报告。原根 README 的安装与运行内容保存在 `ENGINEERING.md`。正文、生成文件与配图一并提交到 `main` 后，沿用现有 GitHub Pages 发布。生成的根 README 和网页不单独编辑。
 
 图源优先使用Windows微软雅黑；其他平台需要安装Noto Sans CJK SC。三张生成图作为已交付资产保留，重建不触发付费图像生成。HTML无外部脚本或字体依赖；外部文献与工程链接需访问相应来源。
 
