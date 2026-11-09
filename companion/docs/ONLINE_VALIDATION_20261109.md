@@ -38,7 +38,17 @@ vendor/xiaozhi-venv/Scripts/python.exe scripts/probe_xiaozhi.py
 
 首包计时来自探针的接收等待入口；ASR 项包含发送音频结束后的处理与回复等待。它们是本机客户端收包时间。
 
-一个结束协作记录为 partial：模型提出的 persistent 记忆缺少明确的长期依据，被 `Persistent preference/boundary needs explicit enduring evidence` 校验拒绝。该任务的摘要 accepted、结束任务 done；未放宽校验或将候选写成长期事实。
+一个结束协作记录为 partial，被 `Persistent preference/boundary needs explicit enduring evidence` 校验拒绝。后续逐项审计发现，该项同时包含模型事实提取和摘要质量问题：
+
+- 原始用户输入（turn 137）只有“早上9点至下午5点。”，来自上游 ASR 示例。
+- End / `gpt-4.1-mini` 生成 `fact_preference`，key 为“工作时间”，value 为“早上9点至下午5点”，scope 为 `persistent`，并声称“用户明确告知工作时间”。原话未说明时间属于谁、对应什么活动或有何长期含义。
+- 该候选未写入 `memory_items`；但“用户提到工作时间为早上9点至下午5点。”已写入 `sessions.summary`。`summary=accepted` 表示发布成功，不表示事实已经核实。
+
+离线确定性回放复现了同样的“记忆拒绝、错误摘要写入”。单独调用当前记忆校验还验证了：改为 session 会接受该错误候选；原话增加无关的“以后再聊”就能通过 persistent 门槛；“我在广州读高中”这种明确个人事实反而因缺少关键词被拒绝。逐字 quote 也只能证明片段存在，无法证明“工作时间”这一解释。
+
+判断：本条长期写入的拒绝结果正确，但关键词门槛不构成事实依据检查，存在误拦和漏拦；End 事实提取与摘要写入需要改进。推荐用明确事实、来源和适用范围收敛判断，替换粗糙的长期关键词门槛，统一处理记忆和摘要中的无依据推断。该问题**尚未修复**；本次审计未改提示词、校验规则或原始证据。
+
+当前错误摘要可在观察台和 `CoreMemory.last_session_summary` 中读到；当前 Talker 使用 `memory_projection`，未将这段摘要送入提示词。原始调查和五组对照在 `artifacts/online-regression-20261109/memory-candidate-audit.json`。
 
 ## 动态语音与关闭
 

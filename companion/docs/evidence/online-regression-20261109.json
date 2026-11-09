@@ -312,5 +312,78 @@
     "keyboard_interrupt_message": false,
     "atexit_error": false
   },
-  "scope": "Synthetic loopback regression; no ESP32 speaker measurement or new user-effect study."
+  "scope": "Synthetic loopback regression; no ESP32 speaker measurement or new user-effect study.",
+  "memory_candidate_audit": {
+    "status": "unresolved",
+    "source_turn_id": 137,
+    "source_text": "早上9点至下午5点。",
+    "producer_role": "end",
+    "model": "gpt-4.1-mini",
+    "candidate": {
+      "kind": "fact_preference",
+      "key": "工作时间",
+      "value": "早上9点至下午5点",
+      "epistemic_status": "stated",
+      "scope": "persistent",
+      "source_refs": [
+        {
+          "kind": "user_turn",
+          "id": 137,
+          "claim": "用户明确告知工作时间",
+          "quote": null
+        }
+      ]
+    },
+    "persisted_summary": "用户提到工作时间为早上9点至下午5点。",
+    "typed_memory_written": false,
+    "current_talker_receives_session_summary": false,
+    "counterfactual_cases": [
+      {
+        "case": "observed",
+        "text": "早上9点至下午5点。",
+        "scope": "persistent",
+        "candidate_key": "工作时间",
+        "outcome": [
+          "rejected:Persistent preference/boundary needs explicit enduring evidence"
+        ]
+      },
+      {
+        "case": "session_only",
+        "text": "早上9点至下午5点。",
+        "scope": "session",
+        "candidate_key": "工作时间",
+        "outcome": [
+          "accepted"
+        ]
+      },
+      {
+        "case": "irrelevant_duration_word",
+        "text": "早上9点至下午5点。以后再聊。",
+        "scope": "persistent",
+        "candidate_key": "工作时间",
+        "outcome": [
+          "accepted"
+        ]
+      },
+      {
+        "case": "quoted_fragment",
+        "text": "早上9点至下午5点。",
+        "scope": "session",
+        "candidate_key": "工作时间",
+        "outcome": [
+          "accepted"
+        ]
+      },
+      {
+        "case": "explicit_personal_fact",
+        "text": "我在广州读高中。",
+        "scope": "persistent",
+        "candidate_key": "就读情况",
+        "outcome": [
+          "rejected:Persistent preference/boundary needs explicit enduring evidence"
+        ]
+      }
+    ],
+    "reproduction": "offline FakeLLM replay plus direct MemoryService checks in isolated databases; no paid calls or original evidence changes"
+  }
 }
